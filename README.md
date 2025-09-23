@@ -1,3 +1,24 @@
-# CSCE431_502_Veterans
+# README
 
-This is a github repository for the CSCE431 Software Engineering Group 502_Veterans Project
+This README would normally document whatever steps are necessary to get the
+application up and running.
+
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
