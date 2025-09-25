@@ -38,6 +38,9 @@ gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-google-oauth2'
 
+gem 'cancancan'
+gem 'rolify'
+
 gem 'seed_dump'
 
 group :development, :test do
