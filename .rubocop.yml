@@ -1,0 +1,116 @@
+# .rubocop.yml
+plugins:
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+
+  Exclude:
+  - "db/schema.rb"
+  - "Gemfile"
+  - "lib/tasks/*.rake"
+  - "bin/*"
+  - "config/puma.rb"
+  - "config/spring.rb"
+  - "config/environments/development.rb"
+  - "config/environments/production.rb"
+  - "spec/spec_helper.rb"
+
+Layout/LineLength:
+  Max: 100
+
+Layout/IndentationWidth:
+  Width: 2 
+
+Metrics/BlockLength:
+  Exclude:
+    - config/**/*
+    - spec/**/*
+
+Naming/MethodName:
+  Enabled: true
+  EnforcedStyle: snake_case #default
+
+Naming/ClassAndModuleCamelCase:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false
+
+Style/For:
+    EnforcedStyle: each
+Style/IfUnlessModifier:
+  Enabled: true
+Style/NegatedIf:
+  Enabled: true # use `unless` instead of `!if`
+Style/UnlessElse:
+  Enabled: true # disallow unless with else
+Style/WhileUntilModifier:
+  Enabled: true
+
+Naming/PredicatePrefix:
+  Enabled: true
+  NamePrefix:
+    - is_
+    - does_
+    - can_
+  ForbiddenPrefixes:
+    - is_
+    - does_
+    - can_
+
+Naming/ConstantName:
+  Enabled: true
+
+Naming/VariableNumber:
+  Enabled: true
+  EnforcedStyle: snake_case
+
+Naming/FileName:
+  Enabled: true
+  ExpectMatchingDefinition: true
+
+Rails/PluralizationGrammar:
+  Enabled: true # enforce plural table names
+
+Rails/HasAndBelongsToMany:
+  Enabled: true # ensure HABTM join table names follow convention
+
+Rails/InverseOf:
+  Enabled: true
+
+Rails/SaveBang:
+  Enabled: true # enforce save! instead of save for reliability
+
+Rails/SkipsModelValidations:
+  Enabled: true # avoid update_all, decrement, etc.
+
+Rails/TimeZone:
+  Enabled: true # enforce Time.zone.now instead of Time.now
+
+Style/DefWithParentheses:
+  Enabled: true # enforce def with parentheses when args are present
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/ClassLength:
+  Max: 200
+
+Style/IdenticalConditionalBranches:
+  Enabled: true # helps with DRY
+
+Lint/DuplicateHashKey:
+  Enabled: true
+
+Lint/DuplicateMethods:
+  Enabled: true
+
+Lint/UselessAssignment:
+  Enabled: true
+
+Lint/EmptyBlock:
+  Enabled: true
+
+Lint/EmptyClass:
+  Enabled: true
