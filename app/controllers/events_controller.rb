@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: %i[ show edit update destroy ]
+  before_action :set_event, only: %i[ show edit update destroy event_confirm_delete ]
 
   # GET /events or /events.json
   def index
@@ -55,6 +55,10 @@ class EventsController < ApplicationController
       format.html { redirect_to events_path, notice: "Event was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  def event_confirm_delete
+    @event
   end
 
   private
