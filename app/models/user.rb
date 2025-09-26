@@ -4,7 +4,7 @@ class User < ApplicationRecord
   rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :omniauthable, omniauth_providers: [:google_oauth_2]
+  devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   def self.from_google(email:, full_name:, uid:, avatar_url:)
     create_with(uid: uid, full_name: full_name,

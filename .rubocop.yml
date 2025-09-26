@@ -32,6 +32,8 @@ Metrics/BlockLength:
 Naming/MethodName:
   Enabled: true
   EnforcedStyle: snake_case #default
+  AllowedPatterns:
+    - '.*_oauth2'  # allow method names ending with _oauth2 as it MUST be named this way
 
 Naming/ClassAndModuleCamelCase:
   Enabled: true
@@ -67,6 +69,8 @@ Naming/ConstantName:
 Naming/VariableNumber:
   Enabled: true
   EnforcedStyle: snake_case
+  AllowedPatterns:
+    - '.*_oauth2'  # allow google_oauth2
 
 # Ruby's default files don't define classes the way rubocop likes so we do away with it
 Naming/FileName:
