@@ -2,7 +2,7 @@
 
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    def google_oauth2
+    def google_oauth_2
       user = User.from_google(**from_google_params)
 
       if user.present?

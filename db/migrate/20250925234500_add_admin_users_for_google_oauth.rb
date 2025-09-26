@@ -6,8 +6,7 @@ class AddAdminUsersForGoogleOauth < ActiveRecord::Migration[7.2]
   ].freeze
   def up
     ADMIN_EMAILS.each do |email|
-      user = User.find_or_create_by!(email: email) do |u|
-      end
+      user = User.find_or_create_by!(email: email)
 
       user.add_role(:admin) unless user.has_role?(:admin)
     end
