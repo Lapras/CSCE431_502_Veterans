@@ -114,6 +114,15 @@ RSpec.describe "/events", type: :request do
     end
   end
 
+  describe "GET /event_confirm_delete" do
+    it "renders the confirmation delete page" do
+    event = Event.create! valid_attributes
+      get event_confirm_delete_event_path(event)
+      expect(response).to be_successful
+      expect(response.body).to include("Confirm")
+    end
+  end
+
   describe "DELETE /destroy" do
     it "destroys the requested event" do
       event = Event.create! valid_attributes

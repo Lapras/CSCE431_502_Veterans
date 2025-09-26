@@ -8,7 +8,8 @@
   <% @events.each do |event| %>
     <%= render event %>
     <p>
-      <%= link_to "Show this event", event %>
+      <%= link_to "Show this event", event %> |
+      <%= link_to "Delete", event_confirm_delete_event_path(event) %>
     </p>
   <% end %>
 </div>
