@@ -5,10 +5,12 @@ RSpec.describe "events/index", type: :view do
     assign(:events, [
       Event.create!(
         title: "Title",
+        starts_at: 1.day.from_now,
         location: "Location"
       ),
       Event.create!(
         title: "Title",
+        starts_at: 1.day.from_now,
         location: "Location"
       )
     ])

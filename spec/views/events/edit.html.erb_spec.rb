@@ -4,6 +4,7 @@ RSpec.describe "events/edit", type: :view do
   let(:event) {
     Event.create!(
       title: "MyString",
+      starts_at: 1.day.from_now,
       location: "MyString"
     )
   }

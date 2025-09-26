@@ -4,6 +4,7 @@ RSpec.describe "events/show", type: :view do
   before(:each) do
     assign(:event, Event.create!(
       title: "Title",
+      starts_at: 1.day.from_now,
       location: "Location"
     ))
   end
