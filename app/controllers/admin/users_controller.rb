@@ -1,4 +1,5 @@
 class Admin::UsersController < ApplicationController
+  before_action :authenticate_user!
   before_action :require_admin!
   before_action :set_user, only: %i[ show edit update destroy ]
 
@@ -13,7 +14,7 @@ class Admin::UsersController < ApplicationController
 
   # GET /admin/users/new
   def new
-    @admin_user = Admin::User.new
+    @user = User.new
   end
 
   # GET /admin/users/1/edit
@@ -22,16 +23,12 @@ class Admin::UsersController < ApplicationController
 
   # POST /admin/users or /admin/users.json
   def create
-    @admin_user = Admin::User.new(admin_user_params)
-
-    respond_to do |format|
-      if @admin_user.save
-        format.html { redirect_to @admin_user, notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @admin_user }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @admin_user.errors, status: :unprocessable_entity }
-      end
+    @user = User.new(user_params)
+    if @user.save
+      update_roles(@user)
+      redirect_to [:admin, @user], notice: "User created"
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -65,8 +62,14 @@ class Admin::UsersController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    def admin_user_params
-      params.require(:admin_user).permit(:email, :full_name, :uid, :avatar_url)
+    def user_params
+      params.require(:user).permit(:email, :full_name, :uid, :avatar_url)
+    end
+
+    def update_roles(user)
+      return unless params.dig(:user, :role_names).present?
+      user.roles = []
+      params[:user][:role_names].reject(&:blank?).each {|r| user.add_role(r)}
     end
 
     def require_admin!
