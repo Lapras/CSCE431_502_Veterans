@@ -28,4 +28,9 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  admin:
+    users:
+      created: "User created"
+      updated: "User updated"
+      deleted: "User deleted"
+      unauthorized: "Unauthorized"
