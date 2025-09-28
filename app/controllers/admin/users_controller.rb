@@ -34,25 +34,19 @@ class Admin::UsersController < ApplicationController
 
   # PATCH/PUT /admin/users/1 or /admin/users/1.json
   def update
-    respond_to do |format|
-      if @admin_user.update(admin_user_params)
-        format.html { redirect_to @admin_user, notice: "User was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @admin_user }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @admin_user.errors, status: :unprocessable_entity }
-      end
+    if @user.update(user_params)
+      update_roles(@user)
+      redirect_to [:admin, @user], notice: "User updated"
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # DELETE /admin/users/1 or /admin/users/1.json
   def destroy
-    @admin_user.destroy!
+    @user.destroy!
 
-    respond_to do |format|
-      format.html { redirect_to admin_users_path, notice: "User was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to admin_users_path, notice: "User deleted"
   end
 
   private
