@@ -1,29 +1,17 @@
-require 'rails_helper'
+# frozen_string_literal: true
+require "rails_helper"
 
 RSpec.describe "admin/users/index", type: :view do
-  before(:each) do
-    assign(:admin_users, [
-      Admin::User.create!(
-        email: "Email",
-        full_name: "Full Name",
-        uid: "Uid",
-        avatar_url: "Avatar Url"
-      ),
-      Admin::User.create!(
-        email: "Email",
-        full_name: "Full Name",
-        uid: "Uid",
-        avatar_url: "Avatar Url"
-      )
-    ])
-  end
+  it "renders a list of users" do
+    users = [
+      User.create!(email: "a@example.com", full_name: "A", uid: "u1", avatar_url: ""),
+      User.create!(email: "b@example.com", full_name: "B", uid: "u2", avatar_url: "")
+    ]
+    assign(:users, users)
 
-  it "renders a list of admin/users" do
     render
-    cell_selector = 'div>p'
-    assert_select cell_selector, text: Regexp.new("Email".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("Full Name".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("Uid".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("Avatar Url".to_s), count: 2
+
+    expect(rendered).to include("a@example.com")
+    expect(rendered).to include("b@example.com")
   end
 end

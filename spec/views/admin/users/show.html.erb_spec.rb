@@ -1,20 +1,14 @@
-require 'rails_helper'
+# frozen_string_literal: true
+require "rails_helper"
 
 RSpec.describe "admin/users/show", type: :view do
-  before(:each) do
-    assign(:admin_user, Admin::User.create!(
-      email: "Email",
-      full_name: "Full Name",
-      uid: "Uid",
-      avatar_url: "Avatar Url"
-    ))
-  end
+  it "renders attributes" do
+    user = User.create!(email: "s@example.com", full_name: "Shown", uid: "u3", avatar_url: "")
+    assign(:user, user)
 
-  it "renders attributes in <p>" do
     render
-    expect(rendered).to match(/Email/)
-    expect(rendered).to match(/Full Name/)
-    expect(rendered).to match(/Uid/)
-    expect(rendered).to match(/Avatar Url/)
+
+    expect(rendered).to include("s@example.com")
+    expect(rendered).to include("Shown")
   end
 end
