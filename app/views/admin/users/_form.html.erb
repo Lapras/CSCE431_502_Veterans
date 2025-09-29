@@ -1,0 +1,46 @@
+<%= form_with(model: [:admin, user]) do |form| %>
+  <% if user.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :email, style: "display: block" %>
+    <%= form.text_field :email %>
+  </div>
+
+  <div>
+    <%= form.label :full_name, style: "display: block" %>
+    <%= form.text_field :full_name %>
+  </div>
+
+  <div>
+    <%= form.label :uid, style: "display: block" %>
+    <%= form.text_field :uid %>
+  </div>
+
+  <div>
+    <%= form.label :avatar_url, style: "display: block" %>
+    <%= form.text_field :avatar_url %>
+  </div>
+
+  <div class="field">
+    <%= form.label :role_names, "Roles" %><br>
+    <% available_roles = (Role.pluck(:name) rescue %w[admin member]) %>
+    <%= form.collection_select :role_names,
+          available_roles, :to_s, :to_s,
+          { selected: user.roles.pluck(:name) },
+          { multiple: true, name: "user[role_names][]" } %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
