@@ -2,6 +2,8 @@ class Event < ApplicationRecord
   validates :title, :starts_at, presence: true
   validate  :starts_at_cannot_be_in_the_past
   validate :starts_at_must_be_valid_datetime
+  validates :location, presence: true
+
 
 
   private

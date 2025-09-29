@@ -58,8 +58,9 @@ class EventsController < ApplicationController
   end
 
   def event_confirm_delete
-    @event
+    @event = Event.find(params[:id])
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
