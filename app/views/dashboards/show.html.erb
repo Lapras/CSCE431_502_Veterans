@@ -1,2 +1,13 @@
-<h1>You're logged in! Welcome to the Dashboard!</h1>
-<%= link_to "Sign Out", destroy_user_session_path %> 
+<!-- app/views/dashboards/show.html.erb -->
+<h1>Welcome, <%= current_user.full_name %>!</h1>
+
+<div class="user-info">
+  <% if current_user.avatar_url.present? %>
+    <%= image_tag current_user.avatar_url, alt: current_user.full_name, class: "user-avatar" %>
+  <% end %>
+  
+  <p><strong>Email:</strong> <%= current_user.email %></p>
+  <% if current_user.roles.any? %>
+    <p><strong>Roles:</strong> <%= current_user.roles.pluck(:name).join(", ") %></p>
+  <% end %>
+</div>

@@ -1,4 +1,15 @@
 class DashboardsController < ApplicationController
-  def show 
+  layout 'user'
+  before_action :authenticate_user!
+  
+  def show
+    # Redirect admins to admin dashboard
+    if current_user.admin?
+      redirect_to admin_dashboard_path
+      return
+    end
+    
+    # User-specific data
+    @user = current_user
   end
 end
