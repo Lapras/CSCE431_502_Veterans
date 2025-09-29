@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 inherit_from: .rubocop_todo.yml
 
 # .rubocop.yml
@@ -37,10 +38,27 @@ Naming/MethodName:
 
 Naming/ClassAndModuleCamelCase:
   Enabled: true
+=======
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  SuggestExtensions: false
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/**/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+>>>>>>> origin/dev
 
 Style/Documentation:
   Enabled: false
 
+<<<<<<< HEAD
 Style/For:
     EnforcedStyle: each
 Style/IfUnlessModifier:
@@ -50,10 +68,32 @@ Style/NegatedIf:
 Style/UnlessElse:
   Enabled: true # disallow unless with else
 Style/WhileUntilModifier:
+=======
+Layout/LineLength:
+  Max: 140
+  AllowURI: true
+  IgnoreCopDirectives: true
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'config/environments/*'
+    - 'db/**/*'
+
+Metrics/MethodLength:
+  Exclude: ['bin/**/*']
+Metrics/CyclomaticComplexity:
+  Exclude: ['bin/**/*']
+Metrics/PerceivedComplexity:
+  Exclude: ['bin/**/*']
+
+Rails:
+>>>>>>> origin/dev
   Enabled: true
 
 Naming/PredicatePrefix:
   Enabled: true
+<<<<<<< HEAD
   NamePrefix:
     - is_
     - does_
@@ -137,3 +177,13 @@ Layout/LineLength:
     - 'config/initializers/devise.rb'
     - 'config/initializers/filter_parameter_logging.rb'
     - 'db/seeds.rb'
+=======
+
+Rails/HasAndBelongsToMany:
+  Exclude: ['app/models/role.rb']
+
+RSpec/ExampleLength:
+  Exclude: ['spec/views/**/*']
+RSpec/MultipleExpectations:
+  Exclude: ['spec/views/**/*']
+>>>>>>> origin/dev
