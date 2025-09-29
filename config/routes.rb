@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  get "not_a_member", to: "static_pages#not_a_member", as: :not_a_member
+  get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
 
+  namespace :admin do
+    resources :users
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   root to: 'dashboards#show'

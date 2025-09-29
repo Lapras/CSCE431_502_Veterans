@@ -11,13 +11,13 @@ class ApplicationController < ActionController::Base
     return unless current_user # Only check if logged in
     return if on_not_a_member_page? || on_auth_pages?
 
-    if current_user.roles.empty? && !on_not_a_member_page?
-      redirect_to not_a_member_path, alert: "You must be a member to access this site."
-    end
+    return unless current_user.roles.empty? && !on_not_a_member_page?
+
+    redirect_to not_a_member_path, alert: I18n.t('alerts.not_a_member')
   end
 
   def on_not_a_member_page?
-    controller_name == "static_pages" && action_name == "not_a_member"
+    controller_name == 'static_pages' && action_name == 'not_a_member'
   end
 
   def on_auth_pages?
