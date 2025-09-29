@@ -7,18 +7,14 @@ class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   validates :email, presence: true, uniqueness: true
-  validates :full_name, presence: true
-  validates :uid, presence: true
 
   def self.from_google(email:, full_name:, uid:, avatar_url:)
     create_with(uid: uid, full_name: full_name, avatar_url: avatar_url).find_or_create_by!(email: email)
   end
 
-  def admin?
-    has_role?(:admin)
-  end
-
-  def member?
-    has_role?(:member)
+  def set_roles!(names)
+    names = Array(names).map(&:to_s).reject(&:blank?)
+    (roles.pluck(:name) - names).each {|r| remove_role(r)}
+    (names - roles.pluck(:name)).each {|r| add_role(r)}
   end
 end
