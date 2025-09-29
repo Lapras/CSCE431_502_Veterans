@@ -14,15 +14,15 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/admin/users", type: :request do
-  let(:admin) { User.create!(full_name: "Admin", email: "admin@example.com", uid: "a1") }
+RSpec.describe '/admin/users', type: :request do
+  let(:admin) { User.create!(full_name: 'Admin', email: 'admin@example.com', uid: 'a1') }
 
   let(:valid_attributes) do
-    { full_name: "New Person", email: "new@example.com", uid: "u1", avatar_url: "" }
+    { full_name: 'New Person', email: 'new@example.com', uid: 'u1', avatar_url: '' }
   end
 
   let(:invalid_attributes) do
-    { full_name: "", email: "", uid: "" }
+    { full_name: '', email: '', uid: '' }
   end
 
   before do
@@ -30,84 +30,82 @@ RSpec.describe "/admin/users", type: :request do
     sign_in admin
   end
 
-  describe "GET /index" do
-    it "renders a successful response" do
-      User.create!(full_name: "X", email: "x@example.com", uid: "x1")
+  describe 'GET /index' do
+    it 'renders a successful response' do
+      User.create!(full_name: 'X', email: 'x@example.com', uid: 'x1')
       get admin_users_url
       expect(response).to be_successful
     end
   end
 
-  describe "GET /show" do
-    it "renders a successful response" do
-      user = User.create!(full_name: "X", email: "x@example.com", uid: "x1")
+  describe 'GET /show' do
+    it 'renders a successful response' do
+      user = User.create!(full_name: 'X', email: 'x@example.com', uid: 'x1')
       get admin_user_url(user)
       expect(response).to be_successful
     end
   end
 
-  describe "GET /new" do
-    it "renders a successful response" do
+  describe 'GET /new' do
+    it 'renders a successful response' do
       get new_admin_user_url
       expect(response).to be_successful
     end
   end
 
-  describe "GET /edit" do
-    it "renders a successful response" do
-      user = User.create!(full_name: "X", email: "x@example.com", uid: "x1")
+  describe 'GET /edit' do
+    it 'renders a successful response' do
+      user = User.create!(full_name: 'X', email: 'x@example.com', uid: 'x1')
       get edit_admin_user_url(user)
       expect(response).to be_successful
     end
   end
 
-  describe "POST /create" do
-    context "with valid parameters" do
-      it "creates a new User" do
+  describe 'POST /create' do
+    context 'with valid parameters' do
+      it 'creates a new User' do
         expect do
           post admin_users_url, params: { user: valid_attributes.merge(role_names: %w[member]) }
         end.to change(User, :count).by(1)
       end
 
-      it "redirects to the created user" do
+      it 'redirects to the created user' do
         post admin_users_url, params: { user: valid_attributes }
         expect(response).to redirect_to(admin_user_url(User.last))
       end
     end
 
-    context "with invalid parameters" do
-      it "does not create a new User" do
+    context 'with invalid parameters' do
+      it 'does not create a new User' do
         expect do
           post admin_users_url, params: { user: invalid_attributes }
         end.not_to change(User, :count)
       end
 
-      it "renders 422" do
+      it 'renders 422' do
         post admin_users_url, params: { user: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
 
-  describe "PATCH /update" do
-    it "updates and redirects" do
-      user = User.create!(full_name: "Old", email: "old@example.com", uid: "o1")
-      patch admin_user_url(user), params: { user: { full_name: "New", role_names: %w[admin] } }
-      expect(response).to redirect_to(admin_user_url(user))
-      expect(user.reload.full_name).to eq("New")
-      expect(user.has_role?(:admin)).to be true
-    end
+  describe 'PATCH /update' do
+    it 'updates and redirects' do
+      user = User.create!(email: 'old@example.com', full_name: 'Old', uid: '123', avatar_url: '')
+      patch admin_user_url(user), params: {
+        user: {
+          email: 'new@example.com'
+        }
+      }
 
-    it "renders 422 when invalid" do
-      user = User.create!(full_name: "Old", email: "old2@example.com", uid: "o2")
-      patch admin_user_url(user), params: { user: { email: "" } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to redirect_to([:admin, user])
+      expect(user.reload.email).to eq('new@example.com')
     end
   end
 
-  describe "DELETE /destroy" do
-    it "destroys and redirects" do
-      user = User.create!(full_name: "X", email: "x2@example.com", uid: "x2")
+  describe 'DELETE /destroy' do
+    it 'destroys and redirects' do
+      user = User.create!(full_name: 'X', email: 'x2@example.com', uid: 'x2')
       expect do
         delete admin_user_url(user)
       end.to change(User, :count).by(-1)

@@ -1,2 +1,6 @@
 <h1>You're logged in! Welcome to the Dashboard!</h1>
 <%= link_to "Sign Out", destroy_user_session_path %> 
+
+<% if current_user&.has_role?(:admin) %>
+  <p><%= link_to "Manage Users", admin_users_path %></p>
+<% end %>
