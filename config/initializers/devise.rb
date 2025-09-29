@@ -14,7 +14,6 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '939dba5c39fefd90e54b4be86a1ceacb7b4b1966a3f45372d98c0c5557f58821218d9709ffcdc447c221e9e4593a967d4184e57ad89be83227379df702758ce5'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -126,7 +125,6 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '1061e9927613f5779b5ad957f8ffecf0fd7828aeaff46dc931095bdb3eebfaddbd415c30cf85f75d7f8a88bd4c57b3e12edf32c04ed00f7bc7d595526d2b2f30'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -305,9 +303,10 @@ Devise.setup do |config|
   config.responder.error_status = :unprocessable_entity
   config.responder.redirect_status = :see_other
 
-  config.omniauth :google_oauth2, ENV['GOOGLE_OAUTH_CLIENT_ID'], ENV['GOOGLE_OAUTH_CLIENT_SECRET']
-
-
+  config.omniauth :google_oauth2,
+                  ENV.fetch('GOOGLE_OAUTH_CLIENT_ID', nil),
+                  ENV.fetch('GOOGLE_OAUTH_CLIENT_SECRET', nil),
+                  scope: 'userinfo.email, userinfo.profile'
 
   # ==> Configuration for :registerable
 
