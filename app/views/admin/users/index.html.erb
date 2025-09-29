@@ -1,0 +1,34 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Users" %>
+
+<h1>Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th>Email</th>
+      <th>ID</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.full_name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.uid %></td>
+        <td><%= user.roles.pluck(:name).join(", ") %></td>
+        <td>
+          <%= link_to "Show", [:admin, user] %> |
+          <%= link_to "Edit", edit_admin_user_path(user) %> |
+          <%= link_to "Delete", [:admin, user], data: { confirm: "Are you sure?" }, method: :delete %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<%= link_to "New user", new_admin_user_path %>
