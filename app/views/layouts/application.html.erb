@@ -1,3 +1,4 @@
+<!-- app/views/layouts/application.html.erb -->
 <!DOCTYPE html>
   <html>
     <head>
@@ -25,6 +26,14 @@
   </head>
 
   <body>
+    <div class="banner">
+      <%= image_tag "choral_activities_banner.png", alt: "Choral Activities Banner" %>
+    </div>
+    
+    <% if user_signed_in? %>
+      <%= link_to "Sign Out", destroy_user_session_path, class: "sign-out" %>
+    <% end %>
+    
     <% if flash.any? %>
       <% flash.each do |key, value| -%>
         <section class="flash flash__<%= key %>"><%= value.html_safe %></section>
@@ -32,4 +41,4 @@
     <% end %>
     <%= yield %>
   </body>
-</html> 
+</html>
