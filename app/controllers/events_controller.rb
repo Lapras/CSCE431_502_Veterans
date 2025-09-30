@@ -1,9 +1,11 @@
 class EventsController < ApplicationController
+  layout :select_layout
   before_action :set_event, only: %i[ show edit update destroy event_confirm_delete ]
+  before_action :require_admin!, except: %i[ index show ]
 
   # GET /events or /events.json
   def index
-    @events = Event.all
+    @events = Event.where('starts_at >= ?', Time.current).order(:starts_at)
   end
 
   # GET /events/1 or /events/1.json
@@ -70,5 +72,18 @@ class EventsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def event_params
       params.require(:event).permit(:title, :starts_at, :location)
+    end
+
+    def require_admin!
+      unless current_user&.has_role?(:admin)
+        redirect_to events_path, alert: "You must be an administrator to perform this action."
+      end
+    end
+    def select_layout
+      if current_user&.has_role?(:admin)
+        'admin'
+      else
+        'user'
+      end
     end
 end
