@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
 
   namespace :admin do
     resources :users
     resource :dashboard, only: [:show] # Admin dashboard
+  end
+
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :events do
+    member do
+      get :event_confirm_delete
+    end
   end
 
   root to: 'dashboards#show'
