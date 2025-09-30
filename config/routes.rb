@@ -8,6 +8,13 @@ Rails.application.routes.draw do
     resource :dashboard, only: [:show] # Admin dashboard
   end
 
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :events do
+    member do
+      get :event_confirm_delete
+    end
+  end
+
   root to: 'dashboards#show'
   resource :dashboard, only: [:show] # User dashboard
 
