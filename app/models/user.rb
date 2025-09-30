@@ -13,8 +13,8 @@ class User < ApplicationRecord
   end
 
   def set_roles!(names)
-    names = Array(names).map(&:to_s).reject(&:blank?)
-    (roles.pluck(:name) - names).each {|r| remove_role(r)}
-    (names - roles.pluck(:name)).each {|r| add_role(r)}
+    names = Array(names).map(&:to_s).compact_blank
+    (roles.pluck(:name) - names).each { |r| remove_role(r) }
+    (names - roles.pluck(:name)).each { |r| add_role(r) }
   end
 end
