@@ -1,0 +1,9 @@
+<h1> Delete event</h1>
+
+<p>Are you sure you want to delete this event?</p>
+
+<h1>Title:</h1><p><%=  @event.title %></p>
+
+<%= button_to "Yes, Delete", @event, method: :delete, data: { turbo_confirm: "This action cannot be undone!" } %>
+
+<%= link_to "Cancel", events_path %>

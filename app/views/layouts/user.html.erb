@@ -1,0 +1,45 @@
+<!-- app/views/layouts/user.html.erb -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GoogleOauthDevise</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <style>
+      .flash__alert { color: red; }
+      .flash__notice { color: blue; }
+      .flash__success { color: green; }
+    </style>
+  </head>
+
+  <body>
+    <div class="banner">
+      <%= image_tag "choral_activities_banner.png", alt: "Choral Activities Banner" %>
+    </div>
+
+    <% if user_signed_in? %>
+      <%= link_to "Sign Out", destroy_user_session_path, class: "sign-out" %>
+    <% end %>
+
+    <div class="user-container">
+      <aside class="user-sidebar">
+        <h2>Menu</h2>
+        <nav class="user-nav">
+          <%= link_to "Dashboard", dashboard_path, class: "nav-link active" %>
+          <%= link_to "Events", events_path, class: "nav-link #{'active' if controller_name == 'events'}" %>
+        </nav>
+      </aside>
+      
+      <main class="user-main">
+        <% if flash.any? %>
+          <% flash.each do |key, value| -%>
+            <section class="flash flash__<%= key %>"><%= value.html_safe %></section>
+          <% end -%>
+        <% end %>
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

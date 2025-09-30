@@ -1,0 +1,13 @@
+
+<h1>User Details</h1>
+
+<div class="user-details">
+  <p><strong>Full name:</strong> <%= @user.full_name %></p>
+  <p><strong>Email:</strong> <%= @user.email %></p>
+  <p><strong>ID:</strong> <%= @user.uid %></p>
+  <p><strong>Avatar URL:</strong> <%= @user.avatar_url %></p>
+  <p><strong>Role:</strong> <%= @user.roles.pluck(:name).join(", ") %></p>
+</div>
+
+<%= link_to "Edit", edit_admin_user_path(@user), class: "action-button" %>
+<%= link_to "Back to Users", admin_users_path, class: "action-button" %>
