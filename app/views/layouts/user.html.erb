@@ -28,6 +28,7 @@
         <h2>Menu</h2>
         <nav class="user-nav">
           <%= link_to "Dashboard", dashboard_path, class: "nav-link active" %>
+          <%= link_to "Events", events_path, class: "nav-link #{'active' if controller_name == 'events'}" %>
         </nav>
       </aside>
       
