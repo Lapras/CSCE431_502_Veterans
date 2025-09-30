@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "/events", type: :request do
+  before do
+    # Bypass Devise authentication for all tests in this block
+    allow_any_instance_of(ApplicationController).to receive(:authenticate_user!).and_return(true)
+  end
   let(:valid_attributes) {
     {
       title: 'Concert',
