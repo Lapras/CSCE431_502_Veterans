@@ -4,6 +4,8 @@ RSpec.describe "/events", type: :request do
   before do
     # Bypass Devise authentication for all tests in this block
     allow_any_instance_of(ApplicationController).to receive(:authenticate_user!).and_return(true)
+    # Bypass admin check for controller actions that require admin
+    allow_any_instance_of(EventsController).to receive(:require_admin!).and_return(true)
   end
   let(:valid_attributes) {
     {

@@ -27,6 +27,8 @@ module Admin
     def create
       @user = User.new(user_params.except(:role_names))
       if @user.save
+        # Ensure requested roles exist in the DB (e.g. "member") before assigning.
+        Array(user_params[:role_names]).compact_blank.each { |r| Role.find_or_create_by!(name: r) }
         @user.set_roles!(user_params[:role_names])
         redirect_to [:admin, @user], notice: t('admin.users.created')
       else
@@ -37,6 +39,8 @@ module Admin
     # PATCH/PUT /admin/users/1 or /admin/users/1.json
     def update
       if @user.update(user_params.except(:role_names))
+        # Ensure requested roles exist in the DB before updating the user's roles.
+        Array(user_params[:role_names]).compact_blank.each { |r| Role.find_or_create_by!(name: r) }
         @user.set_roles!(user_params[:role_names])
         redirect_to [:admin, @user], notice: t('admin.users.updated')
       else
