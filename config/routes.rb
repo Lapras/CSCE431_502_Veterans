@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
+
   namespace :admin do
     resources :users
     resource :dashboard, only: [:show]  # Admin dashboard
