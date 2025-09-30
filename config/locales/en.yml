@@ -29,3 +29,11 @@
 
 en:
   hello: "Hello world"
+  alerts:
+    not_a_member: "You must be a member to access this site."
+  admin:
+    users:
+      created: "User created"
+      updated: "User updated"
+      deleted: "User deleted"
+      unauthorized: "Unauthorized"
