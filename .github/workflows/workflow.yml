@@ -43,7 +43,10 @@ jobs:
           bundler exec rails db:create RAILS_ENV=test
           bundler exec rails db:migrate RAILS_ENV=test
       - name: Run rubocop
-        run: bundler exec rubocop --force-exclusion vendor/*/** --out rubocop.txt
+        run: |
+          bundler exec rubocop --force-exclusion vendor/*/** \
+          --format progress \
+          --out rubocop.txt
       - name: Upload rubocop report
         uses: actions/upload-artifact@master
         if: always()
@@ -84,7 +87,7 @@ jobs:
           bundler exec rails db:create RAILS_ENV=test
           bundler exec rails db:migrate RAILS_ENV=test
       - name: Run brakeman
-        run: brakeman -o brakeman.txt
+        run: brakeman -o brakeman.txt --exit-on-warn
       - name: Upload brakeman report
         uses: actions/upload-artifact@master
         if: always()
