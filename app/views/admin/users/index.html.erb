@@ -16,7 +16,7 @@
   </thead>
   <tbody>
     <% @users.each do |user| %>
-      <% next if user.roles.empty? %>
+      <% next if user.roles.empty? || user.has_role?(:requesting) %>
       <tr>
         <td><%= user.full_name %></td>
         <td><%= user.email %></td>
