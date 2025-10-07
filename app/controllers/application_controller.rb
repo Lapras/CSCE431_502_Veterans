@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   # Nescessary check so that unroled users are sent to the not_a_member_path
   def check_user_roles
     return unless current_user # Only check if logged in
-    return if on_not_a_member_page? || on_auth_pages?
+    return if on_not_a_member_page? || on_auth_pages? || on_membership_request_pages?
 
     return unless current_user.roles.empty? && !on_not_a_member_page?
 
@@ -19,6 +19,11 @@ class ApplicationController < ActionController::Base
   def on_not_a_member_page?
     controller_name == 'static_pages' && action_name == 'not_a_member'
   end
+
+def on_membership_request_pages?
+  controller_name == 'membership_requests' && action_name == 'create'
+end
+
 
   def on_auth_pages?
     devise_controller?
