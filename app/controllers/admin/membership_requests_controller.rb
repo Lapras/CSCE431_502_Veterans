@@ -1,0 +1,28 @@
+class Admin::MembershipRequestsController < ApplicationController
+  before_action :require_admin!
+
+  def index
+    @users = User.with_role(:requesting)
+  end
+
+  def approve
+    user = User.find(params[:id])
+    user.remove_role(:requesting)
+    user.add_role(:member)
+    redirect_to admin_membership_requests_path, notice: "#{user.email} has been approved."
+  end
+
+  def deny
+    user = User.find(params[:id])
+    user.remove_role(:requesting)
+    redirect_to admin_membership_requests_path, notice: "#{user.email} has been denied."
+  end
+
+  private
+
+  def require_admin!
+    unless current_user.has_role?(:admin)
+      redirect_to root_path, alert: "Not authorized."
+    end
+  end
+end

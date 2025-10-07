@@ -1,0 +1,10 @@
+post "/request_membership", to: "membership_requests#create"
+
+namespace :admin do
+  resources :membership_requests, only: [:index] do
+    member do
+      patch :approve
+      patch :deny
+    end
+  end
+end
