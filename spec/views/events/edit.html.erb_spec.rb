@@ -4,7 +4,7 @@ RSpec.describe "events/edit", type: :view do
   let(:event) {
     Event.create!(
       title: "My Concert",
-      starts_at: DateTime.new(2025, 10, 1, 19, 30),
+      starts_at: DateTime.new(2026, 10, 1, 19, 30),
       location: "New York"
     )
   }
