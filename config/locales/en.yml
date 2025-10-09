@@ -42,7 +42,7 @@ en:
       created: "User created"
       updated: "User updated"
       deleted: "User deleted"
-      unauthorized: "Unauthorized"
+      unauthorized: "You must be an administrator to perform this action."
   event:
     created: "Event was successfully created."
     updated: 'Event was successfully updated.'
