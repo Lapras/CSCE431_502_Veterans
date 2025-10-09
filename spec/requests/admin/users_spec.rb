@@ -31,11 +31,22 @@ RSpec.describe '/admin/users', type: :request do
   end
 
   describe 'GET /index' do
-    it 'renders a successful response' do
-      User.create!(full_name: 'X', email: 'x@example.com', uid: 'x1')
-      get admin_users_url
-      expect(response).to be_successful
-    end
+    context 'with_admin' do
+      it 'renders a successful response' do
+        User.create!(full_name: 'X', email: 'x@example.com', uid: 'x1')
+        get admin_users_url
+        expect(response).to be_successful
+      end
+    
+      context 'without_admin' do
+        before do
+          admin.remove_role(:admin)
+          admin.add_role(:member)
+        it 'redirects to not a member' do
+          get admin_users_url
+          expect(flash[:alert]).to eq("You must be an administrator to perform this action.")
+      end
+    
   end
 
   describe 'GET /show' do
@@ -84,7 +95,7 @@ RSpec.describe '/admin/users', type: :request do
 
       it 'creates a user with no roles' do
         post admin_users_url, params: { user: valid_attributes }
-        
+
         user = User.last
         expect(user.roles).to be_empty
       end
