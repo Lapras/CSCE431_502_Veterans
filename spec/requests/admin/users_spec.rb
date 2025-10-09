@@ -75,6 +75,21 @@ RSpec.describe '/admin/users', type: :request do
       end
     end
 
+    context 'none roles' do
+      it 'creates a new User' do
+        expect do
+          post admin_users_url, params: { user: valid_attributes }
+        end.to change(User, :count).by(1)
+      end
+
+      it 'creates a user with no roles' do
+        post admin_users_url, params: { user: valid_attributes }
+        
+        user = User.last
+        expect(user.roles).to be_empty
+      end
+    end
+
     context 'with invalid parameters' do
       it 'does not create a new User' do
         expect do
