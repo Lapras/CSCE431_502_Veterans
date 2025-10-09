@@ -8,7 +8,7 @@ class MembershipRequestsController < ApplicationController
       redirect_to root_path, alert: I18n.t('alerts.already_requesting')
     else
       current_user.add_role(:requesting)
-      redirect_to root_path, notice: I18n.t('membership.request_send')
+      redirect_to root_path, notice: I18n.t('membership.request_sent')
     end
   end
 end
