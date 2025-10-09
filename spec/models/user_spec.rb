@@ -18,9 +18,9 @@ RSpec.describe User, type: :model do
     let(:avatar_url) { 'http://avatar.url/image.png' }
 
     it 'creates a new user with given attributes if not found' do
-      expect {
+      expect do
         User.from_google(email: email, full_name: full_name, uid: uid, avatar_url: avatar_url)
-      }.to change(User, :count).by(1)
+      end.to change(User, :count).by(1)
 
       user = User.find_by(email: email)
       expect(user.full_name).to eq(full_name)
@@ -30,10 +30,10 @@ RSpec.describe User, type: :model do
 
     it 'finds the existing user by email without creating new one' do
       existing_user = User.create!(email: email)
-      expect {
+      expect do
         user = User.from_google(email: email, full_name: full_name, uid: uid, avatar_url: avatar_url)
         expect(user.id).to eq(existing_user.id)
-      }.not_to change(User, :count)
+      end.not_to change(User, :count)
     end
   end
 
@@ -42,15 +42,15 @@ RSpec.describe User, type: :model do
 
     before do
       allow(user).to receive(:roles).and_return(double(
-        pluck: [],
-        each: nil,
-        remove_role: nil,
-        add_role: nil
-      ))
+                                                  pluck: [],
+                                                  each: nil,
+                                                  remove_role: nil,
+                                                  add_role: nil
+                                                ))
     end
 
     it 'calls remove_role for roles that are not in new names' do
-      allow(user.roles).to receive(:pluck).and_return(['admin', 'editor'])
+      allow(user.roles).to receive(:pluck).and_return(%w[admin editor])
       expect(user).to receive(:remove_role).with('admin')
       expect(user).to receive(:remove_role).with('editor')
       expect(user).to receive(:add_role).with('user')

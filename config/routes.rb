@@ -2,10 +2,17 @@
 
 Rails.application.routes.draw do
   get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
+  post '/request_membership', to: 'membership_requests#create'
 
   namespace :admin do
     resources :users
     resource :dashboard, only: [:show] # Admin dashboard
+    resources :membership_requests, only: [:index] do
+      member do
+        patch :approve
+        patch :deny
+      end
+    end
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

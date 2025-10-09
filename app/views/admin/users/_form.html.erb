@@ -27,11 +27,12 @@
     <% # Prefer real Role names from DB, but always include a safe fallback list so 'member' shows up. %>
     <% db_roles = (Role.pluck(:name) rescue []) %>
     <% fallback = %w[admin member] %>
-    <% available_roles = (db_roles + fallback).uniq %>
+    <% available_roles = (["none"] + db_roles + fallback).uniq %>
     <%= form.collection_select :role_names,
       available_roles, :to_s, :to_s,
-      { selected: user.roles.pluck(:name) },
+      { selected: (user.roles.pluck(:name).presence || ["none"]), include_hidden: false },
       { multiple: true } %>
+      
     <%= hidden_field_tag "user[role_names][]", "" %>
   </div>
 
