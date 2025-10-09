@@ -1,28 +1,32 @@
-class Admin::MembershipRequestsController < ApplicationController
-  before_action :require_admin!
+# frozen_string_literal: true
 
-  def index
-    @users = User.with_role(:requesting)
-  end
+module Admin
+  class MembershipRequestsController < ApplicationController
+    before_action :require_admin!
 
-  def approve
-    user = User.find(params[:id])
-    user.remove_role(:requesting)
-    user.add_role(:member)
-    redirect_to admin_membership_requests_path, notice: "#{user.email} has been approved."
-  end
+    def index
+      @users = User.with_role(:requesting)
+    end
 
-  def deny
-    user = User.find(params[:id])
-    user.remove_role(:requesting)
-    redirect_to admin_membership_requests_path, notice: "#{user.email} has been denied."
-  end
+    def approve
+      user = User.find(params[:id])
+      user.remove_role(:requesting)
+      user.add_role(:member)
+      redirect_to admin_membership_requests_path, notice: "#{user.email} has been approved."
+    end
 
-  private
+    def deny
+      user = User.find(params[:id])
+      user.remove_role(:requesting)
+      redirect_to admin_membership_requests_path, notice: "#{user.email} has been denied."
+    end
 
-  def require_admin!
-    unless current_user.has_role?(:admin)
-      redirect_to root_path, alert: "Not authorized."
+    private
+
+    def require_admin!
+      return if current_user.has_role?(:admin)
+
+      redirect_to root_path, alert: 'Not authorized.'
     end
   end
 end

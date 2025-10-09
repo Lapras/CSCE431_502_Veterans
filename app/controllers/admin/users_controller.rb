@@ -41,8 +41,8 @@ module Admin
       if @user.update(user_params.except(:role_names))
         roles = Array(user_params[:role_names]).compact_blank
 
-        if roles.include?("none")
-          @user.roles = []   # remove all roles
+        if roles.include?('none')
+          @user.roles = [] # remove all roles
         else
           # Ensure requested roles exist
           roles.each { |r| Role.find_or_create_by!(name: r) }

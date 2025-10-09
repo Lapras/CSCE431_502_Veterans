@@ -18,10 +18,9 @@ class ApplicationController < ActionController::Base
     controller_name == 'static_pages' && action_name == 'not_a_member'
   end
 
-def on_membership_request_pages?
-  controller_name == 'membership_requests' && action_name == 'create'
-end
-
+  def on_membership_request_pages?
+    controller_name == 'membership_requests' && action_name == 'create'
+  end
 
   def on_auth_pages?
     devise_controller?
