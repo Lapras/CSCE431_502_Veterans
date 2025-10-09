@@ -27,7 +27,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
+        format.html { redirect_to @event, notice: I18n.t('event.created') }
         format.json { render :show, status: :created, location: @event }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -40,7 +40,7 @@ class EventsController < ApplicationController
   def update
     respond_to do |format|
       if @event.update(event_params)
-        format.html { redirect_to @event, notice: 'Event was successfully updated.', status: :see_other }
+        format.html { redirect_to @event, notice: I18n.t('event.updated'), status: :see_other }
         format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -54,7 +54,7 @@ class EventsController < ApplicationController
     @event.destroy!
 
     respond_to do |format|
-      format.html { redirect_to events_path, notice: 'Event was successfully destroyed.', status: :see_other }
+      format.html { redirect_to events_path, notice: I18n.t('event.deleted'), status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -78,7 +78,7 @@ class EventsController < ApplicationController
   def require_admin!
     return if current_user&.has_role?(:admin)
 
-    redirect_to events_path, alert: 'You must be an administrator to perform this action.'
+    redirect_to events_path, alert: I18n.t('alerts.not_admin')
   end
 
   def select_layout

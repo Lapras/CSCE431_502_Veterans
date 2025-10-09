@@ -37,16 +37,19 @@ RSpec.describe '/admin/users', type: :request do
         get admin_users_url
         expect(response).to be_successful
       end
-    
+
       context 'without_admin' do
         before do
           admin.remove_role(:admin)
           admin.add_role(:member)
+        end
+
         it 'redirects to not a member' do
           get admin_users_url
-          expect(flash[:alert]).to eq("You must be an administrator to perform this action.")
+          expect(flash[:alert]).to eq('You must be an administrator to perform this action.')
+        end
       end
-    
+    end
   end
 
   describe 'GET /show' do
@@ -130,11 +133,14 @@ RSpec.describe '/admin/users', type: :request do
   end
 
   describe 'DELETE /destroy' do
-    it 'destroys and redirects' do
-      user = User.create!(full_name: 'X', email: 'x2@example.com', uid: 'x2')
-      expect do
-        delete admin_user_url(user)
-      end.to change(User, :count).by(-1)
+    it 'destroys the user' do
+      user = User.create!(email: 'old@example.com', full_name: 'Old', uid: '123', avatar_url: '')
+      expect { delete admin_user_url(user) }.to change(User, :count).by(-1)
+    end
+
+    it 'redirects to the users list' do
+      user = User.create!(email: 'old@example.com', full_name: 'Old', uid: '123', avatar_url: '')
+      delete admin_user_url(user)
       expect(response).to redirect_to(admin_users_url)
     end
   end

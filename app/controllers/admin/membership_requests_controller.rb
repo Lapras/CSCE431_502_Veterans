@@ -26,7 +26,7 @@ module Admin
     def require_admin!
       return if current_user.has_role?(:admin)
 
-      redirect_to root_path, alert: 'Not authorized.'
+      redirect_to root_path, I18n.t('alerts.not_authorized')
     end
   end
 end
