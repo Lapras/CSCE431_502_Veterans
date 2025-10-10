@@ -5,6 +5,10 @@ require 'securerandom'
 class AddAdminUsersForGoogleOauth < ActiveRecord::Migration[7.1]
   ADMIN_EMAILS = [
     'jermurray2@tamu.edu'
+    'trevorschwedler@tamu.edu'
+    'alleny2017@tamu.edu'
+    'ryanm64@tamu.edu'
+    'jrt0614@tamu.edu'
   ].freeze
   def up
     ADMIN_EMAILS.each do |email|
