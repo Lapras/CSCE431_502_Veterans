@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_29_181619) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_14_221704) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,30 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_181619) do
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "excusal_requests", force: :cascade do |t|
+    t.text "reason"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.bigint "user_id", null: false
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "event_id", null: false
+    t.index ["event_id"], name: "index_excusal_requests_on_event_id"
+    t.index ["user_id"], name: "index_excusal_requests_on_user_id"
+  end
+
+  create_table "excusals", force: :cascade do |t|
+    t.text "reason"
+    t.string "status"
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_excusals_on_event_id"
+    t.index ["user_id"], name: "index_excusals_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -49,4 +73,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_181619) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
+
+  add_foreign_key "excusal_requests", "events"
+  add_foreign_key "excusal_requests", "users"
+  add_foreign_key "excusals", "events"
+  add_foreign_key "excusals", "users"
 end
