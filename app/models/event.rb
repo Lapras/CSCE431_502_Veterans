@@ -9,11 +9,17 @@ class Event < ApplicationRecord
   private
 
   def starts_at_cannot_be_in_the_past
-    return if starts_at.blank?
+    return if starts_at.blank? # let presence validator handle blank
 
-    return unless starts_at < Time.zone.now
+    # If not a time-like object, add a clear error and stop.
+    unless starts_at.is_a?(Time) || starts_at.is_a?(ActiveSupport::TimeWithZone)
+      errors.add(:starts_at, 'is not a valid datetime')
+      return
+    end
 
-    errors.add(:starts_at, "can't be in the past")
+    if starts_at < Time.zone.now
+      errors.add(:starts_at, "can't be in the past")
+    end
   end
 
   def starts_at_must_be_valid_datetime
