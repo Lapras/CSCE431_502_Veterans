@@ -3,6 +3,9 @@
 module Admin
   class MembershipRequestsController < ApplicationController
     before_action :require_admin!
+    
+    #puts admin layout (left handed sidebar)
+    layout 'admin' 
 
     def index
       @users = User.with_role(:requesting)

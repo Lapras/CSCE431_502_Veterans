@@ -14,7 +14,7 @@
   <% end %>
 </div>
 
-<% if current_user.has_role?(:member) || current_user.has_role?(:admin) %>
+<% if current_user.has_role?(:member) %>
   <% attendance = @event.attendance_for(current_user) %>
   <% if attendance %>
     <div class="user-details">
@@ -22,9 +22,6 @@
       <p><strong>Status:</strong> <%= attendance.status_label %></p>
       <% if attendance.checked_in_at %>
         <p><strong>Checked In:</strong> <%= attendance.checked_in_at.strftime("%I:%M %p") %></p>
-      <% end %>
-      <% if attendance.notes.present? %>
-        <p><strong>Notes:</strong> <%= attendance.notes %></p>
       <% end %>
       
       <% if attendance.status == 'pending' %>
