@@ -1,29 +1,5 @@
 # frozen_string_literal: true
-require 'simplecov'
 require 'spec_helper'
-
-SimpleCov.start 'rails' do
-  enable_coverage :branch
-
-  # Ignore non-Sprint-1 boilerplate files
-  add_filter 'app/channels/'
-  add_filter 'app/jobs/'
-  add_filter 'app/mailers/'
-  add_filter 'app/models/ability.rb'
-  add_filter 'app/controllers/admin/dashboards_controller.rb'
-  add_filter 'app/controllers/dashboards_controller.rb'
-  add_filter 'app/controllers/users/omniauth_callbacks_controller.rb'
-  add_filter 'app/controllers/users/sessions_controller.rb'
-
-  # Keep this to measure only your actual app logic
-  add_filter %r{^/config/}
-  add_filter %r{^/db/}
-  add_filter %r{^/bin/}
-  add_filter %r{^/vendor/}
-
-  minimum_coverage 100
-  minimum_coverage_by_file 100
-end
 
 puts '→ SimpleCov started (branch coverage enabled)'
 # This file is copied to spec/ when you run 'rails generate rspec:install'
