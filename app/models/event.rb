@@ -7,6 +7,7 @@ class Event < ApplicationRecord
   validate  :starts_at_cannot_be_in_the_past
   validate :starts_at_must_be_valid_datetime
   validates :location, presence: true
+  has_many :excusal_requests, dependent: :destroy
 
   # Create attendance records for all members when event is created
   after_create :create_attendance_records
