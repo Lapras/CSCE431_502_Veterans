@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if defined?(RSpec)
+unless ENV['SKIP_SIMPLECOV']
   require 'simplecov'
   SimpleCov.start 'rails' do
     minimum_coverage 90  # fails if overall coverage < 90%
