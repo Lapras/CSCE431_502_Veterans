@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "excusal_requests/new"
+  get "excusal_requests/create"
   get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
   post '/request_membership', to: 'membership_requests#create'
 
@@ -21,6 +23,8 @@ Rails.application.routes.draw do
       get :event_confirm_delete
     end
   end
+
+  resources :excusal_requests, only: [:new, :create]
 
   root to: 'dashboards#show'
   resource :dashboard, only: [:show] # User dashboard

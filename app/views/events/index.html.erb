@@ -7,12 +7,32 @@
 <div id="events">
   <% @events.each do |event| %>
     <%= render event %>
+    <% user_requests = current_user.excusal_requests.where(event_id: event.id) %>
     <p>
       <%= link_to "Show this event", event %>
       <%= link_to "Delete", event_confirm_delete_event_path(event) %>
-
+      <%= link_to "Request Excusal", new_excusal_request_path(event_id: event.id), class: "btn btn-warning" %>
     </p>
+    <% if user_requests.present? %>
+    <div style="margin-left: 20px;">
+      <strong>Your Excusal Request(s):</strong><br>
+      <% user_requests.each do |request| %>
+        <p>
+          Reason: <%= request.reason %><br>
+          <% case request.status %>
+          <% when "approved" %>
+            Status: ✅ <strong style="color: green;">Approved</strong>
+          <% when "denied" %>
+            Status: ❌ <strong style="color: red;">Denied</strong>
+          <% else %>
+            Status: ⏳ <strong style="color: orange;">Pending</strong>
+          <% end %>
+        </p>
+      <% end %>
+    </div>
   <% end %>
-</div>
+
+  <hr>
+<% end %>
 
 <%= link_to "New event", new_event_path %>
