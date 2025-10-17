@@ -15,13 +15,8 @@ Rails.application.routes.draw do
         patch :deny
       end
     end
-  end
-
-  namespace :admin do
-    resources :events do
-      resource :roll_call, only: [:show, :update], controller: "roll_calls" do
-        post :complete
-      end
+    resources :events, only: [] do
+      resource :roll_call, only: [:update]
     end
   end
 
