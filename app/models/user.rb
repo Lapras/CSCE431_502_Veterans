@@ -8,6 +8,12 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
 
+  has_many :excusal_requests, dependent: :destroy
+
+  has_many :attendances, dependent: :destroy
+  has_many :attended_events, through: :attendances, source: :event
+
+
   def self.from_google(email:, full_name:, uid:, avatar_url:)
     create_with(uid: uid, full_name: full_name, avatar_url: avatar_url).find_or_create_by!(email: email)
   end

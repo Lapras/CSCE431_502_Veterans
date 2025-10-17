@@ -11,7 +11,18 @@ class EventsController < ApplicationController
   end
 
   # GET /events/1 or /events/1.json
-  def show; end
+  def show
+    @event = Event.find(params[:id])
+
+    User.with_role(:member).find_each do |u|
+      @event.attendances.find_or_create_by!(user: u)
+    end
+    
+    @attendances =
+      @event.attendances
+            .joins(:user)
+            .order('users.full_name NULLS LAST, users.email')
+  end
 
   # GET /events/new
   def new
