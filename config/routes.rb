@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :admin do
+    resources :events do
+      resource :roll_call, only: [:show, :update], controller: "roll_calls" do
+        post :complete
+      end
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   resources :events do
     member do

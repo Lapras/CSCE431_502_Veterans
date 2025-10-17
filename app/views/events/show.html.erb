@@ -2,6 +2,67 @@
 
 <%= render @event %>
 
+<h2> Roll Call </h2>
+
+<%= form_with url: admin_event_roll_call_path(@event), method: :patch, local: true do %>
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">Member</th>
+        <th>Present</th>
+        <th>Absent</th>
+        <th>Tardy</th>
+        <th>Excused</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @attendances.each do |a| %>
+        <tr>
+          <td><%= a.user.full_name.presence || a.user.email %></td>
+          <td style="text-align:center;">
+            <%= radio_button_tag "attendance[#{a.id}]", "present", a.present? %>
+          </td>
+          <td style="text-align:center;">
+            <%= radio_button_tag "attendance[#{a.id}]", "absent", a.absent? %>
+          </td>
+          <td style="text-align:center;">
+            <%= radio_button_tag "attendance[#{a.id}]", "tardy", a.tardy? %>
+          </td>
+          <td style="text-align:center;">
+            <%= radio_button_tag "attendance[#{a.id}]", "excused", a.excused? %>
+          </td>
+          <td>
+            <% klass =
+                if a.present?
+                   "status status--present"
+                elsif a.absent?
+                   "status status--absent"
+                elsif a.absent?
+                   "status status--tardy"
+                elsif a.absent?
+                   "status status--excused"
+                else
+                   "status status--unknown"
+                end %>
+            <span class="<%= klass %>"><%= a.status || "—" %></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div style="margin-top:1rem;">
+    <%= submit_tag "Save Progress" %>
+  </div>
+<% end %>
+
+<div style="margin-top:0.75rem;">
+  <%= button_to "Complete Roll Call",
+                complete_admin_event_roll_call_path(@event),
+                method: :post,
+                form: { data: { turbo_confirm: "All members must be marked. Continue?" } } %>
+</div>
+
 <div>
   <%= link_to "Edit this event", edit_event_path(@event) %> |
   <%= link_to "Back to events", events_path %>
