@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_14_214216) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_214216) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "attendances", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.string "status", default: "unknown", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "user_id"], name: "index_attendances_on_event_id_and_user_id", unique: true
+    t.index ["event_id"], name: "index_attendances_on_event_id"
+    t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
 
   create_table "events", force: :cascade do |t|
     t.string "title"
@@ -61,6 +72,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_14_214216) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "attendances", "events"
+  add_foreign_key "attendances", "users"
   add_foreign_key "excusal_requests", "events"
   add_foreign_key "excusal_requests", "users"
 end

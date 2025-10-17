@@ -12,14 +12,11 @@ class EventsController < ApplicationController
 
   # GET /events/1 or /events/1.json
   def show
-    @event = Event.find(params[:id])
-
-    User.find_each do |u|
-      @event.attendances.find_or_create_by!(user: u)
-    end
-    
-    @attendances = @event.attendances.includes(:user).references(:users).order("users.full_name NULLS LAST, users.email")
-    
+    @attendances =
+      @event.attendances
+            .includes(:user)
+            .merge(User.with_role(:member)) # remove this line if you truly want all users
+            .order('users.full_name NULLS LAST, users.email')
   end
 
   # GET /events/new
