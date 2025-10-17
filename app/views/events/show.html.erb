@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @attendances.each do |a| %>
+      <% Array(@attendances).each do |a| %>
         <tr>
           <td><%= a.user.full_name.presence || a.user.email %></td>
 
