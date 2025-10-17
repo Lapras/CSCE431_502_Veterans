@@ -14,8 +14,7 @@ class EventsController < ApplicationController
   def show
     @attendances =
       @event.attendances
-            .includes(:user)
-            .merge(User.with_role(:member)) # remove this line if you truly want all users
+            .joins(:user)
             .order('users.full_name NULLS LAST, users.email')
   end
 
