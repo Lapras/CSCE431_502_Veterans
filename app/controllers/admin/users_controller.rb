@@ -39,9 +39,16 @@ module Admin
     # PATCH/PUT /admin/users/1 or /admin/users/1.json
     def update
       if @user.update(user_params.except(:role_names))
-        # Ensure requested roles exist in the DB before updating the user's roles.
-        Array(user_params[:role_names]).compact_blank.each { |r| Role.find_or_create_by!(name: r) }
-        @user.set_roles!(user_params[:role_names])
+        roles = Array(user_params[:role_names]).compact_blank
+
+        if roles.include?('none')
+          @user.roles = [] # remove all roles
+        else
+          # Ensure requested roles exist
+          roles.each { |r| Role.find_or_create_by!(name: r) }
+          @user.set_roles!(roles)
+        end
+
         redirect_to [:admin, @user], notice: t('admin.users.updated')
       else
         render :edit, status: :unprocessable_entity

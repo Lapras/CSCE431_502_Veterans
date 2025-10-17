@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
 
+  has_many :excusal_requests, dependent: :destroy
+
   def self.from_google(email:, full_name:, uid:, avatar_url:)
     create_with(uid: uid, full_name: full_name, avatar_url: avatar_url).find_or_create_by!(email: email)
   end
@@ -17,4 +19,6 @@ class User < ApplicationRecord
     (roles.pluck(:name) - names).each { |r| remove_role(r) }
     (names - roles.pluck(:name)).each { |r| add_role(r) }
   end
+
+  has_many :approvals, foreign_key: :approved_by_user_id, dependent: :destroy
 end

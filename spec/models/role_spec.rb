@@ -11,7 +11,7 @@ RSpec.describe Role, type: :model do
 
     it 'is invalid with an invalid resource_type' do
       role = Role.new(name: 'admin', resource_type: 'InvalidType')
-      role.valid?  
+      role.valid?
       expect(role.errors[:resource_type]).to include('is not included in the list')
     end
   end

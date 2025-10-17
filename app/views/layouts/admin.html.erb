@@ -30,6 +30,7 @@
           <%= link_to "Dashboard", admin_dashboard_path, class: "nav-link #{'active' if current_page?(admin_dashboard_path)}" %>
           <%= link_to "Manage Users", admin_users_path, class: "nav-link #{'active' if controller_name == 'users'}" %>
           <%= link_to "Manage Events", events_path, class: "nav-link #{'active' if controller_name == 'events'}" %>
+          <%= link_to "Manage Approvals", approvals_path, class: "nav-link #{'active' if controller_name == 'approvals'}" %>
         </nav>
       </aside>
       

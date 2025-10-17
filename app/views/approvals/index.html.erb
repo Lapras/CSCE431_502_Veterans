@@ -1,0 +1,115 @@
+<% content_for :title, "Approve Excusal Requests" %>
+
+<h1>Excusal Request Approvals</h1>
+
+<% if flash[:notice] %>
+  <p style="color: green;"><%= flash[:notice] %></p>
+<% end %>
+
+<% if flash[:alert] %>
+  <p style="color: red;"><%= flash[:alert] %></p>
+<% end %>
+
+<h2>Pending Requests</h2>
+<% if @pending_requests.any? %>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Event</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Requested</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pending_requests.each do |request| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.user.full_name || request.user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.event.title %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= form_with model: Approval.new, url: excusal_request_approvals_path(request), method: :post, local: true, style: "display: inline;" do |f| %>
+              <%= f.hidden_field :decision, value: 'approved' %>
+              <%= f.text_field :comment, placeholder: "Optional comment", style: "width: 150px; margin-right: 5px;" %>
+              <%= f.submit "Approve", style: "background-color: green; color: white; padding: 5px 10px; cursor: pointer;" %>
+            <% end %>
+            
+            <%= form_with model: Approval.new, url: excusal_request_approvals_path(request), method: :post, local: true, style: "display: inline;" do |f| %>
+              <%= f.hidden_field :decision, value: 'denied' %>
+              <%= f.text_field :comment, placeholder: "Optional comment", style: "width: 150px; margin-right: 5px;" %>
+              <%= f.submit "Deny", style: "background-color: red; color: white; padding: 5px 10px; cursor: pointer;" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No pending excusal requests.</p>
+<% end %>
+
+<hr style="margin: 30px 0;">
+
+<h2>Recently Approved</h2>
+<% if @approved_requests.any? %>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Event</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Approved By</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @approved_requests.each do |request| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.user.full_name || request.user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.event.title %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.approved_by_user.full_name || request.approval.approved_by_user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.comment %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No approved requests.</p>
+<% end %>
+
+<hr style="margin: 30px 0;">
+
+<h2>Recently Denied</h2>
+<% if @denied_requests.any? %>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Event</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Denied By</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @denied_requests.each do |request| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.user.full_name || request.user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.event.title %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.approved_by_user.full_name || request.approval.approved_by_user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.comment %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No denied requests.</p>
+<% end %>
