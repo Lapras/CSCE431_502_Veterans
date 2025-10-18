@@ -1,0 +1,62 @@
+<!-- app/views/attendances/index.html.erb -->
+<% content_for :title, "Attendance for #{@event.title}" %>
+
+<h1>Attendance for <%= @event.title %></h1>
+
+<div class="user-details">
+  <p><strong>Event:</strong> <%= @event.title %></p>
+  <p><strong>Date:</strong> <%= @event.starts_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+  <p><strong>Location:</strong> <%= @event.location %></p>
+</div>
+
+<div class="user-details">
+  <h3>Attendance Summary</h3>
+  <p><strong>Total Members:</strong> <%= @stats[:total] %></p>
+  <p><strong>Present:</strong> <%= @stats[:present] %></p>
+  <p><strong>Absent:</strong> <%= @stats[:absent] %></p>
+  <p><strong>Excused:</strong> <%= @stats[:excused] %></p>
+  <p><strong>Tardy:</strong> <%= @stats[:tardy] %></p>
+  <p><strong>Pending:</strong> <%= @stats[:pending] %></p>
+</div>
+
+<%= form_with url: bulk_update_event_attendances_path(@event), method: :post do |f| %>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Checked In At</th>
+        <th>Points</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @attendances.each do |attendance| %>
+        <tr>
+          <td><%= attendance.user.full_name %></td>
+          <td><%= attendance.user.email %></td>
+          <td>
+            <%= select_tag "attendances[#{attendance.id}][status]",
+                options_for_select(Attendance::STATUSES.map { |k, v| [v, k] }, attendance.status),
+                class: "status-select" %>
+          </td>
+          <td><%= attendance.checked_in_at&.strftime("%I:%M %p") || "—" %></td>
+          <td><%= attendance.point_value %></td>
+          <td>
+            <%= link_to "Edit", edit_event_attendance_path(@event, attendance) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 1rem;">
+    <%= f.submit "Update All Attendance", class: "action-button" %>
+  </div>
+<% end %>
+
+<div style="margin-top: 1rem;">
+  <%= link_to "Back to Event", @event, class: "action-button" %>
+  <%= link_to "Back to Events", events_path, class: "action-button" %>
+</div>

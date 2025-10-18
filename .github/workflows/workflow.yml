@@ -39,9 +39,12 @@ jobs:
           gem install bundler
           bundler install
       - name: Create database
+        env:
+         SKIP_SIMPLECOV: true
         run: |
           bundler exec rails db:create RAILS_ENV=test
           bundler exec rails db:migrate RAILS_ENV=test
+        
       - name: Run rubocop
         run: |
           bundler exec rubocop --force-exclusion vendor/*/** \
@@ -86,6 +89,8 @@ jobs:
         run: |
           bundler exec rails db:create RAILS_ENV=test
           bundler exec rails db:migrate RAILS_ENV=test
+        env:
+         SKIP_SIMPLECOV: true
       - name: Run brakeman
         run: brakeman -o brakeman.txt --exit-on-warn
       - name: Upload brakeman report
@@ -127,6 +132,8 @@ jobs:
         run: |
           bundler exec rails db:create RAILS_ENV=test
           bundler exec rails db:migrate RAILS_ENV=test
+        env:
+         SKIP_SIMPLECOV: true
       - name: Run tests
         run: bundler exec rspec .
       - name: Upload coverage results

@@ -9,12 +9,12 @@ RSpec.describe 'admin/users/edit', type: :view do
 
     render
 
-    # form_with uses POST + hidden _method=patch
     assert_select 'form[action=?][method=?]', admin_user_path(user), 'post' do
       assert_select 'input[name=?]', 'user[email]'
-      assert_select 'input[name=?]', 'user[full_name]', count: 0
-      assert_select 'input[name=?]', 'user[uid]', count: 0
-      assert_select 'input[name=?]', 'user[avatar_url]', count: 0
+      assert_select 'div.field', text: /Full name:/i
+      assert_select 'div.field', text: /UID:/i
+      assert_select 'div.field', text: /Avatar:/i
+      assert_select 'select[name=?]', 'user[role_names][]'
     end
   end
 end
