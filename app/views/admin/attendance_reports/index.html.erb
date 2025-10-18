@@ -13,13 +13,23 @@
     <% end %>
   </div>
 <% end %>
+<style>
+  th a {
+    color: white !important;
+    text-decoration: none;
+  }
+  th a:hover {
+    color: #f5f5f5 !important;
+    text-decoration: underline;
+  }
+</style>
 
 <table class="table">
   <thead>
     <tr>
       <th><%= sort_link("Name",   :name) %></th>
       <th><%= sort_link("Email",  :email) %></th>
-      <th style="text-align:right;"><%= sort_link("Total",  :total) %></th>
+      <th style="text-align:right;"><%= sort_link("Total",:total) %></th>
       <th style="text-align:right;"><%= sort_link("Present",:present) %></th>
       <th style="text-align:right;"><%= sort_link("Absent", :absent) %></th>
       <th style="text-align:right;"><%= sort_link("Tardy",  :tardy) %></th>
@@ -31,7 +41,7 @@
       <tr>
         <td><%= u.full_name.presence || "—" %></td>
         <td><%= u.email %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_attendances) %></td>
+        <td style="text-align:right;"><%= u.read_attribute(:weighed_total) %></td>
         <td style="text-align:right;"><%= u.read_attribute(:total_presents) %></td>
         <td style="text-align:right;"><%= u.read_attribute(:total_absences) %></td>
         <td style="text-align:right;"><%= u.read_attribute(:total_tardies) %></td>
