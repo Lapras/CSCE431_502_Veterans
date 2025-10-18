@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateExcusalRequests < ActiveRecord::Migration[7.2]
   def change
     create_table :excusal_requests do |t|

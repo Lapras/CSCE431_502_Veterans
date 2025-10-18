@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateApprovals < ActiveRecord::Migration[7.2]
   def change
     create_table :approvals do |t|
@@ -9,8 +11,8 @@ class CreateApprovals < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
+
     # Add index for faster queries
-    add_index :approvals, [:excusal_request_id, :decision]
+    add_index :approvals, %i[excusal_request_id decision]
   end
 end

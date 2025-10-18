@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRecurringExcusals < ActiveRecord::Migration[7.2]
   def change
     create_table :recurring_excusals do |t|

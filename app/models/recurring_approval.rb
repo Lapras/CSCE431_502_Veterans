@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-class Approval < ApplicationRecord
-  belongs_to :excusal_request
+class RecurringApproval < ApplicationRecord
+  belongs_to :recurring_excusal
   belongs_to :approved_by_user, class_name: 'User'
 
   validates :decision, presence: true, inclusion: { in: %w[approved denied] }
   validates :decision_at, presence: true
-  validates :excusal_request_id, uniqueness: true
+  validates :recurring_excusal_id, uniqueness: true
 
-  after_create :update_excusal_request_status
+  after_create :update_recurring_excusal_status
 
   scope :approved, -> { where(decision: 'approved') }
   scope :denied, -> { where(decision: 'denied') }
 
   private
 
-  def update_excusal_request_status
-    excusal_request.update(status: decision)
+  def update_recurring_excusal_status
+    recurring_excusal.update(status: decision)
   end
 end

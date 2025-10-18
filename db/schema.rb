@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_18_031427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_excusal_requests_on_event_id"
     t.index ["user_id"], name: "index_excusal_requests_on_user_id"
+  end
+
+  create_table "recurring_approvals", force: :cascade do |t|
+    t.bigint "recurring_excusal_id", null: false
+    t.bigint "approved_by_user_id", null: false
+    t.string "decision", null: false
+    t.datetime "decision_at", precision: nil, null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_user_id"], name: "index_recurring_approvals_on_approved_by_user_id"
+    t.index ["recurring_excusal_id", "decision"], name: "index_recurring_approvals_on_recurring_excusal_id_and_decision"
+    t.index ["recurring_excusal_id"], name: "index_recurring_approvals_on_recurring_excusal_id"
   end
 
   create_table "recurring_excusals", force: :cascade do |t|
@@ -90,7 +103,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
   add_foreign_key "approvals", "users", column: "approved_by_user_id"
   add_foreign_key "excusal_requests", "events"
   add_foreign_key "excusal_requests", "users"
-  add_foreign_key "excusal_requests", "events"
-  add_foreign_key "excusal_requests", "users"
+  add_foreign_key "recurring_approvals", "recurring_excusals"
+  add_foreign_key "recurring_approvals", "users", column: "approved_by_user_id"
   add_foreign_key "recurring_excusals", "users"
 end

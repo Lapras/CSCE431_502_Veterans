@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExcusalRequestsController < ApplicationController
   before_action :authenticate_user!
 
@@ -9,10 +11,10 @@ class ExcusalRequestsController < ApplicationController
   def create
     @excusal_request = current_user.excusal_requests.build(excusal_request_params)
     if @excusal_request.save
-      flash[:notice] = "Excusal request is sent."
+      flash[:notice] = 'Excusal request is sent.'
       redirect_to dashboard_path
     else
-      flash.now[:alert] = "Error: Missing required fields."
+      flash.now[:alert] = 'Error: Missing required fields.'
       render :new
     end
   end

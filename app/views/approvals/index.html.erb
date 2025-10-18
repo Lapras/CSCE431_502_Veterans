@@ -10,9 +10,13 @@
   <p style="color: red;"><%= flash[:alert] %></p>
 <% end %>
 
+<!-- ========== PENDING SECTION ========== -->
 <h2>Pending Requests</h2>
+
+<!-- One-Time Excusal Requests -->
+<h3 style="margin-top: 20px;">One-Time Events</h3>
 <% if @pending_requests.any? %>
-  <table style="width: 100%; border-collapse: collapse;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
     <thead>
       <tr style="background-color: #f0f0f0;">
         <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
@@ -47,14 +51,66 @@
     </tbody>
   </table>
 <% else %>
-  <p>No pending excusal requests.</p>
+  <p>No pending one-time excusal requests.</p>
+<% end %>
+
+<!-- Recurring Excusals -->
+<h3 style="margin-top: 20px;">Recurring Excusals</h3>
+<% if @pending_recurring.any? %>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Days</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Time</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Requested</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pending_recurring.each do |recurring| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.user.full_name || recurring.user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_days.map { |d| Date::DAYNAMES[d.to_i] }.join(", ") %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_start_time.strftime("%I:%M %p") %> - 
+            <%= recurring.recurring_end_time.strftime("%I:%M %p") %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= form_with model: RecurringApproval.new, url: recurring_excusal_recurring_approvals_path(recurring), method: :post, local: true, style: "display: inline;" do |f| %>
+              <%= f.hidden_field :decision, value: 'approved' %>
+              <%= f.text_field :comment, placeholder: "Optional comment", style: "width: 150px; margin-right: 5px;" %>
+              <%= f.submit "Approve", style: "background-color: green; color: white; padding: 5px 10px; cursor: pointer;" %>
+            <% end %>
+            
+            <%= form_with model: RecurringApproval.new, url: recurring_excusal_recurring_approvals_path(recurring), method: :post, local: true, style: "display: inline;" do |f| %>
+              <%= f.hidden_field :decision, value: 'denied' %>
+              <%= f.text_field :comment, placeholder: "Optional comment", style: "width: 150px; margin-right: 5px;" %>
+              <%= f.submit "Deny", style: "background-color: red; color: white; padding: 5px 10px; cursor: pointer;" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No pending recurring excusals.</p>
 <% end %>
 
 <hr style="margin: 30px 0;">
 
+<!-- ========== APPROVED SECTION ========== -->
 <h2>Recently Approved</h2>
+
+<!-- One-Time Approved -->
+<h3 style="margin-top: 20px;">One-Time Events</h3>
 <% if @approved_requests.any? %>
-  <table style="width: 100%; border-collapse: collapse;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
     <thead>
       <tr style="background-color: #f0f0f0;">
         <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
@@ -79,14 +135,56 @@
     </tbody>
   </table>
 <% else %>
-  <p>No approved requests.</p>
+  <p>No approved one-time requests.</p>
+<% end %>
+
+<!-- Recurring Approved -->
+<h3 style="margin-top: 20px;">Recurring Excusals</h3>
+<% if @approved_recurring.any? %>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Days</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Time</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Approved By</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @approved_recurring.each do |recurring| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.user.full_name || recurring.user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_days.map { |d| Date::DAYNAMES[d.to_i] }.join(", ") %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_start_time.strftime("%I:%M %p") %> - 
+            <%= recurring.recurring_end_time.strftime("%I:%M %p") %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.approved_by_user.full_name || recurring.recurring_approval.approved_by_user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.comment %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No approved recurring excusals.</p>
 <% end %>
 
 <hr style="margin: 30px 0;">
 
+<!-- ========== DENIED SECTION ========== -->
 <h2>Recently Denied</h2>
+
+<!-- One-Time Denied -->
+<h3 style="margin-top: 20px;">One-Time Events</h3>
 <% if @denied_requests.any? %>
-  <table style="width: 100%; border-collapse: collapse;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
     <thead>
       <tr style="background-color: #f0f0f0;">
         <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
@@ -111,5 +209,43 @@
     </tbody>
   </table>
 <% else %>
-  <p>No denied requests.</p>
+  <p>No denied one-time requests.</p>
+<% end %>
+
+<!-- Recurring Denied -->
+<h3 style="margin-top: 20px;">Recurring Excusals</h3>
+<% if @denied_recurring.any? %>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Days</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Time</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Denied By</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @denied_recurring.each do |recurring| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.user.full_name || recurring.user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_days.map { |d| Date::DAYNAMES[d.to_i] }.join(", ") %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_start_time.strftime("%I:%M %p") %> - 
+            <%= recurring.recurring_end_time.strftime("%I:%M %p") %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.approved_by_user.full_name || recurring.recurring_approval.approved_by_user.email %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.comment %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No denied recurring excusals.</p>
 <% end %>

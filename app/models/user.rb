@@ -23,4 +23,5 @@ class User < ApplicationRecord
   end
 
   has_many :approvals, foreign_key: :approved_by_user_id, dependent: :destroy
+  has_many :recurring_approvals, foreign_key: :approved_by_user_id, dependent: :destroy
 end
