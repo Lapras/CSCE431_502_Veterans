@@ -3,7 +3,15 @@ class Attendance < ApplicationRecord
   belongs_to :user
   belongs_to :event
 
-  # Status values
+  enum status: {
+    pending: 'pending',
+    present: 'present',
+    absent:  'absent',
+    tardy: 'tardy',
+    excused: 'excused'
+  }
+
+  # Status values for dropdowns (key => label)
   STATUSES = {
     'pending' => 'Pending',
     'present' => 'Present',
@@ -21,17 +29,11 @@ class Attendance < ApplicationRecord
     'pending' => 0
   }.freeze
 
-  validates :status, presence: true, inclusion: { in: STATUSES.keys }
   validates :user_id, uniqueness: { scope: :event_id, message: "already has an attendance record for this event" }
 
   # Scopes
   scope :for_event, ->(event) { where(event: event) }
   scope :for_user, ->(user) { where(user: user) }
-  scope :present, -> { where(status: 'present') }
-  scope :absent, -> { where(status: 'absent') }
-  scope :excused, -> { where(status: 'excused') }
-  scope :tardy, -> { where(status: 'tardy') }
-  scope :pending, -> { where(status: 'pending') }
 
   # Check in a user
   def check_in!

@@ -8,6 +8,8 @@ class Event < ApplicationRecord
   validate :starts_at_must_be_valid_datetime
   validates :location, presence: true
   has_many :excusal_requests, dependent: :destroy
+  has_many :attendances, dependent: :destroy
+  has_many :attending_users, through: :attendances, source: :user
 
   # Create attendance records for all members when event is created
   after_create :create_attendance_records
@@ -38,7 +40,14 @@ class Event < ApplicationRecord
   private
 
   def starts_at_cannot_be_in_the_past
-    return if starts_at.blank?
+    return if starts_at.blank? # let presence validator handle blank
+
+    # If not a time-like object, add a clear error and stop.
+    unless starts_at.is_a?(Time) || starts_at.is_a?(ActiveSupport::TimeWithZone)
+      errors.add(:starts_at, 'is not a valid datetime')
+      return
+    end
+
     if starts_at < Time.zone.now
       errors.add(:starts_at, "can't be in the past")
     end
