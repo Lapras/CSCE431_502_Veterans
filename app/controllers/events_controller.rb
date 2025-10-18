@@ -28,7 +28,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: I18n.t('event.created') }
-        @event.user_ids = params[:event][:user_ids] 
+        assign_users_to_event
         format.json { render :show, status: :created, location: @event }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,7 +42,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       if @event.update(event_params)
         format.html { redirect_to @event, notice: I18n.t('event.updated'), status: :see_other }
-        @event.user_ids = params[:event][:user_ids] 
+        assign_users_to_event
         format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -89,5 +89,9 @@ class EventsController < ApplicationController
     else
       'user'
     end
+  end
+
+  def assign_users_to_event
+    @event.user_ids = params[:event][:user_ids] if params[:event][:user_ids].present?
   end
 end
