@@ -1,0 +1,42 @@
+<!-- app/views/admin/attendance_reports/index.html.erb -->
+<% content_for :title, "Attendance History" %>
+
+<h1>Attendance History</h1>
+
+<%= form_with url: admin_attendance_reports_path, method: :get, local: true, class: "search-form" do %>
+  <div>
+    <label for="q">Search name or email</label>
+    <input type="text" id="q" name="q" value="<%= h @q %>" />
+    <button type="submit">Search</button>
+    <% if @q.present? %>
+      <%= link_to "Clear", admin_attendance_reports_path %>
+    <% end %>
+  </div>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th><%= sort_link("Name",   :name) %></th>
+      <th><%= sort_link("Email",  :email) %></th>
+      <th style="text-align:right;"><%= sort_link("Total",  :total) %></th>
+      <th style="text-align:right;"><%= sort_link("Present",:present) %></th>
+      <th style="text-align:right;"><%= sort_link("Absent", :absent) %></th>
+      <th style="text-align:right;"><%= sort_link("Tardy",  :tardy) %></th>
+      <th style="text-align:right;"><%= sort_link("Excused",:excused) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @rows.each do |u| %>
+      <tr>
+        <td><%= u.full_name.presence || "—" %></td>
+        <td><%= u.email %></td>
+        <td style="text-align:right;"><%= u.read_attribute(:total_attendances) %></td>
+        <td style="text-align:right;"><%= u.read_attribute(:total_presents) %></td>
+        <td style="text-align:right;"><%= u.read_attribute(:total_absences) %></td>
+        <td style="text-align:right;"><%= u.read_attribute(:total_tardies) %></td>
+        <td style="text-align:right;"><%= u.read_attribute(:total_excused) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
