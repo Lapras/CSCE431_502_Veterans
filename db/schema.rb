@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_14_214216) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,6 +31,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_14_214216) do
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_excusal_requests_on_event_id"
     t.index ["user_id"], name: "index_excusal_requests_on_user_id"
+  end
+
+  create_table "recurring_excusals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "recurring_days"
+    t.time "recurring_start_time"
+    t.time "recurring_end_time"
+    t.text "reason"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_recurring_excusals_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -63,4 +75,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_14_214216) do
 
   add_foreign_key "excusal_requests", "events"
   add_foreign_key "excusal_requests", "users"
+  add_foreign_key "recurring_excusals", "users"
 end
