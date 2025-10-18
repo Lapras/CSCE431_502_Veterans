@@ -1,4 +1,3 @@
-# app/models/approval.rb
 class Approval < ApplicationRecord
   belongs_to :excusal_request
   belongs_to :approved_by_user, class_name: 'User'

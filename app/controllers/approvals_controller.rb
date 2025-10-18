@@ -1,4 +1,3 @@
-# app/controllers/approvals_controller.rb
 class ApprovalsController < ApplicationController
   layout 'admin'
   before_action :require_admin!
@@ -36,14 +35,6 @@ class ApprovalsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash[:alert] = "Excusal request not found."
     redirect_to approvals_path
-  end
-  
-  # Replace this method in the controller:
-  def authorize_approver!
-    unless current_user.has_role?(:admin)  # or whatever your existing check is
-      flash[:alert] = "You are not authorized to approve excusal requests."
-      redirect_to dashboard_path
-    end
   end
   
   def approval_params
