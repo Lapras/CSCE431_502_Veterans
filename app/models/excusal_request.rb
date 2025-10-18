@@ -1,29 +1,21 @@
-# class ExcusalRequest < ApplicationRecord
-#   belongs_to :user
-#   belongs_to :event
-#   validates :reason, presence: true
-#   validates :user_id, presence: true
-#   validates :event_id, presence: true
-# end
-
 class ExcusalRequest < ApplicationRecord
   belongs_to :user
-  belongs_to :event
-  has_one :approval, dependent: :destroy  # ADD THIS LINE
-  
+  belongs_to :event, optional: true   
+  has_one :approval, dependent: :destroy 
+
+  serialize :recurring_days, Array   
   validates :reason, presence: true
   validates :user_id, presence: true
-  validates :event_id, presence: true
+  validates :event_id, presence: true, unless: -> { recurring }
+  validate :validate_recurring_fields, if: -> { recurring }
+
   
-  # ADD THESE SCOPES
   scope :pending, -> { where(status: 'pending').or(where(status: nil)) }
   scope :approved, -> { where(status: 'approved') }
   scope :denied, -> { where(status: 'denied') }
   
-  # ADD THIS CALLBACK
   after_initialize :set_default_status, if: :new_record?
   
-  # ADD THESE METHODS
   def pending?
     status.nil? || status == 'pending'
   end
@@ -40,5 +32,11 @@ class ExcusalRequest < ApplicationRecord
   
   def set_default_status
     self.status ||= 'pending'
+  end
+
+  def validate_recurring_fields
+    if recurring_days.blank? || recurring_start_time.blank? || recurring_end_time.blank?
+      errors.add(:base, "Recurring days and time range must be present for recurring excusals")
+    end
   end
 end
