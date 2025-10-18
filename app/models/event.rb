@@ -7,6 +7,9 @@ class Event < ApplicationRecord
   validates :location, presence: true
   has_many :excusal_requests, dependent: :destroy
 
+  has_many :event_users, dependent: :destroy
+  has_many :users, through: :event_users
+
   private
 
   def starts_at_cannot_be_in_the_past

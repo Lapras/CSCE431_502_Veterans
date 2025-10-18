@@ -27,6 +27,37 @@
   </div>
 
   <div>
+    <%= form.label "Assign Users" %>
+    <div style="margin-bottom: 8px;">
+      <button type="button" onclick="selectAllUsers()">Select All</button>
+      <button type="button" onclick="deselectAllUsers()">Select None</button>
+    </div>
+
+    <%= form.collection_select :user_ids, User.all, :id, :full_name, {}, {
+        multiple: true,
+        id: 'event_user_ids',
+        size: 8,
+        style: "width: 300px; height: 150px; overflow-y: scroll;"
+      } %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
+
+  <script>
+  function selectAllUsers() {
+    const box = document.getElementById('event_user_ids');
+    for (const option of box.options) {
+      option.selected = true;
+    }
+  }
+
+  function deselectAllUsers() {
+    const box = document.getElementById('event_user_ids');
+    for (const option of box.options) {
+      option.selected = false;
+    }
+  }
+</script>
 <% end %>

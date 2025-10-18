@@ -47,3 +47,6 @@ en:
     created: "Event was successfully created."
     updated: 'Event was successfully updated.'
     deleted: "Event was succesfully destroyed"
+  excusal_requests:
+    sent: "Excusal request is sent"
+    missing_fields: "Error: Missing required fields"

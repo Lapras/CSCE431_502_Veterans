@@ -2,6 +2,6 @@
 
 require 'rails_helper'
 
-RSpec.describe 'excusal_requests/new.html.erb', type: :view do
+RSpec.describe EventUser, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end
