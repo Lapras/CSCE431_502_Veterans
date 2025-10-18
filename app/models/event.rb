@@ -16,7 +16,8 @@ class Event < ApplicationRecord
 
   # Get attendance for a specific user
   def attendance_for(user)
-    attendances.find_by(user: user)
+    return nil unless user
+    attendances.find_by(user_id: user.id)
   end
 
   # Check if user has checked in

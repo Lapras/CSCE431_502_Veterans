@@ -3,7 +3,7 @@ class Attendance < ApplicationRecord
   belongs_to :user
   belongs_to :event
 
-  enum status: {
+  enum :status, {
     pending: 'pending',
     present: 'present',
     absent:  'absent',
