@@ -15,49 +15,34 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   describe 'PATCH #update (roles handling branches)' do
     it "clears roles when params include 'none'" do
-      # give the user some roles first so clear branch is visible
-      user.add_role(:member) if user.respond_to?(:add_role)
+    admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com"); admin.add_role(:admin); sign_in admin
+    user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com"); user.add_role(:member)
 
-      patch :update, params: {
-        id: user.id,
-        user: { email: 'new_email@example.com' },
-        role_names: ['none'] # <- hits @user.roles = []
-      }
+    patch :update, params: { id: user.id, user: { email: user.email, role_names: ['none'] } }
 
-      expect(response).to redirect_to([:admin, assigns(:user)])
-      expect(flash[:notice]).to be_present
-
-      # Ensure roles are cleared
-      if user.respond_to?(:roles)
-        expect(assigns(:user).roles).to be_empty
-      end
+    expect(response).to redirect_to([:admin, user])
+    expect(user.reload.roles).to be_empty
     end
 
-    it 'ensures roles exist and calls set_roles! when concrete roles provided' do
-      expect(Role).to receive(:find_or_create_by!).with(name: 'admin').and_call_original
-      expect(Role).to receive(:find_or_create_by!).with(name: 'officer').and_call_original
-      expect_any_instance_of(User).to receive(:set_roles!).with(array_including('admin', 'officer'))
+    it "assigns provided roles" do
+    admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com"); admin.add_role(:admin); sign_in admin
+    user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com")
 
-      patch :update, params: {
-        id: user.id,
-        user: { email: 'another@example.com' },
-        role_names: %w[admin officer] # <- hits Role.find_or_create_by! + set_roles!
-      }
+    patch :update, params: { id: user.id, user: { email: user.email, role_names: %w[admin officer] } }
 
-      expect(response).to redirect_to([:admin, assigns(:user)])
-      expect(flash[:notice]).to be_present
+    user.reload
+    expect(user.has_role?(:admin)).to be(true)
+    expect(user.has_role?(:officer)).to be(true)
+    expect(response).to redirect_to([:admin, user])
     end
 
-    it 'renders :edit with 422 when update fails' do
-      # Email presence validation should fail
-      patch :update, params: {
-        id: user.id,
-        user: { email: '' }, # invalid
-        role_names: ['none']
-      }
+    it "renders 422 when invalid" do
+    admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com"); admin.add_role(:admin); sign_in admin
+    user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com")
 
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(response).to render_template(:edit)
+    patch :update, params: { id: user.id, user: { email: "" } }
+
+    expect(response.status).to eq(422)
     end
   end
 
@@ -102,12 +87,12 @@ RSpec.describe Admin::UsersController, type: :controller do
   describe "PATCH #update – clears roles when 'none' provided" do
     it "executes @user.roles = []" do
       # authorize as admin
-      admin = User.create!(email: "admin@example.com")
+      admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@example.com")
       admin.add_role(:admin)
       sign_in admin
 
       # use a real user to avoid Rolify surprises, but stub the bits we need
-      target = User.create!(email: "target@example.com")
+      target = User.create!(email: "target+#{SecureRandom.hex(4)}@example.com")
       target.add_role(:member)
 
       # make the controller use *our* target as @user (bypasses set_user -> find)

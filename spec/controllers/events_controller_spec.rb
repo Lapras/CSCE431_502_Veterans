@@ -11,18 +11,14 @@ RSpec.describe EventsController, type: :controller do
     end
 
     it "redirects non-admin users to events_path with alert" do
-      user = User.create!(email: "user@example.com")
-      user.add_role(:member)
-      sign_in user
+        user = User.create!(email: "u+#{SecureRandom.hex(4)}@ex.com"); user.add_role(:member); sign_in user
+        allow(controller).to receive(:events_path).and_return("/events")
+        allow(I18n).to receive(:t).with("alerts.not_admin").and_return("Not admin")
 
-      # Stub translation + path so no dependency on I18n or routing
-      allow(controller).to receive(:events_path).and_return("/events")
-      allow(I18n).to receive(:t).with("alerts.not_admin").and_return("Not admin")
+        get :new   # <- triggers before_action :require_admin!
 
-      controller.send(:require_admin!)
-
-      expect(response).to redirect_to("/events")
-      expect(flash[:alert]).to eq("Not admin")
+        expect(response).to redirect_to("/events")
+        expect(flash[:alert]).to eq("Not admin")
     end
 
     it "returns early (no redirect) for admin" do
