@@ -12,8 +12,8 @@
 <div id="events">
   <% @events.each do |event| %>
     <%= render event %>
-    <% user_requests = current_user.excusal_requests.where(event_id: event.id) %>
-    <p>
+    <%# safe when no user is signed in and fine when there is %>
+    <% user_requests = user_excusal_requests_for(event) %>
       <%= link_to "Show this event", event %>
       <%= link_to "Delete", event_confirm_delete_event_path(event) %>
       <%= link_to "Request Excusal", new_excusal_request_path(event_id: event.id), class: "btn btn-warning" %>
