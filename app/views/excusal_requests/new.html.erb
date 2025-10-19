@@ -3,7 +3,7 @@
 <%= form_with model: @excusal_request, local: true do |form| %>
 
   <% if @excusal_request.errors.any? %>
-    <div style="color: red;">
+    <div style="color: red; margin-bottom: 1rem;">
       <h4><%= pluralize(@excusal_request.errors.count, "error") %> prevented the form from submitting:</h4>
       <ul>
         <% @excusal_request.errors.full_messages.each do |msg| %>
@@ -14,16 +14,20 @@
   <% end %>
 
   <div>
-    <%= form.label :event_id, "Event" %><br>
-    <%= form.collection_select :event_id, Event.all, :id, :title, include_blank: "Select Event" %>
+    <%= form.label :event_id, "Event" %>
+    <%= form.collection_select :event_id, Event.where('starts_at >= ?', Time.current).order(:starts_at), :id, :title, { include_blank: "Select Event" }, { style: "width: 100%; max-width: 500px;" } %>
   </div>
 
   <div>
-    <%= form.label :reason %><br>
-    <%= form.text_area :reason, rows: 5 %>
+    <%= form.label :reason %>
+    <%= form.text_area :reason, rows: 5, style: "width: 100%; max-width: 500px;" %>
   </div>
 
   <div>
     <%= form.submit "Send Excusal Request" %>
   </div>
 <% end %>
+
+<div style="margin-top: 1rem;">
+  <%= link_to "Back to Events", events_path, class: "action-button" %>
+</div>

@@ -1,68 +1,59 @@
 <% content_for :title, "My Recurring Excusal Requests" %>
 
-<div class="container mt-4">
-  <% if notice %>
-    <div class="alert alert-success"><%= notice %></div>
-  <% end %>
+<h1>Recurring Excusal Requests</h1>
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Recurring Excusal Requests</h1>
-    <div>
-      <%= link_to "Back to Events", events_path, class: "btn btn-outline-secondary me-2" %>
-    </div>
-  </div>
+<%= link_to "Back to Events", events_path, class: "action-button" %>
 
-  <% if current_user.recurring_excusals.any? %>
-    <table class="table table-striped">
-      <thead>
+<% if current_user.recurring_excusals.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Days</th>
+        <th>Time</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Requested</th>
+        <% if current_user.has_role?(:admin) %>
+          <th>Actions</th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% current_user.recurring_excusals.order(created_at: :desc).each do |rec| %>
         <tr>
-          <th>Days</th>
-          <th>Time</th>
-          <th>Reason</th>
-          <th>Status</th>
-          <th>Requested</th>
+          <td>
+            <%= rec.recurring_days.map { |d| Date::DAYNAMES[d.to_i] }.join(", ") %>
+          </td>
+          <td>
+            <%= rec.recurring_start_time.strftime("%I:%M %p") %> - <%= rec.recurring_end_time.strftime("%I:%M %p") %>
+          </td>
+          <td><%= rec.reason %></td>
+          <td>
+            <% case rec.status %>
+            <% when "approved" %>
+              <strong style="color: green;">Approved</strong>
+            <% when "denied" %>
+              <strong style="color: red;">Denied</strong>
+            <% else %>
+              <strong style="color: orange;">Pending</strong>
+            <% end %>
+          </td>
+          <td><%= rec.created_at.strftime("%b %d, %Y") %></td>
+
           <% if current_user.has_role?(:admin) %>
-            <th>Actions</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tbody>
-        <% current_user.recurring_excusals.order(created_at: :desc).each do |rec| %>
-          <tr>
             <td>
-              <%= rec.recurring_days.map { |d| Date::DAYNAMES[d.to_i] }.join(", ") %>
-            </td>
-            <td>
-              <%= rec.recurring_start_time.strftime("%I:%M %p") %> - <%= rec.recurring_end_time.strftime("%I:%M %p") %>
-            </td>
-            <td><%= rec.reason %></td>
-            <td>
-              <% case rec.status %>
-              <% when "approved" %>
-                <span class="badge bg-success">✅ Approved</span>
-              <% when "denied" %>
-                <span class="badge bg-danger">❌ Denied</span>
-              <% else %>
-                <span class="badge bg-warning text-dark">⏳ Pending</span>
+              <% unless rec.status == "approved" %>
+                <%= button_to "Approve", approve_recurring_excusal_path(rec), method: :post, class: "action-button", data: { turbo: false } %>
+              <% end %>
+              <% unless rec.status == "denied" %>
+                <%= button_to "Deny", deny_recurring_excusal_path(rec), method: :post, class: "action-button", data: { turbo: false } %>
               <% end %>
             </td>
-            <td><%= rec.created_at.strftime("%b %d, %Y") %></td>
-
-            <% if current_user.has_role?(:admin) %>
-              <td>
-                <% unless rec.status == "approved" %>
-                  <%= button_to "Approve", approve_recurring_excusal_path(rec), method: :post, class: "btn btn-sm btn-success", data: { turbo: false } %>
-                <% end %>
-                <% unless rec.status == "denied" %>
-                  <%= button_to "Deny", deny_recurring_excusal_path(rec), method: :post, class: "btn btn-sm btn-danger", data: { turbo: false } %>
-                <% end %>
-              </td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p>You have not submitted any recurring excusal requests yet.</p>
-  <% end %>
-</div>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You have not submitted any recurring excusal requests yet.</p>
+<% end %>
