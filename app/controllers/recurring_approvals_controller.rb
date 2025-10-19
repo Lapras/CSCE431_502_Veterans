@@ -7,7 +7,7 @@ class RecurringApprovalsController < ApplicationController
 
   def create
     if @recurring_excusal.recurring_approval.present?
-      flash[:alert] = 'This recurring excusal has already been reviewed.'
+      flash[:alert] = I18n.t('recurring_approvals.already_reviewed')
       redirect_to approvals_path and return
     end
 
@@ -28,7 +28,7 @@ class RecurringApprovalsController < ApplicationController
   def set_recurring_excusal
     @recurring_excusal = RecurringExcusal.find(params[:recurring_excusal_id])
   rescue ActiveRecord::RecordNotFound
-    flash[:alert] = 'Recurring excusal not found.'
+    flash[:alert] =  I18n.t('recurring_approvals.not_found')
     redirect_to approvals_path
   end
 
