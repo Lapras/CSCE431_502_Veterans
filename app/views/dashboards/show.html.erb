@@ -11,3 +11,48 @@
     <p><strong>Roles:</strong> <%= current_user.roles.pluck(:name).join(", ") %></p>
   <% end %>
 </div>
+
+<% if current_user.has_role?(:member) || current_user.has_role?(:admin) %>
+  <% stats = current_user.attendance_stats %>
+  <div class="user-details">
+    <h2>My Attendance Summary</h2>
+    <p><strong>Total Events:</strong> <%= stats[:total_events] %></p>
+    <p><strong>Present:</strong> <%= stats[:present] %></p>
+    <p><strong>Absent:</strong> <%= stats[:absent] %></p>
+    <p><strong>Excused:</strong> <%= stats[:excused] %></p>
+    <p><strong>Tardy:</strong> <%= stats[:tardy] %></p>
+    <p><strong>Total Points:</strong> <%= stats[:points] %></p>
+  </div>
+
+  <% upcoming_events = Event.where('starts_at >= ?', Time.current).order(:starts_at).limit(5) %>
+  <% if upcoming_events.any? %>
+    <h2>Upcoming Events</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Date & Time</th>
+          <th>Location</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% upcoming_events.each do |event| %>
+          <% attendance = event.attendance_for(current_user) %>
+          <tr>
+            <td><%= link_to event.title, event %></td>
+            <td><%= event.starts_at.strftime("%b %d, %Y at %I:%M %p") %></td>
+            <td><%= event.location %></td>
+            <td>
+              <% if attendance %>
+                <%= attendance.status_label %>
+              <% else %>
+                Not Registered
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>

@@ -11,7 +11,16 @@ class EventsController < ApplicationController
   end
 
   # GET /events/1 or /events/1.json
-  def show; end
+  def show
+    # Auto-create attendance records for all members if they don't exist
+    # This is already handled by the Event model's after_create callback
+    # but we ensure they exist for events that were created before the callback
+    User.with_role(:member).find_each do |u|
+      @event.attendances.find_or_create_by(user: u) do |attendance|
+        attendance.status = 'pending'
+      end
+    end
+  end
 
   # GET /events/new
   def new

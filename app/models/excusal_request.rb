@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class ExcusalRequest < ApplicationRecord
+
+  belongs_to :event
+  validates :reason, presence: true
+  validates :user_id, presence: true
   belongs_to :user
   belongs_to :event, optional: true
   has_one :approval, dependent: :destroy
 
-  validates :reason, presence: true
   validates :event_id, presence: true
 
   scope :pending, -> { where(status: 'pending').or(where(status: nil)) }
@@ -38,3 +41,4 @@ class ExcusalRequest < ApplicationRecord
     errors.add(:base, 'Recurring days and time range must be present for recurring excusals')
   end
 end
+

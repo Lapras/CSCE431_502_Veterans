@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExcusalRequestsController < ApplicationController
-  before_action :authenticate_user!
+  skip_before_action :authenticate_user!, only: %i[new create]
 
   def new
     @excusal_request = ExcusalRequest.new
@@ -9,13 +9,18 @@ class ExcusalRequestsController < ApplicationController
   end
 
   def create
-    @excusal_request = current_user.excusal_requests.build(excusal_request_params)
+    collection = current_user&.respond_to?(:excusal_requests) ? current_user.excusal_requests : nil
+    @excusal_request = collection ? collection.build(excusal_request_params) : ExcusalRequest.new(excusal_request_params)
+
     if @excusal_request.save
       flash[:notice] = 'Excusal request is sent.'
       redirect_to dashboard_path
     else
       flash.now[:alert] = 'Error: Missing required fields.'
       render :new
+      redirect_to events_path, notice: 'Excusal request was successfully submitted.'
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 

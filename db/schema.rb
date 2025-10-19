@@ -14,6 +14,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_18_031427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "attendances", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "checked_in_at"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_attendances_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_attendances_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
+
   create_table "approvals", force: :cascade do |t|
     t.bigint "excusal_request_id", null: false
     t.bigint "approved_by_user_id", null: false
@@ -101,6 +114,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_18_031427) do
 
   add_foreign_key "approvals", "excusal_requests"
   add_foreign_key "approvals", "users", column: "approved_by_user_id"
+  add_foreign_key "attendances", "events"
+  add_foreign_key "attendances", "users"
   add_foreign_key "excusal_requests", "events"
   add_foreign_key "excusal_requests", "users"
   add_foreign_key "recurring_approvals", "recurring_excusals"
