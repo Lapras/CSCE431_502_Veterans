@@ -11,7 +11,7 @@ RSpec.describe "/events", type: :request do
 
     # Pretend the user is signed in and already has at least one role
     # so ApplicationController#check_user_roles doesn't redirect.
-    stubbed_user = double("User", has_role?: true, roles: [double("Role")])
+    stubbed_user = double("User", has_role?: true, roles: [double("Role")], id: 1)
     allow_any_instance_of(ApplicationController)
       .to receive(:current_user).and_return(stubbed_user)
 
