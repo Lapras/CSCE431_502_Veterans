@@ -4,6 +4,11 @@
 
 <h1>Events</h1>
 
+<div class="mb-3">
+  <%= link_to "Request Recurring Excusal", new_recurring_excusal_path, class: "btn btn-primary" %>
+  <%= link_to "View My Recurring Requests", recurring_excusals_path, class: "btn btn-outline-secondary" %>
+</div>
+
 <div id="events">
   <% @events.each do |event| %>
     <%= render event %>

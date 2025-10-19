@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "recurring_excusals/index"
+  get "recurring_excusals/new"
+  get "recurring_excusals/create"
   get "excusal_requests/new"
   get "excusal_requests/create"
   get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
@@ -32,7 +35,7 @@ Rails.application.routes.draw do
   end
 
   resources :excusal_requests, only: [:new, :create]
-
+  resources :recurring_excusals, only: [:index, :new, :create]
   root to: 'dashboards#show'
   resource :dashboard, only: [:show] # User dashboard
 

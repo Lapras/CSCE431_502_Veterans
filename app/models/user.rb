@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :attended_events, through: :attendances, source: :event
 
+  has_many :recurring_excusals, dependent: :destroy
 
   def self.from_google(email:, full_name:, uid:, avatar_url:)
     create_with(uid: uid, full_name: full_name, avatar_url: avatar_url).find_or_create_by!(email: email)
