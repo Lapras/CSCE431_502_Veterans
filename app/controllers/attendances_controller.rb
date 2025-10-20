@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # app/controllers/attendances_controller.rb
 class AttendancesController < ApplicationController
   layout :select_layout
   before_action :set_event
-  before_action :set_attendance, only: [:edit, :update]
+  before_action :set_attendance, only: %i[edit update]
   before_action :require_admin!, except: [:check_in]
 
   # GET /events/:event_id/attendances
@@ -12,13 +14,12 @@ class AttendancesController < ApplicationController
   end
 
   # GET /events/:event_id/attendances/:id/edit
-  def edit
-  end
+  def edit; end
 
   # PATCH/PUT /events/:event_id/attendances/:id
   def update
     if @attendance.update(attendance_params)
-      redirect_to event_attendances_path(@event), notice: 'Attendance was successfully updated.'
+      redirect_to event_attendances_path(@event), notice: I18n.t('attendance.updated')
     else
       render :edit, status: :unprocessable_entity
     end
@@ -27,15 +28,13 @@ class AttendancesController < ApplicationController
   # POST /events/:event_id/attendances/check_in
   def check_in
     @attendance = @event.attendance_for(current_user)
-    
-    unless @attendance
-      @attendance = @event.attendances.create(user: current_user, status: 'pending')
-    end
+
+    @attendance ||= @event.attendances.create(user: current_user, status: 'pending')
 
     if @attendance.check_in!
-      redirect_to @event, notice: 'Successfully checked in!'
+      redirect_to @event, notice: I18n.t('attendance.checkin')
     else
-      redirect_to @event, alert: 'Failed to check in.'
+      redirect_to @event, alert: I18n.t('attendance.checkin_fail')
     end
   end
 
@@ -44,12 +43,10 @@ class AttendancesController < ApplicationController
     success_count = 0
     params[:attendances]&.each do |id, attrs|
       attendance = @event.attendances.find(id)
-      if attendance.update(status: attrs[:status])
-        success_count += 1
-      end
+      success_count += 1 if attendance.update(status: attrs[:status])
     end
 
-    redirect_to event_attendances_path(@event), 
+    redirect_to event_attendances_path(@event),
                 notice: "Updated #{success_count} attendance record(s)."
   end
 
@@ -68,9 +65,9 @@ class AttendancesController < ApplicationController
   end
 
   def require_admin!
-    unless current_user&.has_role?(:admin)
-      redirect_to events_path, alert: "You must be an administrator to perform this action."
-    end
+    return if current_user&.has_role?(:admin)
+
+    redirect_to events_path, alert: I18n.t('admin.users.unauthorized')
   end
 
   def select_layout

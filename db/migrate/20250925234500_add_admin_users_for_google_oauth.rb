@@ -13,8 +13,9 @@ class AddAdminUsersForGoogleOauth < ActiveRecord::Migration[7.1]
     'riddhighate.07@tamu.edu'
   ].freeze
   def up
-    return unless Rails.env.development? || Rails.env.test?
-    #only done in our development and testing environments
+    return unless Rails.env.local?
+
+    # only done in our development and testing environments
 
     ADMIN_EMAILS.each do |email|
       User.find_or_create_by!(email: email)
@@ -30,8 +31,9 @@ class AddAdminUsersForGoogleOauth < ActiveRecord::Migration[7.1]
   end
 
   def down
-    return unless Rails.env.development? || Rails.env.test?
-    #only done in our development and testing environments
+    return unless Rails.env.local?
+
+    # only done in our development and testing environments
 
     ADMIN_EMAILS.each do |email|
       user = User.find_by(email: email)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecurringExcusal < ApplicationRecord
   belongs_to :user
   serialize :recurring_days, coder: JSON
