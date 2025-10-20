@@ -60,15 +60,15 @@ GOOGLE_OAUTH_CLIENT_SECRET=</code></pre>
 <p>Setup a Heroku account: <a href="https://signup.heroku.com/" target="_blank">https://signup.heroku.com/</a></p>
 <p>Steps:</p>
 <ol>
-  <li>Create a new pipeline on the Heroku dashboard and link your GitHub repo.</li>
-  <li>Enable Review Apps.</li>
-  <li>Create a new app under review apps for your test branch.</li>
-  <li>Create a staging app linked to your main branch.</li>
-  <li>Add environment variables for Google OAuth in the settings tab:</li>
+  <li>Log in to Heroku</li>
+  <li>Create a new  Heroku App</li>
+  <li>Select the github deployment method, and link to https://github.com/Lapras/CSCE431_502_Veterans, and the main branch</li>
+  <li>visit the resources tab, and add the Heroku Postgres resource to your app</li>
+  <li> Visit the settings tabs, and find Buildpacks. Add the NodeJS buildpack, then the Ruby buildpack in that order</li>
+  <li>In the settings tab, find the Config Vars section. Hit reveal Config vars and add the following to the configuration:</li>
 </ol>
-<pre><code>GOOGLE_OAUTH_CLIENT_ID=
-GOOGLE_OAUTH_CLIENT_SECRET=</code></pre>
-<p>After the pipeline builds, open the staging app. To move to production, click the up/down arrows and select "Move to production".</p>
+<pre><code>GOOGLE_OAUTH_CLIENT_ID=(Google client ID, insecure to display here)
+GOOGLE_OAUTH_CLIENT_SECRET=(Google secret, insecure to display here)</code></pre>
 
 <h2>CI/CD</h2>
 <p>Heroku automatically deploys apps when the respective GitHub branches are updated:</p>
@@ -80,6 +80,6 @@ GOOGLE_OAUTH_CLIENT_SECRET=</code></pre>
 
 <h2>Support</h2>
 <ul>
-  <li>Admins should first look at the application help page.</li>
-  <li>Users should seek assistance from the customer.</li>
+  <li>Admins should first look at the application Documentation and Support page for assistance.</li>
+  <li>If additonal assistance is needed, contact the development team for support</li>
 </ul>
