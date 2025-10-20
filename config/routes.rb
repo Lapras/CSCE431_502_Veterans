@@ -35,8 +35,16 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :excusal_requests, only: %i[new create]
-  resources :recurring_excusals, only: %i[index new create]
+  resources :excusal_requests, only: %i[new create] do
+    resources :approvals, only: [:create]
+  end
+
+  resources :approvals, only: [:index]
+
+  resources :recurring_excusals, only: %i[index new create] do
+    resources :recurring_approvals, only: [:create]
+  end
+
   root to: 'dashboards#show'
   resource :dashboard, only: [:show] # User dashboard
 

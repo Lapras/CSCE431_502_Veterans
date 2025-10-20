@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe "RecurringExcusals", type: :request do
@@ -19,10 +17,23 @@ RSpec.describe "RecurringExcusals", type: :request do
     expect(response).to have_http_status(:success)
   end
 
-  it "POST /create redirects (until we supply full valid params)" do
-    post recurring_excusals_path, params: { recurring_excusal: {} }
-    expect(response).to have_http_status(:redirect)
-      .or have_http_status(:unprocessable_entity)
-      .or have_http_status(:bad_request)
+  it "POST /create with valid params creates recurring excusal and redirects" do
+    expect {
+      post recurring_excusals_path, params: {
+        recurring_excusal: {
+          reason: 'Valid reason',
+          recurring_start_time: '09:00',
+          recurring_end_time: '10:00',
+          recurring_days: ['Monday', 'Wednesday']
+        }
+      }
+    }.to change(RecurringExcusal, :count).by(1)
+    expect(response).to redirect_to(recurring_excusals_path)
+  end
+
+  it "POST /create with invalid params renders new" do
+    post recurring_excusals_path, params: { recurring_excusal: { reason: '' } }
+    expect(response).to have_http_status(:success)
+    expect(response.body).to include('Request Recurring Excusal')
   end
 end
