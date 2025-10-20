@@ -18,6 +18,12 @@ class EventsController < ApplicationController
 
   # GET /events/1 or /events/1.json
   def show
+    # Check if user is authorized to view this event
+    unless current_user&.has_role?(:admin) || @event.assigned_users.include?(current_user)
+      redirect_to events_path, alert: I18n.t('alerts.not_authorized')
+      return
+    end
+
     # Ensure attendance records exist for assigned users
     # This is already handled by the Event model's after_create callback
     # but we ensure they exist for events that were created before the callback

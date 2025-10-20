@@ -19,6 +19,7 @@ RSpec.describe "/events", type: :request do
 
     it "GET /show renders a successful response" do
       event = Event.create!(valid_attributes)
+      event.assigned_users << @member  # Assign member to event so they can view it
       get event_path(event)
       expect(response).to have_http_status(:success)
     end
@@ -31,6 +32,7 @@ RSpec.describe "/events", type: :request do
 
     it 'only shows events starting in the future' do
       future = Event.create!(title: 'Future', starts_at: 1.day.from_now, location: 'TX')
+      future.assigned_users << @member  # Assign member to event so they can see it
       past   = Event.new(title: 'Past', starts_at: 1.day.ago, location: 'TX')
       past.save!(validate: false)
 
