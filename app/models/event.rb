@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/models/event.rb
 class Event < ApplicationRecord
   has_many :attendances, dependent: :destroy
@@ -8,7 +10,6 @@ class Event < ApplicationRecord
   validate :starts_at_must_be_valid_datetime
   validates :location, presence: true
   has_many :excusal_requests, dependent: :destroy
-  has_many :attendances, dependent: :destroy
   has_many :attending_users, through: :attendances, source: :user
 
   # Create attendance records for all members when event is created
@@ -17,13 +18,14 @@ class Event < ApplicationRecord
   # Get attendance for a specific user
   def attendance_for(user)
     return nil unless user
+
     attendances.find_by(user_id: user.id)
   end
 
   # Check if user has checked in
   def user_checked_in?(user)
     attendance = attendance_for(user)
-    attendance&.status == 'present' || attendance&.status == 'tardy'
+    %w[present tardy].include?(attendance&.status)
   end
 
   # Attendance statistics
@@ -49,13 +51,16 @@ class Event < ApplicationRecord
       return
     end
 
-    if starts_at < Time.zone.now
-      errors.add(:starts_at, "can't be in the past")
-    end
+    return unless starts_at < Time.zone.now
+
+    errors.add(:starts_at, "can't be in the past")
   end
-  
+
   def starts_at_must_be_valid_datetime
-    errors.add(:starts_at, "is not a valid datetime") if starts_at.present? && !starts_at.is_a?(ActiveSupport::TimeWithZone) && !starts_at.is_a?(Time)
+    return unless starts_at.present? && !starts_at.is_a?(ActiveSupport::TimeWithZone) && !starts_at.is_a?(Time)
+
+    errors.add(:starts_at,
+               'is not a valid datetime')
   end
 
   def create_attendance_records

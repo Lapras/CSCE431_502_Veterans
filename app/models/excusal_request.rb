@@ -41,4 +41,3 @@ class ExcusalRequest < ApplicationRecord
     errors.add(:base, 'Recurring days and time range must be present for recurring excusals')
   end
 end
-

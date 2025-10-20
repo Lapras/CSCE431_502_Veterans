@@ -2,8 +2,8 @@
 
 class User < ApplicationRecord
   rolify
-  
-  #attedance related associations
+
+  # attedance related associations
   has_many :attendances, dependent: :destroy
   has_many :events, through: :attendances
 
@@ -15,7 +15,6 @@ class User < ApplicationRecord
 
   has_many :excusal_requests, dependent: :destroy
 
-  has_many :attendances, dependent: :destroy
   has_many :attended_events, through: :attendances, source: :event
 
   has_many :recurring_excusals, dependent: :destroy
@@ -34,7 +33,7 @@ class User < ApplicationRecord
   has_many :approvals, foreign_key: :approved_by_user_id, dependent: :destroy
   has_many :recurring_approvals, foreign_key: :approved_by_user_id, dependent: :destroy
 
-  #attendance related methods
+  # attendance related methods
   def attendance_for(event)
     attendances.find_by(event: event)
   end

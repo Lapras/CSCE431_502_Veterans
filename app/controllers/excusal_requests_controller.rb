@@ -9,11 +9,12 @@ class ExcusalRequestsController < ApplicationController
   end
 
   def create
-    collection = current_user&.respond_to?(:excusal_requests) ? current_user.excusal_requests : nil
-    @excusal_request = collection ? collection.build(excusal_request_params) : ExcusalRequest.new(excusal_request_params)
+    collection = current_user.respond_to?(:excusal_requests) ? current_user.excusal_requests : nil
+    @excusal_request =
+      collection ? collection.build(excusal_request_params) : ExcusalRequest.new(excusal_request_params)
 
     if @excusal_request.save
-      redirect_to events_path, notice: 'Excusal request was successfully submitted.'
+      redirect_to events_path, notice: I18n.t('excusal.submit')
     else
       render :new, status: :unprocessable_entity
     end
