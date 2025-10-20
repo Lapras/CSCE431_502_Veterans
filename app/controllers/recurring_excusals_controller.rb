@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RecurringExcusalsController < ApplicationController
-  layout 'user'
+  layout :determine_layout
   before_action :authenticate_user!
 
   def index
@@ -27,5 +27,9 @@ class RecurringExcusalsController < ApplicationController
 
   def recurring_excusal_params
     params.require(:recurring_excusal).permit(:reason, :recurring_start_time, :recurring_end_time, recurring_days: [])
+  end
+
+  def determine_layout
+    current_user&.has_role?(:admin) ? 'admin' : 'user'
   end
 end
