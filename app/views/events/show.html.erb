@@ -1,10 +1,48 @@
+<!-- app/views/events/show.html.erb -->
 <p style="color: green"><%= notice %></p>
+<p style="color: red"><%= alert %></p>
 
-<%= render @event %>
+<h1><%= @event.title %></h1>
 
-<div>
-  <%= link_to "Edit this event", edit_event_path(@event) %> |
-  <%= link_to "Back to events", events_path %>
-  <%= link_to "Delete this event", event_confirm_delete_event_path(@event) %>
-  <%= button_to "Destroy this event", @event, method: :delete %>
+<div class="user-details">
+  <p><strong>Date & Time:</strong> <%= @event.starts_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+  <p><strong>Location:</strong> <%= @event.location %></p>
+
+  <% if current_user.has_role?(:admin) %>
+    <% stats = @event.attendance_stats %>
+    <p><strong>Attendance:</strong> <%= stats[:present] %> / <%= stats[:total] %> present</p>
+  <% end %>
+</div>
+
+<% if current_user.has_role?(:member) || current_user.has_role?(:admin) %>
+  <% attendance = @event.attendance_for(current_user) %>
+  <% if attendance %>
+    <div class="user-details">
+      <h3>Your Attendance</h3>
+      <p><strong>Status:</strong> <%= attendance.status_label %></p>
+      <% if attendance.checked_in_at %>
+        <p><strong>Checked In:</strong> <%= attendance.checked_in_at.strftime("%I:%M %p") %></p>
+      <% end %>
+      <% if attendance.notes.present? %>
+        <p><strong>Notes:</strong> <%= attendance.notes %></p>
+      <% end %>
+
+      <% if attendance.status == 'pending' %>
+        <%= button_to "Check In", check_in_event_attendances_path(@event),
+            method: :post, class: "action-button" %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<% if current_user.has_role?(:admin) %>
+  <div style="margin-top: 1rem;">
+    <%= link_to "Manage Attendance", event_attendances_path(@event), class: "action-button" %>
+    <%= link_to "Edit Event", edit_event_path(@event), class: "action-button" %>
+    <%= link_to "Delete Event", event_confirm_delete_event_path(@event), class: "action-button" %>
+  </div>
+<% end %>
+
+<div style="margin-top: 1rem;">
+  <%= link_to "Back to Events", events_path, class: "action-button" %>
 </div>

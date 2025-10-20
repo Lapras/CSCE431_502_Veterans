@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_29_181619) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "attendances", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "checked_in_at"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_attendances_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_attendances_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
 
   create_table "events", force: :cascade do |t|
     t.string "title"
@@ -20,6 +33,29 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_181619) do
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "excusal_requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.text "reason"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_excusal_requests_on_event_id"
+    t.index ["user_id"], name: "index_excusal_requests_on_user_id"
+  end
+
+  create_table "recurring_excusals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "recurring_days"
+    t.time "recurring_start_time"
+    t.time "recurring_end_time"
+    t.text "reason"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_recurring_excusals_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -49,4 +85,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_181619) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
+
+  add_foreign_key "attendances", "events"
+  add_foreign_key "attendances", "users"
+  add_foreign_key "excusal_requests", "events"
+  add_foreign_key "excusal_requests", "users"
+  add_foreign_key "recurring_excusals", "users"
 end
