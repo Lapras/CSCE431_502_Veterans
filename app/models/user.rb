@@ -35,7 +35,7 @@ class User < ApplicationRecord
   has_many :approvals, foreign_key: :approved_by_user_id, dependent: :destroy
   has_many :recurring_approvals, foreign_key: :approved_by_user_id, dependent: :destroy
 
-  #attendance related methods
+  # attendance related methods
   def attendance_for(event)
     attendances.find_by(event: event)
   end
