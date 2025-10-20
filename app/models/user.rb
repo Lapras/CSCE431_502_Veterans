@@ -31,7 +31,11 @@ class User < ApplicationRecord
     (names - roles.pluck(:name)).each { |r| add_role(r) }
   end
 
-  #attendance related methods
+  # approvals
+  has_many :approvals, foreign_key: :approved_by_user_id, dependent: :destroy
+  has_many :recurring_approvals, foreign_key: :approved_by_user_id, dependent: :destroy
+
+  # attendance related methods
   def attendance_for(event)
     attendances.find_by(event: event)
   end

@@ -17,7 +17,7 @@ class RecurringExcusalsController < ApplicationController
     @recurring_excusal.status = 'pending'
 
     if @recurring_excusal.save
-      redirect_to recurring_excusals_path, notice: I18n.t('excusal.recurring_submit')
+      redirect_to recurring_excusals_path, notice: 'Recurring excusal request sent.'
     else
       render :new
     end
