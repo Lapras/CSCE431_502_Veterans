@@ -1,48 +1,62 @@
 <!-- app/views/events/show.html.erb -->
-<p style="color: green"><%= notice %></p>
-<p style="color: red"><%= alert %></p>
-
 <h1><%= @event.title %></h1>
 
-<div class="user-details">
-  <p><strong>Date & Time:</strong> <%= @event.starts_at.strftime("%B %d, %Y at %I:%M %p") %></p>
-  <p><strong>Location:</strong> <%= @event.location %></p>
+<div class="event-details-card">
+  <div class="detail-row">
+    <span class="detail-label">Date & Time:</span>
+    <span class="detail-value"><%= @event.starts_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+  </div>
+  <div class="detail-row">
+    <span class="detail-label">Location:</span>
+    <span class="detail-value"><%= @event.location %></span>
+  </div>
 
   <% if current_user.has_role?(:admin) %>
-    <% stats = @event.attendance_stats %>
-    <p><strong>Attendance:</strong> <%= stats[:present] %> / <%= stats[:total] %> present</p>
+    <div class="detail-row">
+      <span class="detail-label">Attendance:</span>
+      <% stats = @event.attendance_stats %>
+      <span class="detail-value"><%= stats[:present] %> / <%= stats[:total] %> present</span>
+    </div>
   <% end %>
 </div>
 
 <% if current_user.has_role?(:member) || current_user.has_role?(:admin) %>
   <% attendance = @event.attendance_for(current_user) %>
   <% if attendance %>
-    <div class="user-details">
-      <h3>Your Attendance</h3>
-      <p><strong>Status:</strong> <%= attendance.status_label %></p>
+    <div class="event-details-card">
+      <h2 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.3em; color: #500000;">Your Attendance</h2>
+      <div class="detail-row">
+        <span class="detail-label">Status:</span>
+        <span class="detail-value"><%= attendance.status_label %></span>
+      </div>
       <% if attendance.checked_in_at %>
-        <p><strong>Checked In:</strong> <%= attendance.checked_in_at.strftime("%I:%M %p") %></p>
+        <div class="detail-row">
+          <span class="detail-label">Checked In:</span>
+          <span class="detail-value"><%= attendance.checked_in_at.strftime("%I:%M %p") %></span>
+        </div>
       <% end %>
       <% if attendance.notes.present? %>
-        <p><strong>Notes:</strong> <%= attendance.notes %></p>
+        <div class="detail-row">
+          <span class="detail-label">Notes:</span>
+          <span class="detail-value"><%= attendance.notes %></span>
+        </div>
       <% end %>
 
       <% if attendance.status == 'pending' %>
-        <%= button_to "Check In", check_in_event_attendances_path(@event),
-            method: :post, class: "action-button" %>
+        <div style="margin-top: 1rem;">
+          <%= button_to "Check In", check_in_event_attendances_path(@event),
+              method: :post, class: "action-button" %>
+        </div>
       <% end %>
     </div>
   <% end %>
 <% end %>
 
-<% if current_user.has_role?(:admin) %>
-  <div style="margin-top: 1rem;">
+<div style="margin-top: 1.5rem;">
+  <% if current_user.has_role?(:admin) %>
     <%= link_to "Manage Attendance", event_attendances_path(@event), class: "action-button" %>
     <%= link_to "Edit Event", edit_event_path(@event), class: "action-button" %>
     <%= link_to "Delete Event", event_confirm_delete_event_path(@event), class: "action-button" %>
-  </div>
-<% end %>
-
-<div style="margin-top: 1rem;">
+  <% end %>
   <%= link_to "Back to Events", events_path, class: "action-button" %>
 </div>
