@@ -55,3 +55,6 @@ en:
   excusal:
     submit: 'Excusal request was successfully submitted.'
     recurring_submit: 'Recurring excusal request sent.'
+  excusal_requests:
+    sent: "Excusal request is sent"
+    missing_fields: "Error: Missing required fields"
