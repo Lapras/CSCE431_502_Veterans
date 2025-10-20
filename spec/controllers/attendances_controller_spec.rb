@@ -85,9 +85,9 @@ RSpec.describe AttendancesController, type: :controller do
     end
 
     it 'creates attendance if not exists' do
-      expect {
+      expect do
         post :check_in, params: { event_id: event.id }
-      }.to change(Attendance, :count).by(1)
+      end.to change(Attendance, :count).by(1)
     end
   end
 

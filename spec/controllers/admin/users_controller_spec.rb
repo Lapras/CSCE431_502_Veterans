@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::UsersController, type: :controller do
@@ -15,34 +17,41 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   describe 'PATCH #update (roles handling branches)' do
     it "clears roles when params include 'none'" do
-    admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com"); admin.add_role(:admin); sign_in admin
-    user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com"); user.add_role(:member)
+      admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com")
+      admin.add_role(:admin)
+      sign_in admin
+      user = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com")
+      user.add_role(:member)
 
-    patch :update, params: { id: user.id, user: { email: user.email, role_names: ['none'] } }
+      patch :update, params: { id: user.id, user: { email: user.email, role_names: ['none'] } }
 
-    expect(response).to redirect_to([:admin, user])
-    expect(user.reload.roles).to be_empty
+      expect(response).to redirect_to([:admin, user])
+      expect(user.reload.roles).to be_empty
     end
 
-    it "assigns provided roles" do
-    admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com"); admin.add_role(:admin); sign_in admin
-    user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com")
+    it 'assigns provided roles' do
+      admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com")
+      admin.add_role(:admin)
+      sign_in admin
+      user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com")
 
-    patch :update, params: { id: user.id, user: { email: user.email, role_names: %w[admin officer] } }
+      patch :update, params: { id: user.id, user: { email: user.email, role_names: %w[admin officer] } }
 
-    user.reload
-    expect(user.has_role?(:admin)).to be(true)
-    expect(user.has_role?(:officer)).to be(true)
-    expect(response).to redirect_to([:admin, user])
+      user.reload
+      expect(user.has_role?(:admin)).to be(true)
+      expect(user.has_role?(:officer)).to be(true)
+      expect(response).to redirect_to([:admin, user])
     end
 
-    it "renders 422 when invalid" do
-    admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com"); admin.add_role(:admin); sign_in admin
-    user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com")
+    it 'renders 422 when invalid' do
+      admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@ex.com")
+      admin.add_role(:admin)
+      sign_in admin
+      user  = User.create!(email: "target+#{SecureRandom.hex(4)}@ex.com")
 
-    patch :update, params: { id: user.id, user: { email: "" } }
+      patch :update, params: { id: user.id, user: { email: '' } }
 
-    expect(response.status).to eq(422)
+      expect(response.status).to eq(422)
     end
   end
 
@@ -59,9 +68,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
       controller.send(:update_roles, user) # should no-op
 
-      if user.respond_to?(:roles)
-        expect(user.roles.pluck(:name)).to eq(before_roles)
-      end
+      expect(user.roles.pluck(:name)).to eq(before_roles) if user.respond_to?(:roles)
     end
 
     it 'clears roles then adds compacted role_names' do
@@ -79,13 +86,11 @@ RSpec.describe Admin::UsersController, type: :controller do
 
       controller.send(:update_roles, user)
 
-      if user.respond_to?(:roles)
-        expect(user.roles.pluck(:name).sort).to eq(%w[member officer].sort)
-      end
+      expect(user.roles.pluck(:name).sort).to eq(%w[member officer].sort) if user.respond_to?(:roles)
     end
   end
   describe "PATCH #update – clears roles when 'none' provided" do
-    it "executes @user.roles = []" do
+    it 'executes @user.roles = []' do
       # authorize as admin
       admin = User.create!(email: "admin+#{SecureRandom.hex(4)}@example.com")
       admin.add_role(:admin)
@@ -108,7 +113,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         id: target.id,
         user: {
           email: target.email,     # anything to keep update "valid"
-          role_names: ["none"]     # -> triggers the branch
+          role_names: ['none']     # -> triggers the branch
         }
       }
 

@@ -24,19 +24,19 @@ RSpec.describe 'events/index', type: :view do
     allow(view).to receive(:user_excusal_requests_for).and_return([])
   end
 
-  it "renders a list" do
+  it 'renders a list' do
     assign(:events, [
-      Event.new(id: 1, title: "T1", starts_at: Time.zone.now, location: "L1"),
-      Event.new(id: 2, title: "T2", starts_at: Time.zone.now, location: "L2"),
-    ])
+             Event.new(id: 1, title: 'T1', starts_at: Time.zone.now, location: 'L1'),
+             Event.new(id: 2, title: 'T2', starts_at: Time.zone.now, location: 'L2')
+           ])
 
-    fake_user = double("user", excusal_requests: double("reqs", where: []))
+    fake_user = double('user', excusal_requests: double('reqs', where: []))
     allow(view).to receive(:current_user).and_return(fake_user)
 
     render
 
-    expect(rendered).to include("T1").and include("T2")
-    expect(rendered).to include("L1").and include("L2")
+    expect(rendered).to include('T1').and include('T2')
+    expect(rendered).to include('L1').and include('L2')
     expect(rendered).to have_text('Starts at:').twice
   end
 end

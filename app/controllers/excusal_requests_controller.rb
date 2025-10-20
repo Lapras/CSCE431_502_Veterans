@@ -10,7 +10,7 @@ class ExcusalRequestsController < ApplicationController
   end
 
   def create
-    collection = current_user&.respond_to?(:excusal_requests) ? current_user.excusal_requests : nil
+    collection = current_user.respond_to?(:excusal_requests) ? current_user.excusal_requests : nil
     @excusal_request = collection ? collection.build(excusal_request_params) : ExcusalRequest.new(excusal_request_params)
 
     if @excusal_request.save

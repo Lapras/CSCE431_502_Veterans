@@ -6,8 +6,6 @@ class ExcusalRequest < ApplicationRecord
   has_one :approval, dependent: :destroy
 
   validates :reason, presence: true
-  validates :user_id, presence: true
-  validates :event_id, presence: true
 
   scope :pending, -> { where(status: 'pending').or(where(status: nil)) }
   scope :approved, -> { where(status: 'approved') }
