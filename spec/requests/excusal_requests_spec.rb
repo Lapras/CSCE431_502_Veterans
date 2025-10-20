@@ -1,8 +1,8 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe "ExcusalRequests", type: :request do
+  let(:event) { Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location') }
+
   before do
     @user = User.create!(email: "ex+#{SecureRandom.hex(6)}@ex.com")
     @user.add_role(:member)
