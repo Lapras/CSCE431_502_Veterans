@@ -4,11 +4,6 @@ RSpec.describe "/events", type: :request do
   let(:valid_attributes)   { { title: "Concert", starts_at: 1.hour.from_now, location: "Hall" } }
   let(:invalid_attributes) { { title: "",       starts_at: nil,             location: ""    } }
 
-    # Pretend the user is signed in and already has at least one role
-    # so ApplicationController#check_user_roles doesn't redirect.
-    stubbed_user = double("User", has_role?: true, roles: [double("Role")], id: 1)
-    allow_any_instance_of(ApplicationController)
-      .to receive(:current_user).and_return(stubbed_user)
   context "as a signed-in MEMBER" do
     before do
       @member = User.create!(email: "member+#{SecureRandom.hex(6)}@ex.com")
