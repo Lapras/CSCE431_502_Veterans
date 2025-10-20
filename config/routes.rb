@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   get 'recurring_excusals/create'
   get 'excusal_requests/new'
   get 'excusal_requests/create'
+  get 'recurring_excusals/index'
+  get 'recurring_excusals/new'
+  get 'recurring_excusals/create'
+  get 'excusal_requests/new'
+  get 'excusal_requests/create'
   get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
   get '/documentation_and_support', to: 'static_pages#documentation_and_support', as: :documentation_and_support
   post '/request_membership', to: 'membership_requests#create'
@@ -19,6 +24,7 @@ Rails.application.routes.draw do
         patch :deny
       end
     end
+    resources :attendance_reports, only: [:index]
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -35,8 +41,16 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :excusal_requests, only: %i[new create]
-  resources :recurring_excusals, only: %i[index new create]
+  resources :excusal_requests, only: %i[new create] do
+    resources :approvals, only: [:create]
+  end
+
+  resources :approvals, only: [:index]
+
+  resources :recurring_excusals, only: %i[index new create] do
+    resources :recurring_approvals, only: [:create]
+  end
+
   root to: 'dashboards#show'
   resource :dashboard, only: [:show] # User dashboard
 

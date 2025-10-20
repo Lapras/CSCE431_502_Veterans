@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_18_031427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "approvals", force: :cascade do |t|
+    t.bigint "excusal_request_id", null: false
+    t.bigint "approved_by_user_id", null: false
+    t.string "decision", null: false
+    t.datetime "decision_at", precision: nil, null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_user_id"], name: "index_approvals_on_approved_by_user_id"
+    t.index ["excusal_request_id", "decision"], name: "index_approvals_on_excusal_request_id_and_decision"
+    t.index ["excusal_request_id"], name: "index_approvals_on_excusal_request_id"
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -25,6 +38,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
     t.index ["event_id"], name: "index_attendances_on_event_id"
     t.index ["user_id", "event_id"], name: "index_attendances_on_user_id_and_event_id", unique: true
     t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
+
+  create_table "event_users", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_event_users_on_event_id"
+    t.index ["user_id"], name: "index_event_users_on_user_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -44,6 +66,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_excusal_requests_on_event_id"
     t.index ["user_id"], name: "index_excusal_requests_on_user_id"
+  end
+
+  create_table "recurring_approvals", force: :cascade do |t|
+    t.bigint "recurring_excusal_id", null: false
+    t.bigint "approved_by_user_id", null: false
+    t.string "decision", null: false
+    t.datetime "decision_at", precision: nil, null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_user_id"], name: "index_recurring_approvals_on_approved_by_user_id"
+    t.index ["recurring_excusal_id", "decision"], name: "index_recurring_approvals_on_recurring_excusal_id_and_decision"
+    t.index ["recurring_excusal_id"], name: "index_recurring_approvals_on_recurring_excusal_id"
   end
 
   create_table "recurring_excusals", force: :cascade do |t|
@@ -86,9 +121,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_172044) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "approvals", "excusal_requests"
+  add_foreign_key "approvals", "users", column: "approved_by_user_id"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "users"
+  add_foreign_key "event_users", "events"
+  add_foreign_key "event_users", "users"
   add_foreign_key "excusal_requests", "events"
   add_foreign_key "excusal_requests", "users"
+  add_foreign_key "recurring_approvals", "recurring_excusals"
+  add_foreign_key "recurring_approvals", "users", column: "approved_by_user_id"
   add_foreign_key "recurring_excusals", "users"
 end

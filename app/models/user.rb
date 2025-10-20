@@ -3,21 +3,23 @@
 class User < ApplicationRecord
   rolify
 
-  # attedance related associations
-  has_many :attendances, dependent: :destroy
-  has_many :events, through: :attendances
-
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   validates :email, presence: true, uniqueness: true
 
-  has_many :excusal_requests, dependent: :destroy
-
+  # Attendance related associations
+  has_many :attendances, dependent: :destroy
+  has_many :events, through: :attendances
   has_many :attended_events, through: :attendances, source: :event
 
+  # Excusal related associations
+  has_many :excusal_requests, dependent: :destroy
   has_many :recurring_excusals, dependent: :destroy
+
+  # Event users (join table)
+  has_many :event_users, dependent: :destroy
 
   def self.from_google(email:, full_name:, uid:, avatar_url:)
     create_with(uid: uid, full_name: full_name, avatar_url: avatar_url).find_or_create_by!(email: email)
@@ -28,6 +30,10 @@ class User < ApplicationRecord
     (roles.pluck(:name) - names).each { |r| remove_role(r) }
     (names - roles.pluck(:name)).each { |r| add_role(r) }
   end
+
+  # approvals
+  has_many :approvals, foreign_key: :approved_by_user_id, dependent: :destroy
+  has_many :recurring_approvals, foreign_key: :approved_by_user_id, dependent: :destroy
 
   # attendance related methods
   def attendance_for(event)

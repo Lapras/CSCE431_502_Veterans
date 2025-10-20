@@ -37,6 +37,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: I18n.t('event.created') }
+        assign_users_to_event
         format.json { render :show, status: :created, location: @event }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -50,6 +51,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       if @event.update(event_params)
         format.html { redirect_to @event, notice: I18n.t('event.updated'), status: :see_other }
+        assign_users_to_event
         format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -81,7 +83,7 @@ class EventsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def event_params
-    params.require(:event).permit(:title, :starts_at, :location)
+    params.require(:event).permit(:title, :starts_at, :location, user_ids: [])
   end
 
   def require_admin!
@@ -96,5 +98,9 @@ class EventsController < ApplicationController
     else
       'user'
     end
+  end
+
+  def assign_users_to_event
+    @event.user_ids = params[:event][:user_ids] if params[:event][:user_ids].present?
   end
 end

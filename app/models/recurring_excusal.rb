@@ -9,4 +9,9 @@ class RecurringExcusal < ApplicationRecord
   validates :recurring_end_time, presence: true
   validates :status, inclusion: { in: %w[pending approved denied] }
   scope :approved, -> { where(status: 'approved') }
+
+  has_one :recurring_approval, dependent: :destroy
+
+  scope :pending, -> { where(status: 'pending').or(where(status: nil)) }
+  scope :denied, -> { where(status: 'denied') }
 end
