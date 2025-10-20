@@ -30,6 +30,7 @@ RSpec.describe 'events/index', type: :view do
     allow(user).to receive(:has_role?).with(:member).and_return(true)
   end
 
+<<<<<<< HEAD
   it 'renders a list of events with titles, locations, and formatted start times' do
     # Mock attendance_for for each event
     events.each do |event|
@@ -43,5 +44,18 @@ RSpec.describe 'events/index', type: :view do
     expect(rendered).to have_text('Event Two')
     expect(rendered).to have_text('Location One')
     expect(rendered).to have_text('Location Two')
+=======
+  it "renders a list" do
+    assign(:events, [
+      Event.new(id: 1, title: "T1", starts_at: Time.zone.now, location: "L1"),
+      Event.new(id: 2, title: "T2", starts_at: Time.zone.now, location: "L2"),
+    ])
+
+    fake_user = double("user", excusal_requests: double("reqs", where: []))
+    allow(view).to receive(:current_user).and_return(fake_user)
+
+    render
+    expect(rendered).to include("T1").and include("T2")
+>>>>>>> origin/sprint1-test-coverage
   end
 end
