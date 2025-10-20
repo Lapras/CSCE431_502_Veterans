@@ -8,7 +8,7 @@ class Attendance < ApplicationRecord
   enum :status, {
     pending: 'pending',
     present: 'present',
-    absent: 'absent',
+    absent:  'absent',
     tardy: 'tardy',
     excused: 'excused'
   }
