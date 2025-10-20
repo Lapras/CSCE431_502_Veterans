@@ -24,7 +24,7 @@ RSpec.describe 'Role gate', type: :request do
   end
 
   it "does NOT add the 'in the past' error when starts_at is blank (only presence error)" do
-    e = Event.new(title: "T", location: "L", starts_at: nil)
+    e = Event.new(title: 'T', location: 'L', starts_at: nil)
     expect(e).not_to be_valid
     # Presence validator fires:
     expect(e.errors[:starts_at]).to include("can't be blank")
@@ -33,11 +33,11 @@ RSpec.describe 'Role gate', type: :request do
   end
 
   it "adds 'is not a valid datetime' when starts_at is present but not a Time/TimeWithZone" do
-    e = Event.new(title: "T", location: "L")
+    e = Event.new(title: 'T', location: 'L')
     # Make starts_at 'present' yet not a Time/TimeWithZone
-    allow(e).to receive(:starts_at).and_return("not-a-time")
+    allow(e).to receive(:starts_at).and_return('not-a-time')
     e.validate
-    expect(e.errors[:starts_at]).to include("is not a valid datetime")
+    expect(e.errors[:starts_at]).to include('is not a valid datetime')
     expect(e.errors[:starts_at]).not_to include("can't be blank")
   end
 end
