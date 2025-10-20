@@ -43,7 +43,10 @@ module Admin
       if @user.update(user_params.except(:role_names))
         names = incoming_role_names
         # IMPORTANT: do nothing if role_names param is missing OR blank (keeps existing roles)
-        if names&.any?
+        # Special case: if 'none' is provided, clear all roles
+        if names&.include?('none')
+          @user.roles = []
+        elsif names&.any?
           names.each { |r| Role.find_or_create_by!(name: r) }
           @user.set_roles!(names)
         end

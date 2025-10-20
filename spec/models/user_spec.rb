@@ -71,4 +71,50 @@ RSpec.describe User, type: :model do
       }.not_to change { user.roles.pluck(:name).sort }
     end
   end
+
+  describe 'attendance methods' do
+    let(:user) { User.create!(email: 'test@example.com', full_name: 'Test User') }
+    let(:event1) { Event.create!(title: 'Event 1', starts_at: 1.day.from_now, location: 'Location 1') }
+    let(:event2) { Event.create!(title: 'Event 2', starts_at: 2.days.from_now, location: 'Location 2') }
+
+    describe '#attendance_for' do
+      it 'returns the attendance for the given event' do
+        attendance = Attendance.create!(user: user, event: event1, status: 'present')
+        expect(user.attendance_for(event1)).to eq(attendance)
+      end
+
+      it 'returns nil when no attendance exists for the event' do
+        expect(user.attendance_for(event1)).to be_nil
+      end
+    end
+
+    describe '#total_attendance_points' do
+      it 'sums all attendance point values' do
+        Attendance.create!(user: user, event: event1, status: 'present')
+        Attendance.create!(user: user, event: event2, status: 'tardy')
+        expect(user.total_attendance_points).to eq(0.33)
+      end
+
+      it 'returns 0 when user has no attendances' do
+        expect(user.total_attendance_points).to eq(0)
+      end
+    end
+
+    describe '#attendance_stats' do
+      before do
+        Attendance.create!(user: user, event: event1, status: 'present')
+        Attendance.create!(user: user, event: event2, status: 'absent')
+      end
+
+      it 'returns a hash with attendance statistics' do
+        stats = user.attendance_stats
+        expect(stats[:total_events]).to eq(2)
+        expect(stats[:present]).to eq(1)
+        expect(stats[:absent]).to eq(1)
+        expect(stats[:excused]).to eq(0)
+        expect(stats[:tardy]).to eq(0)
+        expect(stats[:points]).to eq(1)
+      end
+    end
+  end
 end

@@ -71,4 +71,41 @@ RSpec.describe 'Role gate', type: :request do
       expect(e.errors[:starts_at]).to include('is not a valid datetime')
     end
   end
+
+  describe 'event instance methods' do
+    let!(:member) { User.create!(email: 'member@example.com').tap { |u| u.add_role(:member) } }
+    let(:event) { Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location') }
+
+    describe '#user_checked_in?' do
+      it 'returns true when user is present' do
+        attendance = event.attendance_for(member)
+        attendance.update!(status: 'present')
+        expect(event.user_checked_in?(member)).to be true
+      end
+
+      it 'returns true when user is tardy' do
+        attendance = event.attendance_for(member)
+        attendance.update!(status: 'tardy')
+        expect(event.user_checked_in?(member)).to be true
+      end
+
+      it 'returns false when user is absent' do
+        attendance = event.attendance_for(member)
+        attendance.update!(status: 'absent')
+        expect(event.user_checked_in?(member)).to be false
+      end
+    end
+
+    describe '#attendance_stats' do
+      it 'returns attendance statistics' do
+        stats = event.attendance_stats
+        expect(stats).to have_key(:total)
+        expect(stats).to have_key(:present)
+        expect(stats).to have_key(:absent)
+        expect(stats).to have_key(:excused)
+        expect(stats).to have_key(:tardy)
+        expect(stats).to have_key(:pending)
+      end
+    end
+  end
 end

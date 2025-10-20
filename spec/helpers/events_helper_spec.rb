@@ -17,4 +17,31 @@ RSpec.describe EventsHelper, type: :helper do
       expect(helper.formatted_event_date(event)).to be_nil
     end
   end
+
+  describe '#user_excusal_requests_for' do
+    let(:user) { User.create!(email: 'user@example.com') }
+    let(:event) { Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location') }
+
+    it 'returns excusal requests for the given user and event' do
+      excusal_request = ExcusalRequest.create!(user: user, event: event, reason: 'Test reason')
+      requests = helper.user_excusal_requests_for(event, user)
+      expect(requests).to include(excusal_request)
+    end
+
+    it 'returns empty when user has no excusal requests for the event' do
+      requests = helper.user_excusal_requests_for(event, user)
+      expect(requests).to be_empty
+    end
+
+    it 'returns none when user is nil' do
+      requests = helper.user_excusal_requests_for(event, nil)
+      expect(requests).to eq(ExcusalRequest.none)
+    end
+
+    it 'handles error when current_user is not available' do
+      allow(helper).to receive(:current_user).and_raise(StandardError)
+      requests = helper.user_excusal_requests_for(event)
+      expect(requests).to eq(ExcusalRequest.none)
+    end
+  end
 end

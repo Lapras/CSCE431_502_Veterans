@@ -68,6 +68,47 @@ RSpec.describe "Attendances", type: :request do
     end
   end
 
+  describe "GET /events/:event_id/attendances/:id/edit" do
+    context "as admin" do
+      before do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+        allow_any_instance_of(ApplicationController).to receive(:authenticate_user!).and_return(true)
+        allow_any_instance_of(ApplicationController).to receive(:check_user_roles).and_return(true)
+      end
+
+      it "returns success" do
+        attendance = event.attendance_for(member)
+        get edit_event_attendance_path(event, attendance)
+        expect(response).to be_successful
+      end
+    end
+  end
+
+  describe "PATCH /events/:event_id/attendances/:id" do
+    context "as admin" do
+      before do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+        allow_any_instance_of(ApplicationController).to receive(:authenticate_user!).and_return(true)
+        allow_any_instance_of(ApplicationController).to receive(:check_user_roles).and_return(true)
+      end
+
+      it "updates the attendance with valid params" do
+        attendance = event.attendance_for(member)
+        patch event_attendance_path(event, attendance), params: { attendance: { status: 'present' } }
+        attendance.reload
+        expect(attendance.status).to eq('present')
+        expect(response).to redirect_to(event_attendances_path(event))
+      end
+
+      it "renders edit with invalid params" do
+        attendance = event.attendance_for(member)
+        allow_any_instance_of(Attendance).to receive(:update).and_return(false)
+        patch event_attendance_path(event, attendance), params: { attendance: { status: '' } }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
   describe "POST /events/:event_id/attendances/bulk_update" do
     before do
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
