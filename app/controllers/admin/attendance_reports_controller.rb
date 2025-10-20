@@ -10,8 +10,8 @@ module Admin
     # GET /admin/attendance_reports
     def index
       @q       = params[:q].to_s.strip
-      sort     = safe_sort(params[:sort])
-      dir      = %w[asc desc].include?(params[:dir]) ? params[:dir] : 'desc'
+      sort_column = safe_sort(params[:sort])
+      sort_dir    = safe_direction(params[:dir])
 
       absent_w = Attendance::POINT_VALUES['absent'].to_f
       tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
@@ -36,7 +36,8 @@ module Admin
         base = base.where('users.full_name ILIKE ? OR users.email ILIKE ?', pattern, pattern)
       end
 
-      @rows = base.order(Arel.sql("#{sort} #{dir}"))
+      # Use sanitized column and direction - both are whitelisted
+      @rows = base.order(Arel.sql("#{sort_column} #{sort_dir}"))
     end
 
     private
@@ -53,6 +54,11 @@ module Admin
         'total' => 'weighed_total'
       }
       allowed[param.to_s] || 'weighed_total'
+    end
+
+    # Whitelist sort direction
+    def safe_direction(param)
+      %w[asc desc].include?(param.to_s.downcase) ? param.to_s.downcase : 'desc'
     end
 
     def require_admin!

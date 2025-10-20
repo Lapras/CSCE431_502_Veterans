@@ -14,14 +14,38 @@
 
 <% if current_user.has_role?(:member) || current_user.has_role?(:admin) %>
   <% stats = current_user.attendance_stats %>
-  <div class="user-details">
-    <h2>My Attendance Summary</h2>
-    <p><strong>Total Events:</strong> <%= stats[:total_events] %></p>
-    <p><strong>Present:</strong> <%= stats[:present] %></p>
-    <p><strong>Absent:</strong> <%= stats[:absent] %></p>
-    <p><strong>Excused:</strong> <%= stats[:excused] %></p>
-    <p><strong>Tardy:</strong> <%= stats[:tardy] %></p>
-    <p><strong>Total Points:</strong> <%= stats[:points] %></p>
+  <h2>My Attendance Summary</h2>
+
+  <div class="attendance-summary">
+    <div class="stat-card">
+      <span class="stat-value"><%= stats[:total_events] %></span>
+      <span class="stat-label">Total Events</span>
+    </div>
+
+    <div class="stat-card present">
+      <span class="stat-value"><%= stats[:present] %></span>
+      <span class="stat-label">Present</span>
+    </div>
+
+    <div class="stat-card absent">
+      <span class="stat-value"><%= stats[:absent] %></span>
+      <span class="stat-label">Absent</span>
+    </div>
+
+    <div class="stat-card excused">
+      <span class="stat-value"><%= stats[:excused] %></span>
+      <span class="stat-label">Excused</span>
+    </div>
+
+    <div class="stat-card tardy">
+      <span class="stat-value"><%= stats[:tardy] %></span>
+      <span class="stat-label">Tardy</span>
+    </div>
+
+    <div class="stat-card points">
+      <span class="stat-value"><%= stats[:points] %></span>
+      <span class="stat-label">Total Points</span>
+    </div>
   </div>
 
   <% upcoming_events = Event.where('starts_at >= ?', Time.current).order(:starts_at).limit(5) %>
