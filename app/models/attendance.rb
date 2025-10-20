@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# app/models/attendance.rb
 class Attendance < ApplicationRecord
   belongs_to :user
   belongs_to :event
@@ -5,7 +8,7 @@ class Attendance < ApplicationRecord
   enum :status, {
     pending: 'pending',
     present: 'present',
-    absent:  'absent',
+    absent: 'absent',
     tardy: 'tardy',
     excused: 'excused'
   }
@@ -28,7 +31,7 @@ class Attendance < ApplicationRecord
     'pending' => 0
   }.freeze
 
-  validates :user_id, uniqueness: { scope: :event_id, message: "already has an attendance record for this event" }
+  validates :user_id, uniqueness: { scope: :event_id, message: I18n.t('attendance.already') }
 
   # Scopes
   scope :for_event, ->(event) { where(event: event) }

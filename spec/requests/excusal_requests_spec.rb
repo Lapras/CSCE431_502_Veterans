@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe "ExcusalRequests", type: :request do
@@ -32,5 +34,4 @@ RSpec.describe "ExcusalRequests", type: :request do
       expect(response).to redirect_to(events_path)
     end
   end
-
 end

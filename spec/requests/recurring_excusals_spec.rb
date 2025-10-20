@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe "RecurringExcusals", type: :request do
@@ -24,9 +26,9 @@ RSpec.describe "RecurringExcusals", type: :request do
     end
   end
 
-  describe "GET /new" do
-    it "returns http success" do
-      get "/recurring_excusals/new"
+  describe 'GET /new' do
+    it 'returns http success' do
+      get '/recurring_excusals/new'
       expect(response).to have_http_status(:success)
     end
   end
@@ -45,5 +47,4 @@ RSpec.describe "RecurringExcusals", type: :request do
       expect(response).to redirect_to(recurring_excusals_path)
     end
   end
-
 end

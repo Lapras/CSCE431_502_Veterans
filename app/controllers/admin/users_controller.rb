@@ -74,16 +74,16 @@ module Admin
 
     def update_roles(user)
       names = params.dig(:user, :role_names)
-      return if names.nil? || names.reject(&:blank?).empty?
+      return if names.nil? || names.compact_blank.empty?
 
-      user.set_roles!(names.reject(&:blank?))
+      user.set_roles!(names.compact_blank)
     end
 
     def incoming_role_names
       raw = params.dig(:user, :role_names)
       return nil if raw.nil? # key missing
 
-      Array(raw).reject(&:blank?)
+      Array(raw).compact_blank
     end
 
     def require_admin!

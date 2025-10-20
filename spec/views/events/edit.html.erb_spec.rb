@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe 'events/edit', type: :view do
   it 'renders the edit event form with all fields and submit button' do
     # Use a future date to pass validation
     event = Event.create!(
-      title: "My Concert",
+      title: 'My Concert',
       starts_at: 2.days.from_now,
-      location: "New York"
+      location: 'New York'
     )
 
     assign(:event, event)
