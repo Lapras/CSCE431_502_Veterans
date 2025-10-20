@@ -94,3 +94,7 @@
     </tbody>
   </table>
 <% end %>
+
+<% if current_user&.has_role?(:admin) %>
+  <%= link_to "New event", new_event_path %>
+<% end %>

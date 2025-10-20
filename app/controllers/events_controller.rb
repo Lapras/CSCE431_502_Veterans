@@ -7,15 +7,21 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
-    @events = Event.where(starts_at: Time.current..).order(:starts_at)
+    if current_user&.has_role?(:admin)
+      # Admins see all future events
+      @events = Event.where(starts_at: Time.current..).order(:starts_at)
+    else
+      # Regular users only see events they're assigned to
+      @events = current_user.events.where(starts_at: Time.current..).order(:starts_at)
+    end
   end
 
   # GET /events/1 or /events/1.json
   def show
-    # Auto-create attendance records for all members if they don't exist
+    # Ensure attendance records exist for assigned users
     # This is already handled by the Event model's after_create callback
     # but we ensure they exist for events that were created before the callback
-    User.with_role(:member).find_each do |u|
+    @event.assigned_users.each do |u|
       @event.attendances.find_or_create_by(user: u) do |attendance|
         attendance.status = 'pending'
       end
@@ -32,12 +38,12 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
-    @event = Event.new(event_params)
+    @event = Event.new(event_params.except(:user_ids))
 
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: I18n.t('event.created') }
         assign_users_to_event
+        format.html { redirect_to @event, notice: I18n.t('event.created') }
         format.json { render :show, status: :created, location: @event }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -49,9 +55,9 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1 or /events/1.json
   def update
     respond_to do |format|
-      if @event.update(event_params)
-        format.html { redirect_to @event, notice: I18n.t('event.updated'), status: :see_other }
+      if @event.update(event_params.except(:user_ids))
         assign_users_to_event
+        format.html { redirect_to @event, notice: I18n.t('event.updated'), status: :see_other }
         format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -101,6 +107,14 @@ class EventsController < ApplicationController
   end
 
   def assign_users_to_event
-    @event.user_ids = params[:event][:user_ids] if params[:event][:user_ids].present?
+    if params[:event][:user_ids].present?
+      @event.assigned_users = User.where(id: params[:event][:user_ids])
+      # Create attendance records for newly assigned users
+      @event.assigned_users.each do |user|
+        @event.attendances.find_or_create_by(user: user) do |attendance|
+          attendance.status = 'pending'
+        end
+      end
+    end
   end
 end

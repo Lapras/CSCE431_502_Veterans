@@ -2,17 +2,21 @@
 
 # app/models/event.rb
 class Event < ApplicationRecord
+  # Attendance tracking (for actual attendance records)
   has_many :attendances, dependent: :destroy
-  has_many :users, through: :attendances
+  has_many :attended_by_users, through: :attendances, source: :user
+
+  # Event assignment (which users are assigned to this event)
+  has_many :event_users, dependent: :destroy
+  has_many :assigned_users, through: :event_users, source: :user
 
   validates :title, :starts_at, presence: true
   validate  :starts_at_cannot_be_in_the_past
   validate :starts_at_must_be_valid_datetime
   validates :location, presence: true
   has_many :excusal_requests, dependent: :destroy
-  has_many :attending_users, through: :attendances, source: :user
 
-  # Create attendance records for all members when event is created
+  # Create attendance records for assigned users when event is created
   after_create :create_attendance_records
 
   # Get attendance for a specific user
@@ -28,7 +32,7 @@ class Event < ApplicationRecord
     %w[present tardy].include?(attendance&.status)
   end
 
-  # Attendance statistics
+  # Attendance statistics (only count assigned users)
   def attendance_stats
     {
       total: attendances.count,
@@ -40,8 +44,10 @@ class Event < ApplicationRecord
     }
   end
 
-  has_many :event_users, dependent: :destroy
-  has_many :users, through: :event_users
+  # Backwards compatibility alias
+  def users
+    assigned_users
+  end
 
   private
 
@@ -67,8 +73,11 @@ class Event < ApplicationRecord
   end
 
   def create_attendance_records
-    User.with_role(:member).find_each do |user|
-      attendances.create(user: user, status: 'pending')
+    # Only create attendance records for assigned users
+    assigned_users.each do |user|
+      attendances.find_or_create_by(user: user) do |attendance|
+        attendance.status = 'pending'
+      end
     end
   end
 end

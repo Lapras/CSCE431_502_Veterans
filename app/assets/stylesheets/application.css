@@ -20,13 +20,18 @@
 body {
   margin: 0;
   padding: 0;
+  padding-top: 4.6vw; /* Space for fixed banner - 70vw width * 0.065 aspect ratio */
 }
 
 .banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   text-align: center;
   background-color: #500000;
-  position: fixed;
+  position: fixsed;
   top: 0;
   left: 0;
   right: 0;
@@ -204,8 +209,7 @@ form input[type="submit"]:hover {
 /* User Layout */
 .user-container {
   display: flex;
-  min-height: 100vh;
-  padding-top: var(--banner-height, 112px);
+  min-height: calc(100vh - 180px);
 }
 
 .user-sidebar {
@@ -213,10 +217,8 @@ form input[type="submit"]:hover {
   background-color: #4c4646;
   color: white;
   position: fixed;
-  top: var(--banner-height, 112px);
-  height: calc(100vh - var(--banner-height, 112px));
+  height: calc(100vh - 180px);
   padding: 2rem 0;
-  overflow-y: auto;
 }
 
 .user-sidebar h2 {
