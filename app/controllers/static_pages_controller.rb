@@ -6,8 +6,8 @@ class StaticPagesController < ApplicationController
 
   def documentation_and_support
     # Only allow users who are NOT :not_a_member
-    if current_user.roles.empty? || current_user.has_role?(:not_a_member)
-      redirect_to root_path, alert: "You are not authorized to view this page."
-    end
+    return unless current_user.roles.empty? || current_user.has_role?(:not_a_member)
+
+    redirect_to root_path, alert: I18n.t('alerts.not_auth_page')
   end
 end

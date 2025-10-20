@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get 'excusal_requests/new'
   get 'excusal_requests/create'
   get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
-  get "/documentation_and_support", to: "static_pages#documentation_and_support", as: :documentation_and_support
+  get '/documentation_and_support', to: 'static_pages#documentation_and_support', as: :documentation_and_support
   post '/request_membership', to: 'membership_requests#create'
 
   namespace :admin do
