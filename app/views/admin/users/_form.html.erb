@@ -17,10 +17,15 @@
   </div>
 
   <% if user.persisted? %>
-    <div class="field"><strong>Full name:</strong> <%= user.full_name.presence || "—" %></div>
     <div class="field"><strong>UID:</strong> <%= user.uid.presence || "—" %></div>
     <div class="field"><strong>Avatar:</strong> <%= user.avatar_url.presence || "—" %></div>
   <% end %>
+
+  <div>
+    <%= form.label :full_name, "Full Name", style: "display: block" %>
+    <%= form.text_field :full_name, value: user.full_name %>
+  </div>
+
 
   <div class="field">
     <%= form.label :role_names, "Roles" %><br>
