@@ -16,17 +16,25 @@
 body {
   margin: 0;
   padding: 0;
+  padding-top: 4.6vw; /* Space for fixed banner - 70vw width * 0.065 aspect ratio */
 }
 
 .banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   text-align: center;
-  background-color: #500000; 
+  background-color: #500000;
+  z-index: 999; /* Keep banner above content but below sign-out button */
 }
 
 .banner img {
   width: 70%;
+  height: auto;
   display: block;
+  margin: 0 auto;
 }
 
 
@@ -35,6 +43,8 @@ body {
 .admin-container {
   display: flex;
   min-height: 100vh;
+  margin-top: -4.6vw; /* Offset body padding since container has its own layout */
+  padding-top: 4.6vw;
 }
 
 .admin-sidebar {
@@ -43,7 +53,9 @@ body {
   color: white;
   padding: 2rem 0;
   position: fixed;
-  height: 100vh;
+  top: 4.6vw; /* Same as banner height */
+  height: calc(100vh - 4.6vw);
+  box-sizing: border-box;
 }
 
 .admin-sidebar h2 {
@@ -188,7 +200,9 @@ form input[type="submit"]:hover {
 /* User Layout */
 .user-container {
   display: flex;
-  min-height: calc(100vh - 180px);
+  min-height: 100vh;
+  margin-top: -4.6vw; /* Offset body padding since container has its own layout */
+  padding-top: 4.6vw;
 }
 
 .user-sidebar {
@@ -196,8 +210,10 @@ form input[type="submit"]:hover {
   background-color: #4c4646;
   color: white;
   position: fixed;
-  height: calc(100vh - 180px);
+  top: 4.6vw; /* Same as banner height */
+  height: calc(100vh - 4.6vw);
   padding: 2rem 0;
+  box-sizing: border-box;
 }
 
 .user-sidebar h2 {
