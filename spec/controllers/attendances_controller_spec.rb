@@ -85,35 +85,35 @@ RSpec.describe AttendancesController, type: :controller do
     end
 
     it 'creates attendance if not exists' do
-      expect {
+      expect do
         post :check_in, params: { event_id: event.id }
-      }.to change(Attendance, :count).by(1)
+      end.to change(Attendance, :count).by(1)
     end
   end
 
   describe 'POST #bulk_update' do
-    let!(:attendance1) { event.attendances.find_or_create_by!(user: member) { |a| a.status = 'pending' } }
+    let!(:attendance_1) { event.attendances.find_or_create_by!(user: member) { |a| a.status = 'pending' } }
     let!(:other_user) { User.create!(email: "other#{SecureRandom.hex(4)}@example.com") }
-    let!(:attendance2) { event.attendances.find_or_create_by!(user: other_user) { |a| a.status = 'pending' } }
+    let!(:attendance_2) { event.attendances.find_or_create_by!(user: other_user) { |a| a.status = 'pending' } }
 
     it 'updates multiple attendances' do
       post :bulk_update, params: {
         event_id: event.id,
         attendances: {
-          attendance1.id => { status: 'present' },
-          attendance2.id => { status: 'absent' }
+          attendance_1.id => { status: 'present' },
+          attendance_2.id => { status: 'absent' }
         }
       }
 
-      expect(attendance1.reload.status).to eq('present')
-      expect(attendance2.reload.status).to eq('absent')
+      expect(attendance_1.reload.status).to eq('present')
+      expect(attendance_2.reload.status).to eq('absent')
     end
 
     it 'redirects to event attendances path' do
       post :bulk_update, params: {
         event_id: event.id,
         attendances: {
-          attendance1.id => { status: 'present' }
+          attendance_1.id => { status: 'present' }
         }
       }
 

@@ -32,8 +32,15 @@ class User < ApplicationRecord
   end
 
   # approvals
-  has_many :approvals, foreign_key: :approved_by_user_id, dependent: :destroy
-  has_many :recurring_approvals, foreign_key: :approved_by_user_id, dependent: :destroy
+  has_many :approvals,
+           foreign_key: :approved_by_user_id,
+           inverse_of: :approved_by_user,
+           dependent: :destroy
+
+  has_many :recurring_approvals,
+           foreign_key: :approved_by_user_id,
+           inverse_of: :approved_by_user,
+           dependent: :destroy
 
   # attendance related methods
   def attendance_for(event)

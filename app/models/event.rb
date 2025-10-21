@@ -3,7 +3,8 @@
 # app/models/event.rb
 class Event < ApplicationRecord
   has_many :attendances, dependent: :destroy
-  has_many :users, through: :attendances
+  has_many :event_users, dependent: :destroy
+  has_many :users, through: :event_users
 
   validates :title, :starts_at, presence: true
   validate  :starts_at_cannot_be_in_the_past
@@ -39,9 +40,6 @@ class Event < ApplicationRecord
       pending: attendances.pending.count
     }
   end
-
-  has_many :event_users, dependent: :destroy
-  has_many :users, through: :event_users
 
   private
 

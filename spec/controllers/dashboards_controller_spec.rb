@@ -1,23 +1,25 @@
-require "rails_helper"
+# frozen_string_literal: true
+
+require 'rails_helper'
 
 RSpec.describe DashboardsController, type: :controller do
-  before { @request.env["devise.mapping"] = Devise.mappings[:user] }
+  before { @request.env['devise.mapping'] = Devise.mappings[:user] }
 
-  describe "GET #show" do
-    it "redirects admins to the admin dashboard" do
-      admin = User.create!(email: "admin@example.com")
+  describe 'GET #show' do
+    it 'redirects admins to the admin dashboard' do
+      admin = User.create!(email: 'admin@example.com')
       admin.add_role(:admin)
       sign_in admin
 
       # Avoid route coupling: stub the path helper
-      allow(controller).to receive(:admin_dashboard_path).and_return("/admin/dashboard")
+      allow(controller).to receive(:admin_dashboard_path).and_return('/admin/dashboard')
 
       get :show
-      expect(response).to redirect_to("/admin/dashboard")
+      expect(response).to redirect_to('/admin/dashboard')
     end
 
-    it "assigns @user for non-admins and renders successfully" do
-      user = User.create!(email: "member@example.com")
+    it 'assigns @user for non-admins and renders successfully' do
+      user = User.create!(email: 'member@example.com')
       user.add_role(:member) # prevents ApplicationController#check_user_roles redirect
       sign_in user
 

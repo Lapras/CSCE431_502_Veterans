@@ -55,17 +55,17 @@ RSpec.describe Attendance, type: :model do
 
   describe 'scopes' do
     before do
-      @attendance1 = Attendance.create!(user: user, event: event, status: 'present')
-      @attendance2 = Attendance.create!(user: User.create!(email: 'user2@example.com'), event: event, status: 'absent')
+      @attendance_1 = Attendance.create!(user: user, event: event, status: 'present')
+      @attendance_2 = Attendance.create!(user: User.create!(email: 'user2@example.com'), event: event, status: 'absent')
     end
 
     it 'filters by event with for_event scope' do
-      expect(Attendance.for_event(event)).to include(@attendance1, @attendance2)
+      expect(Attendance.for_event(event)).to include(@attendance_1, @attendance_2)
     end
 
     it 'filters by user with for_user scope' do
-      expect(Attendance.for_user(user)).to include(@attendance1)
-      expect(Attendance.for_user(user)).not_to include(@attendance2)
+      expect(Attendance.for_user(user)).to include(@attendance_1)
+      expect(Attendance.for_user(user)).not_to include(@attendance_2)
     end
   end
 
