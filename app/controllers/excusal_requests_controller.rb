@@ -31,4 +31,3 @@ class ExcusalRequestsController < ApplicationController
     current_user&.has_role?(:admin) ? 'admin' : 'user'
   end
 end
-

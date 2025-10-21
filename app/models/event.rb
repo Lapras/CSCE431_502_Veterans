@@ -9,7 +9,6 @@ class Event < ApplicationRecord
   # Event assignment (which users are assigned to this event)
   has_many :event_users, dependent: :destroy
   has_many :assigned_users, through: :event_users, source: :user
-  has_many :event_users, dependent: :destroy
   has_many :users, through: :event_users
 
   validates :title, :starts_at, presence: true

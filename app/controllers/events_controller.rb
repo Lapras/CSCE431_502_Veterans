@@ -7,13 +7,13 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
-    if current_user&.has_role?(:admin)
-      # Admins see all future events
-      @events = Event.where(starts_at: Time.current..).order(:starts_at)
-    else
-      # Regular users only see events they're assigned to
-      @events = current_user.events.where(starts_at: Time.current..).order(:starts_at)
-    end
+    @events = if current_user&.has_role?(:admin)
+                # Admins see all future events
+                Event.where(starts_at: Time.current..).order(:starts_at)
+              else
+                # Regular users only see events they're assigned to
+                current_user.events.where(starts_at: Time.current..).order(:starts_at)
+              end
   end
 
   # GET /events/1 or /events/1.json
@@ -113,13 +113,13 @@ class EventsController < ApplicationController
   end
 
   def assign_users_to_event
-    if params[:event][:user_ids].present?
-      @event.assigned_users = User.where(id: params[:event][:user_ids])
-      # Create attendance records for newly assigned users
-      @event.assigned_users.each do |user|
-        @event.attendances.find_or_create_by(user: user) do |attendance|
-          attendance.status = 'pending'
-        end
+    return if params[:event][:user_ids].blank?
+
+    @event.assigned_users = User.where(id: params[:event][:user_ids])
+    # Create attendance records for newly assigned users
+    @event.assigned_users.each do |user|
+      @event.attendances.find_or_create_by(user: user) do |attendance|
+        attendance.status = 'pending'
       end
     end
   end
