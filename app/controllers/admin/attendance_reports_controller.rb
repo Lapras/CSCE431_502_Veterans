@@ -12,7 +12,7 @@ module Admin
       @q = params[:q].to_s.strip
       @rows = build_base_query
       @rows = filter_by_query(@rows, @q) if @q.present?
-      @rows = @rows.order(Arel.sql("#{sort_column} #{sort_dir}"))
+      @rows = @rows.order(sort_column => sort_dir)
     end
 
     private
