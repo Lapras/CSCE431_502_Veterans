@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 3vw;
+  margin-top: calc(var(--banner-height, 112px) + 3vw); /* Account for fixed banner height + original margin */
   margin-bottom: 2vw;
 }
 
@@ -112,14 +112,34 @@
 }
 /*End Google Sign in button CSS*/
 
+.banner-links {
+  position: absolute;   /* position relative to the banner */
+  top: 15px;            /* distance from the top of the banner */
+  right: 20px;          /* distance from the right edge */
+  display: flex;        /* put links side by side */
+  gap: 15px;            /* space between them */
+}
 
+.banner-links a {
+  background-color: #800000; /* Aggie maroon */
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.banner-links a:hover {
+  background-color: #a00000;
+}
 
 /* Sign out button positioned to appear on the banner (top-right) */
 .sign-out {
   position: fixed;
   top: 1vw;
   right: 1.5vw;
-  z-index: 1000;
+  z-index: 1001;
   background: rgba(255,255,255,0.95);
   color: #500000;
   border: 1px solid #ccc;

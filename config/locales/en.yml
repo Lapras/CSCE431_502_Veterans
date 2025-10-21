@@ -31,9 +31,39 @@ en:
   hello: "Hello world"
   alerts:
     not_a_member: "You must be a member to access this site."
+    not_authorized: "Not Authorized"
+    not_admin: "You must be an administrator to perform this action."
+    already_member: 'You are already a member.'
+    already_requesting: 'You have already requested membership.'
+    not_auth_page: 'You are not authorized to view this page.'
+  membership:
+    request_sent: 'Your membership request has been submitted.'
   admin:
     users:
       created: "User created"
       updated: "User updated"
       deleted: "User deleted"
-      unauthorized: "Unauthorized"
+      unauthorized: "You must be an administrator to perform this action."
+  event:
+    created: "Event was successfully created."
+    updated: 'Event was successfully updated.'
+    deleted: "Event was succesfully destroyed"
+  attendance:
+    updated: 'Attendance was successfully updated.'
+    checkin: 'Succesfully checked in!'
+    checkin_fail: 'Failed to check in.'
+    already: 'already has an attendance record for this event'
+  excusal:
+    submit: 'Excusal request was successfully submitted.'
+    recurring_submit: 'Recurring excusal request sent.'
+  excusal_requests:
+    sent: "Excusal request is sent"
+    missing_fields: "Error: Missing required fields"
+  recurring_excusals:
+    request_sent: "Recurring excusal request sent."
+  approvals:
+    already_reviewed: "This request has already been reviewed."
+    not_found: "Excusal request not found."
+  recurring_approvals:
+    already_reviewed: "This recurring excusal has already been reviewed."
+    not_found: "Recurring excusal not found."

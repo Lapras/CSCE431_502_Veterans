@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  before(:all) do
+    RSpec::Mocks.space.proxy_for(User).reset if RSpec::Mocks.space.registered?(User)
+  end
+
   describe 'validations' do
     it 'validates presence of email' do
       user = User.new(email: nil)
@@ -18,9 +22,9 @@ RSpec.describe User, type: :model do
     let(:avatar_url) { 'http://avatar.url/image.png' }
 
     it 'creates a new user with given attributes if not found' do
-      expect {
+      expect do
         User.from_google(email: email, full_name: full_name, uid: uid, avatar_url: avatar_url)
-      }.to change(User, :count).by(1)
+      end.to change(User, :count).by(1)
 
       user = User.find_by(email: email)
       expect(user.full_name).to eq(full_name)
@@ -30,39 +34,41 @@ RSpec.describe User, type: :model do
 
     it 'finds the existing user by email without creating new one' do
       existing_user = User.create!(email: email)
-      expect {
+      expect do
         user = User.from_google(email: email, full_name: full_name, uid: uid, avatar_url: avatar_url)
         expect(user.id).to eq(existing_user.id)
-      }.not_to change(User, :count)
+      end.not_to change(User, :count)
     end
   end
-
   describe '#set_roles!' do
-    let(:user) { User.create!(email: 'roleuser@example.com') }
+    let(:user) { User.create!(email: "role+#{SecureRandom.hex(6)}@ex.com") }
 
     before do
-      allow(user).to receive(:roles).and_return(double(
-        pluck: [],
-        each: nil,
-        remove_role: nil,
-        add_role: nil
-      ))
+      # ensure no residual stubbing or doubles affect Rolify
+      allow_any_instance_of(User).to receive(:roles).and_call_original
     end
 
-    it 'calls remove_role for roles that are not in new names' do
-      allow(user.roles).to receive(:pluck).and_return(['admin', 'editor'])
-      expect(user).to receive(:remove_role).with('admin')
-      expect(user).to receive(:remove_role).with('editor')
-      expect(user).to receive(:add_role).with('user')
-
-      user.set_roles!(['user'])
+    it 'removes all roles when names is nil' do
+      user.add_role(:admin)
+      user.add_role(:officer)
+      user.set_roles!(nil)
+      expect(user.roles).to be_empty
     end
 
-    it 'calls add_role for new roles not already assigned' do
-      allow(user.roles).to receive(:pluck).and_return(['admin'])
-      expect(user).to receive(:remove_role).with('admin')
-      expect(user).to receive(:add_role).with('user')
-      user.set_roles!(['user'])
+    it 'normalizes strings/symbols and drops blanks' do
+      user.add_role(:admin)
+      user.set_roles!([:member, '', ' ', nil, 'admin'])
+      expect(user.has_role?(:admin)).to be(true)
+      expect(user.has_role?(:member)).to be(true)
+      expect(user.has_role?(:officer)).to be(false)
+    end
+
+    it 'no-op when incoming set equals current set' do
+      user.add_role(:admin)
+      user.add_role(:member)
+      expect do
+        user.set_roles!(['member', :admin, '', 'admin'])
+      end.not_to(change { user.roles.pluck(:name).sort })
     end
   end
 end
