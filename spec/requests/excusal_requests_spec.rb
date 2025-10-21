@@ -37,4 +37,37 @@ RSpec.describe 'ExcusalRequests', type: :request do
       end
     end
   end
+
+  describe 'scopes and status helpers' do
+    let!(:pending_request)  { ExcusalRequest.create!(user: @user, event: event, status: 'pending', reason: 'Pending reason') }
+    let!(:approved_request) { ExcusalRequest.create!(user: @user, event: event, status: 'approved', reason: 'Approved reason') }
+    let!(:denied_request)   { ExcusalRequest.create!(user: @user, event: event, status: 'denied', reason: 'Denied reason') }
+    let!(:nil_status_request) { ExcusalRequest.create!(user: @user, event: event, status: nil, reason: 'Nil status reason') }
+
+    it 'returns pending requests including nil status' do
+      expect(ExcusalRequest.pending).to include(pending_request, nil_status_request)
+      expect(ExcusalRequest.pending).not_to include(approved_request, denied_request)
+    end
+
+    it 'returns approved requests only' do
+      expect(ExcusalRequest.approved).to include(approved_request)
+      expect(ExcusalRequest.approved).not_to include(pending_request, denied_request, nil_status_request)
+    end
+
+    it 'returns denied requests only' do
+      expect(ExcusalRequest.denied).to include(denied_request)
+      expect(ExcusalRequest.denied).not_to include(pending_request, approved_request, nil_status_request)
+    end
+
+    it 'correctly reports pending?, approved?, denied? status' do
+      expect(pending_request.pending?).to be true
+      expect(approved_request.approved?).to be true
+      expect(denied_request.denied?).to be true
+
+      # Negative cases
+      expect(pending_request.approved?).to be false
+      expect(approved_request.denied?).to be false
+      expect(denied_request.pending?).to be false
+    end
+  end
 end
