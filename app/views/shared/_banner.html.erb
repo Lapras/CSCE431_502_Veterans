@@ -1,0 +1,10 @@
+<div class="banner">
+    <%= image_tag "choral_activities_banner.png", alt: "Choral Activities Banner" %>
+
+    <% if user_signed_in? %>
+        <div class="banner-links">
+        <%= link_to "Documentation & Support", documentation_and_support_path%>
+        <%= link_to "Sign Out", destroy_user_session_path %>
+        </div>
+    <% end %>
+</div>
