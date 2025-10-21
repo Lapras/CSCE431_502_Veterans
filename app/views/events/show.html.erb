@@ -18,6 +18,11 @@
       <span class="detail-value"><%= stats[:present] %> / <%= stats[:total] %> present</span>
     </div>
   <% end %>
+
+  <% if @event.notes.present? %>
+    <h4>Notes</h4>
+    <p><%= simple_format(@event.notes) %></p>
+  <% end %>'
 </div>
 
 <% if current_user.has_role?(:member) || current_user.has_role?(:admin) %>

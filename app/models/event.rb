@@ -10,6 +10,7 @@ class Event < ApplicationRecord
   validate  :starts_at_cannot_be_in_the_past
   validate :starts_at_must_be_valid_datetime
   validates :location, presence: true
+
   has_many :excusal_requests, dependent: :destroy
   has_many :attending_users, through: :attendances, source: :user
 
