@@ -20,13 +20,18 @@
 body {
   margin: 0;
   padding: 0;
+  padding-top: 4.6vw; /* Space for fixed banner - 70vw width * 0.065 aspect ratio */
 }
 
 .banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   text-align: center;
   background-color: #500000;
-  position: fixed;
+  position: fixsed;
   top: 0;
   left: 0;
   right: 0;

@@ -5,6 +5,9 @@
   <h1>Events</h1>
 
   <%= link_to "New Event", new_event_path, class: "action-button" %>
+  <%= link_to "Request Excusal", new_excusal_request_path, class: "action-button" %>
+  <%= link_to "Request Recurring Excusal", new_recurring_excusal_path, class: "action-button" %>
+  <%= link_to "View My Recurring Requests", recurring_excusals_path, class: "action-button" %>
 
   <table>
     <thead>
@@ -94,3 +97,5 @@
     </tbody>
   </table>
 <% end %>
+
+

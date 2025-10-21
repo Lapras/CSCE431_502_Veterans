@@ -86,8 +86,8 @@ RSpec.describe Event, type: :model do
       expect(described_class.reflect_on_association(:attendances).macro).to eq(:has_many)
     end
 
-    it 'has many users through attendances' do
-      expect(described_class.reflect_on_association(:users).macro).to eq(:has_many)
+    it 'has many assigned_users through event_users' do
+      expect(described_class.reflect_on_association(:assigned_users).macro).to eq(:has_many)
     end
 
     it 'has many excusal_requests' do
@@ -116,9 +116,13 @@ RSpec.describe Event, type: :model do
   end
 
   describe 'after_create callback' do
-    it 'creates attendance records for all members' do
+    it 'creates attendance records for assigned users' do
       member # create member first
       event = Event.create!(title: 'New Event', starts_at: 1.day.from_now, location: 'Location')
+      event.assigned_users << member # assign member to event
+
+      # Manually trigger the callback since we assigned after creation
+      event.send(:create_attendance_records)
 
       expect(event.attendances.count).to eq(1)
       expect(event.attendances.first.user).to eq(member)
@@ -145,6 +149,8 @@ RSpec.describe Event, type: :model do
     it 'returns true when user status is present' do
       member
       event = Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location')
+      event.assigned_users << member
+      event.send(:create_attendance_records)
       attendance = event.attendances.find_by(user: member)
       attendance.update!(status: 'present')
 
@@ -154,6 +160,8 @@ RSpec.describe Event, type: :model do
     it 'returns true when user status is tardy' do
       member
       event = Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location')
+      event.assigned_users << member
+      event.send(:create_attendance_records)
       attendance = event.attendances.find_by(user: member)
       attendance.update!(status: 'tardy')
 
@@ -163,6 +171,8 @@ RSpec.describe Event, type: :model do
     it 'returns false when user status is pending' do
       member
       event = Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location')
+      event.assigned_users << member
+      event.send(:create_attendance_records)
 
       expect(event.user_checked_in?(member)).to be false
     end
@@ -170,6 +180,8 @@ RSpec.describe Event, type: :model do
     it 'returns false when user status is absent' do
       member
       event = Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location')
+      event.assigned_users << member
+      event.send(:create_attendance_records)
       attendance = event.attendances.find_by(user: member)
       attendance.update!(status: 'absent')
 

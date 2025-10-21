@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat app/assets/stylesheets/application.css)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

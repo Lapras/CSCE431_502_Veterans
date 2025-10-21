@@ -11,15 +11,20 @@ class User < ApplicationRecord
 
   # Attendance related associations
   has_many :attendances, dependent: :destroy
-  has_many :events, through: :attendances
   has_many :attended_events, through: :attendances, source: :event
+
+  # Event assignment (which events this user is assigned to)
+  has_many :event_users, dependent: :destroy
+  has_many :assigned_events, through: :event_users, source: :event
 
   # Excusal related associations
   has_many :excusal_requests, dependent: :destroy
   has_many :recurring_excusals, dependent: :destroy
 
-  # Event users (join table)
-  has_many :event_users, dependent: :destroy
+  # Backwards compatibility alias
+  def events
+    assigned_events
+  end
 
   def self.from_google(email:, full_name:, uid:, avatar_url:)
     create_with(uid: uid, full_name: full_name, avatar_url: avatar_url).find_or_create_by!(email: email)

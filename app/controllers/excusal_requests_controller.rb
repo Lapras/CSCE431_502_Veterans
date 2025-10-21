@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExcusalRequestsController < ApplicationController
-  layout 'user'
+  layout :determine_layout
   skip_before_action :authenticate_user!, only: %i[new create]
 
   def new
@@ -25,5 +25,9 @@ class ExcusalRequestsController < ApplicationController
 
   def excusal_request_params
     params.require(:excusal_request).permit(:event_id, :reason)
+  end
+
+  def determine_layout
+    current_user&.has_role?(:admin) ? 'admin' : 'user'
   end
 end
