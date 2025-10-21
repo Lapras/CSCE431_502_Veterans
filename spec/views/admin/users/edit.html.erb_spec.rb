@@ -12,8 +12,8 @@ RSpec.describe 'admin/users/edit', type: :view do
     assert_select 'form[action=?][method=?]', admin_user_path(user), 'post' do
       assert_select 'input[name=?]', 'user[email]'
       assert_select 'input[name=?]', 'user[full_name]'
-      assert_select 'div.field', text: /UID:/i
-      assert_select 'div.field', text: /Avatar:/i
+      assert_select 'div.field', text: /UID:/
+      assert_select 'div.field', text: /Avatar:/
       assert_select 'select[name=?]', 'user[role_names][]'
     end
   end

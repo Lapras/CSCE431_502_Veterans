@@ -25,7 +25,7 @@ RSpec.describe 'StaticPages', type: :request do
     end
   end
 
-   describe 'GET /documentation_and_support' do
+  describe 'GET /documentation_and_support' do
     context 'when user is allowed (has roles other than :not_a_member)' do
       let(:user) { User.create!(full_name: 'Member', email: 'member@example.com', uid: 'u1') }
 
@@ -52,9 +52,9 @@ RSpec.describe 'StaticPages', type: :request do
         get documentation_and_support_path
       end
 
-     it 'redirects to /not_a_member with alert' do
-      expect(response).to redirect_to(not_a_member_path)
-      expect(flash[:alert]).to eq(I18n.t('alerts.not_a_member'))
+      it 'redirects to /not_a_member with alert' do
+        expect(response).to redirect_to(not_a_member_path)
+        expect(flash[:alert]).to eq(I18n.t('alerts.not_a_member'))
       end
     end
 
