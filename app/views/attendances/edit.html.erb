@@ -1,0 +1,47 @@
+<!-- app/views/attendances/edit.html.erb -->
+<% content_for :title, "Edit Attendance" %>
+
+<h1>Edit Attendance</h1>
+
+<div class="user-details">
+  <p><strong>Event:</strong> <%= @event.title %></p>
+  <p><strong>Member:</strong> <%= @attendance.user.full_name %></p>
+  <p><strong>Email:</strong> <%= @attendance.user.email %></p>
+</div>
+
+<%= form_with(model: [@event, @attendance]) do |form| %>
+  <% if @attendance.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
+      <ul>
+        <% @attendance.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.select :status, Attendance::STATUSES.map { |k, v| [v, k] }, {}, { class: "status-select" } %>
+  </div>
+
+  <div>
+    <%= form.label :checked_in_at, "Checked In At (optional)", style: "display: block" %>
+    <%= form.datetime_field :checked_in_at %>
+  </div>
+
+  <div>
+    <%= form.label :notes, "Notes (optional)", style: "display: block" %>
+    <%= form.text_area :notes, rows: 4, style: "width: 100%; max-width: 500px;" %>
+  </div>
+
+  <div>
+    <%= form.submit "Update Attendance" %>
+  </div>
+<% end %>
+
+<div style="margin-top: 1rem;">
+  <%= link_to "Back to Attendance List", event_attendances_path(@event), class: "action-button" %>
+  <%= link_to "Back to Event", @event, class: "action-button" %>
+</div>
