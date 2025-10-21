@@ -13,6 +13,11 @@
     <strong>Location:</strong>
     <%= event.location %>
   </p>
+  
+  <% if @event.notes.present? %>
+    <h4>Notes</h4>
+    <p><%= simple_format(@event.notes) %></p>
+  <% end %>'
 
   <p>
     <strong>Assigned Users:</strong>

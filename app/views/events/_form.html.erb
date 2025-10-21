@@ -27,6 +27,11 @@
   </div>
 
   <div>
+    <%= form.label :notes, "Notes", style: "display: block" %>
+    <%= form.text_area :notes, rows: 5, placeholder: "Add notes about this event..." %>
+  </div>
+
+  <div>
     <%= form.label "Assign Users" %>
     <div style="margin-bottom: 8px;">
       <button type="button" onclick="selectAllUsers()">Select All</button>
