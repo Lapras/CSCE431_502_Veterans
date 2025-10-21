@@ -33,7 +33,7 @@ RSpec.describe RecurringExcusalsController, type: :controller do
         reason: 'Weekly doctor appointment',
         recurring_start_time: Time.zone.now,
         recurring_end_time: 1.hour.from_now,
-        recurring_days: ['Monday', 'Wednesday']
+        recurring_days: %w[Monday Wednesday]
       }
     end
 
@@ -46,9 +46,9 @@ RSpec.describe RecurringExcusalsController, type: :controller do
 
     context 'with valid params' do
       it 'creates a new RecurringExcusal' do
-        expect {
+        expect do
           post :create, params: { recurring_excusal: valid_attributes }
-        }.to change(RecurringExcusal, :count).by(1)
+        end.to change(RecurringExcusal, :count).by(1)
       end
 
       it 'redirects to the recurring_excusals index' do
@@ -59,9 +59,9 @@ RSpec.describe RecurringExcusalsController, type: :controller do
 
     context 'with invalid params' do
       it 'does not create a new RecurringExcusal' do
-        expect {
+        expect do
           post :create, params: { recurring_excusal: invalid_attributes }
-        }.not_to change(RecurringExcusal, :count)
+        end.not_to change(RecurringExcusal, :count)
       end
 
       it 'returns 200 status when validation fails' do
