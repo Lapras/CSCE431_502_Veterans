@@ -6,29 +6,29 @@ RSpec.describe 'Approvals', type: :request do
   before do
     # Skip Devise
     allow_any_instance_of(ApplicationController)
-        .to receive(:authenticate_user!).and_return(true)
-    
+      .to receive(:authenticate_user!).and_return(true)
+
     # Create REAL users with roles
     @admin_user = User.create!(
-        full_name: "Admin User",
-        email: "admin@test.com",
-        uid: "admin123"
+      full_name: 'Admin User',
+      email: 'admin@test.com',
+      uid: 'admin123'
     )
     @admin_user.add_role(:admin)
-    
+
     # Set current_user to the real admin
     allow_any_instance_of(ApplicationController)
-        .to receive(:current_user).and_return(@admin_user)
-    
+      .to receive(:current_user).and_return(@admin_user)
+
     # Bypass the "not_a_member" check
     allow_any_instance_of(ApplicationController)
-        .to receive(:check_user_roles).and_return(true)
+      .to receive(:check_user_roles).and_return(true)
   end
 
   describe 'GET /approvals' do
     let!(:user) { User.create!(email: 'student@test.com', full_name: 'Test Student') }
     let!(:event) { Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location') }
-    
+
     context 'with pending excusal requests' do
       let!(:pending_request) do
         ExcusalRequest.create!(
@@ -148,7 +148,7 @@ RSpec.describe 'Approvals', type: :request do
 
         expect(response).to redirect_to(approvals_path)
         expect(flash[:notice]).to eq('Excusal request approved.')
-        
+
         excusal_request.reload
         expect(excusal_request.status).to eq('approved')
         expect(excusal_request.approval.comment).to eq('Valid reason provided')
@@ -166,7 +166,7 @@ RSpec.describe 'Approvals', type: :request do
 
         expect(response).to redirect_to(approvals_path)
         expect(flash[:notice]).to eq('Excusal request denied.')
-        
+
         excusal_request.reload
         expect(excusal_request.status).to eq('denied')
       end

@@ -28,7 +28,7 @@ class RecurringApprovalsController < ApplicationController
   def set_recurring_excusal
     @recurring_excusal = RecurringExcusal.find(params[:recurring_excusal_id])
   rescue ActiveRecord::RecordNotFound
-    flash[:alert] =  I18n.t('recurring_approvals.not_found')
+    flash[:alert] = I18n.t('recurring_approvals.not_found')
     redirect_to approvals_path
   end
 

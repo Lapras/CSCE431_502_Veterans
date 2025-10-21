@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   class AttendanceReportsController < ApplicationController
     before_action :authenticate_user!
@@ -11,13 +13,12 @@ module Admin
       sort_column = safe_sort(params[:sort])
       sort_dir    = safe_direction(params[:dir])
 
-
       absent_w = Attendance::POINT_VALUES['absent'].to_f
       tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
 
       # Conditional aggregates; include users with no attendance rows
       base = User.left_joins(:attendances)
-                 .select(<<~SQL)
+                 .select(<<~SQL.squish)
                    users.*,
                    COALESCE(SUM(CASE WHEN attendances.status = 'present' THEN 1 END), 0) AS total_presents,
                    COALESCE(SUM(CASE WHEN attendances.status = 'absent'  THEN 1 END), 0) AS total_absences,
@@ -44,13 +45,13 @@ module Admin
     # Whitelist sortable columns (SQL aliases from the SELECT above + user fields)
     def safe_sort(param)
       allowed = {
-        'name'           => 'users.full_name',
-        'email'          => 'users.email',
-        'present'        => 'total_presents',
-        'absent'         => 'total_absences',
-        'tardy'          => 'total_tardies',
-        'excused'        => 'total_excused',
-        'total'          => 'weighed_total'
+        'name' => 'users.full_name',
+        'email' => 'users.email',
+        'present' => 'total_presents',
+        'absent' => 'total_absences',
+        'tardy' => 'total_tardies',
+        'excused' => 'total_excused',
+        'total' => 'weighed_total'
       }
       allowed[param.to_s] || 'weighed_total'
     end
@@ -62,6 +63,7 @@ module Admin
 
     def require_admin!
       return if current_user&.has_role?(:admin)
+
       redirect_to root_path, alert: I18n.t('alerts.not_admin')
     end
   end
