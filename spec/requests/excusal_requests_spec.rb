@@ -39,10 +39,18 @@ RSpec.describe 'ExcusalRequests', type: :request do
   end
 
   describe 'scopes and status helpers' do
-    let!(:pending_request)  { ExcusalRequest.create!(user: @user, event: event, status: 'pending', reason: 'Pending reason') }
-    let!(:approved_request) { ExcusalRequest.create!(user: @user, event: event, status: 'approved', reason: 'Approved reason') }
-    let!(:denied_request)   { ExcusalRequest.create!(user: @user, event: event, status: 'denied', reason: 'Denied reason') }
-    let!(:nil_status_request) { ExcusalRequest.create!(user: @user, event: event, status: nil, reason: 'Nil status reason') }
+    let!(:pending_request) do
+      ExcusalRequest.create!(user: @user, event: event, status: 'pending', reason: 'Pending reason')
+    end
+    let!(:approved_request) do
+      ExcusalRequest.create!(user: @user, event: event, status: 'approved', reason: 'Approved reason')
+    end
+    let!(:denied_request) do
+      ExcusalRequest.create!(user: @user, event: event, status: 'denied', reason: 'Denied reason')
+    end
+    let!(:nil_status_request) do
+      ExcusalRequest.create!(user: @user, event: event, status: nil, reason: 'Nil status reason')
+    end
 
     it 'returns pending requests including nil status' do
       expect(ExcusalRequest.pending).to include(pending_request, nil_status_request)
