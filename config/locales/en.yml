@@ -30,11 +30,12 @@
 en:
   hello: "Hello world"
   alerts:
-    not_a_member: "You must be a member to access this site."
+    not_a_member: "You youmust be a member to access this site."
     not_authorized: "Not Authorized"
     not_admin: "You must be an administrator to perform this action."
     already_member: 'You are already a member.'
     already_requesting: 'You have already requested membership.'
+    not_auth_page: 'You are not authorized to view this page.'
   membership:
     request_sent: 'Your membership request has been submitted.'
   admin:

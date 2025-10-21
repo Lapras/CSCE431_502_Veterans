@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "RecurringApprovals", type: :request do
+RSpec.describe 'RecurringApprovals', type: :request do
   let(:admin) { User.create!(email: 'admin@example.com') }
   let(:user) { User.create!(email: 'user@example.com') }
   let(:recurring_excusal) do
     RecurringExcusal.create!(
       user: user,
       reason: 'Test reason',
-      recurring_days: ['Monday', 'Wednesday'],
+      recurring_days: %w[Monday Wednesday],
       recurring_start_time: '09:00',
       recurring_end_time: '10:00',
       status: 'pending'
@@ -19,22 +21,22 @@ RSpec.describe "RecurringApprovals", type: :request do
     user.add_role(:member)
   end
 
-  describe "POST /recurring_excusals/:recurring_excusal_id/recurring_approvals" do
-    context "as admin" do
+  describe 'POST /recurring_excusals/:recurring_excusal_id/recurring_approvals' do
+    context 'as admin' do
       before { sign_in admin }
 
-      it "creates an approval and updates recurring excusal" do
-        expect {
+      it 'creates an approval and updates recurring excusal' do
+        expect do
           post recurring_excusal_recurring_approvals_path(recurring_excusal), params: {
             recurring_approval: { decision: 'approved', comment: 'Looks good' }
           }
-        }.to change(RecurringApproval, :count).by(1)
+        end.to change(RecurringApproval, :count).by(1)
 
         expect(recurring_excusal.reload.status).to eq('approved')
         expect(response).to redirect_to(approvals_path)
       end
 
-      it "denies a recurring excusal" do
+      it 'denies a recurring excusal' do
         post recurring_excusal_recurring_approvals_path(recurring_excusal), params: {
           recurring_approval: { decision: 'denied', comment: 'Not valid' }
         }
@@ -43,7 +45,7 @@ RSpec.describe "RecurringApprovals", type: :request do
         expect(response).to redirect_to(approvals_path)
       end
 
-      it "prevents duplicate approvals" do
+      it 'prevents duplicate approvals' do
         RecurringApproval.create!(
           recurring_excusal: recurring_excusal,
           approved_by_user: admin,
@@ -59,8 +61,8 @@ RSpec.describe "RecurringApprovals", type: :request do
         expect(response).to redirect_to(approvals_path)
       end
 
-      it "handles not found recurring excusal" do
-        post recurring_excusal_recurring_approvals_path(recurring_excusal_id: 999999), params: {
+      it 'handles not found recurring excusal' do
+        post recurring_excusal_recurring_approvals_path(recurring_excusal_id: 999_999), params: {
           recurring_approval: { decision: 'approved' }
         }
 
@@ -69,10 +71,10 @@ RSpec.describe "RecurringApprovals", type: :request do
       end
     end
 
-    context "as non-admin" do
+    context 'as non-admin' do
       before { sign_in user }
 
-      it "redirects to events path" do
+      it 'redirects to events path' do
         post recurring_excusal_recurring_approvals_path(recurring_excusal), params: {
           recurring_approval: { decision: 'approved' }
         }
