@@ -67,9 +67,9 @@ RSpec.describe Approval, type: :model do
     end
 
     let!(:denied_approval) do
-      excusal2 = ExcusalRequest.create!(user: user, event: event, reason: 'Another reason')
+      excusal_2 = ExcusalRequest.create!(user: user, event: event, reason: 'Another reason')
       Approval.create!(
-        excusal_request: excusal2,
+        excusal_request: excusal_2,
         approved_by_user: admin,
         decision: 'denied',
         decision_at: Time.current

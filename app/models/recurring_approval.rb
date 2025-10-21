@@ -2,7 +2,9 @@
 
 class RecurringApproval < ApplicationRecord
   belongs_to :recurring_excusal
-  belongs_to :approved_by_user, class_name: 'User'
+  belongs_to :approved_by_user,
+             class_name: 'User',
+             inverse_of: :recurring_approvals
 
   validates :decision, presence: true, inclusion: { in: %w[approved denied] }
   validates :decision_at, presence: true
