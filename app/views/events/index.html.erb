@@ -1,0 +1,96 @@
+<% content_for :title, "Events" %>
+
+<% if current_user&.has_role?(:admin) %>
+  <!-- Admin View -->
+  <h1>Events</h1>
+
+  <%= link_to "New Event", new_event_path, class: "action-button" %>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date & Time</th>
+        <th>Location</th>
+        <th>Attendance</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @events.each do |event| %>
+        <tr>
+          <td><%= event.title %></td>
+          <td><%= event.starts_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+          <td><%= event.location %></td>
+          <td>
+            <% stats = event.attendance_stats %>
+            <%= stats[:present] %> / <%= stats[:total] %>
+          </td>
+          <td>
+            <%= link_to "Show", event %>
+            <%= link_to "Edit", edit_event_path(event) %>
+            <%= link_to "Delete", event_confirm_delete_event_path(event) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% else %>
+  <!-- User View -->
+  <h1>Events</h1>
+
+  <div style="margin-bottom: 1.5rem;">
+    <%= link_to "Request Recurring Excusal", new_recurring_excusal_path, class: "action-button" %>
+    <%= link_to "View My Recurring Requests", recurring_excusals_path, class: "action-button" %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Date & Time</th>
+        <th>Location</th>
+        <th>My Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @events.each do |event| %>
+        <% attendance = event.attendance_for(current_user) %>
+        <% user_requests = user_excusal_requests_for(event) %>
+        <tr>
+          <td><%= event.title %></td>
+          <td><%= event.starts_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+          <td><%= event.location %></td>
+          <td>
+            <% if attendance %>
+              <%= attendance.status_label %>
+            <% else %>
+              Not Registered
+            <% end %>
+            <% if user_requests.present? %>
+              <br>
+              <% user_requests.each do |request| %>
+                <small>
+                  <% case request.status %>
+                  <% when "approved" %>
+                    Excusal: <strong style="color: green;">Approved</strong>
+                  <% when "denied" %>
+                    Excusal: <strong style="color: red;">Denied</strong>
+                  <% else %>
+                    Excusal: <strong style="color: orange;">Pending</strong>
+                  <% end %>
+                </small>
+              <% end %>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "Show", event %>
+            <%= link_to "Request Excusal", new_excusal_request_path(event_id: event.id) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,0 +1,32 @@
+<div id="<%= dom_id event %>">
+  <p>
+    <strong>Title:</strong>
+    <%= event.title %>
+  </p>
+
+  <p>
+    <strong>Starts at:</strong>
+    <%= event.starts_at %>
+  </p>
+
+  <p>
+    <strong>Location:</strong>
+    <%= event.location %>
+  </p>
+
+  <p>
+    <strong>Assigned Users:</strong>
+     <% if event.users.any? %>
+      <div style="border: 1px solid #ccc; padding: 8px; width: 250px; height: 100px; overflow-y: auto; border-radius: 4px;">
+        <ul style="margin: 0; padding-left: 16px;">
+          <% event.users.each do |user| %>
+            <li><%= user.full_name %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% else %>
+      <em>No users assigned</em>
+    <% end %>
+  </p>
+
+</div>

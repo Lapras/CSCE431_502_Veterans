@@ -1,0 +1,38 @@
+<h1>Request Recurring Excusal</h1>
+
+<%= form_with model: @recurring_excusal, local: true do |f| %>
+  <div>
+    <%= f.label :reason %>
+    <%= f.text_area :reason, rows: 5, style: "width: 100%; max-width: 500px;" %>
+  </div>
+
+  <div>
+    <%= f.label :recurring_days, "Days of the Week" %>
+    <div style="margin-top: 0.5rem;">
+      <% Date::DAYNAMES.each_with_index do |day, index| %>
+        <div style="margin-bottom: 0.3rem;">
+          <%= check_box_tag "recurring_excusal[recurring_days][]", index, @recurring_excusal.recurring_days&.include?(index), id: "day_#{index}" %>
+          <%= label_tag "day_#{index}", day, style: "display: inline; font-weight: normal; margin-left: 0.3rem;" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :recurring_start_time, "Start Time" %>
+    <%= f.time_select :recurring_start_time, ignore_date: true %>
+  </div>
+
+  <div>
+    <%= f.label :recurring_end_time, "End Time" %>
+    <%= f.time_select :recurring_end_time, ignore_date: true %>
+  </div>
+
+  <div>
+    <%= f.submit "Request Recurring Excusal" %>
+  </div>
+<% end %>
+
+<div style="margin-top: 1rem;">
+  <%= link_to "Back to Events", events_path, class: "action-button" %>
+</div>

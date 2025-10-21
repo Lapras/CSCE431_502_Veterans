@@ -1,0 +1,68 @@
+<!-- app/views/layouts/admin.html.erb -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GoogleOauthDevise - Admin</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <style>
+      .flash__alert { color: red; }
+      .flash__notice { color: blue; }
+      .flash__success { color: green; }
+    </style>
+    <script>
+      function adjustLayoutForBanner() {
+        const banner = document.querySelector('.banner');
+        if (banner) {
+          const bannerHeight = banner.offsetHeight;
+          document.documentElement.style.setProperty('--banner-height', bannerHeight + 'px');
+        }
+      }
+
+      // Run on page load
+      window.addEventListener('load', adjustLayoutForBanner);
+      // Run on window resize
+      window.addEventListener('resize', adjustLayoutForBanner);
+      // Run immediately in case DOM is already ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', adjustLayoutForBanner);
+      } else {
+        adjustLayoutForBanner();
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="banner">
+      <%= image_tag "choral_activities_banner.png", alt: "Choral Activities Banner" %>
+    </div>
+
+    <% if user_signed_in? %>
+      <%= link_to "Sign Out", destroy_user_session_path, class: "sign-out" %>
+    <% end %>
+
+    <div class="admin-container">
+      <aside class="admin-sidebar">
+        <h2>Admin Panel</h2>
+        <nav class="admin-nav">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "nav-link #{'active' if current_page?(admin_dashboard_path)}" %>
+          <%= link_to "Manage Users", admin_users_path, class: "nav-link #{'active' if controller_name == 'users'}" %>
+          <%= link_to "Manage Events", events_path, class: "nav-link #{'active' if controller_name == 'events'}" %>
+          <%= link_to "Attendance History", admin_attendance_reports_path, class: "nav-link #{'active' if controller_name == 'attendance_reports'}" %>
+          <%= link_to "Manage Approvals", approvals_path, class: "nav-link #{'active' if controller_name == 'approvals'}" %>
+        </nav>
+      </aside>
+
+      <main class="admin-main">
+        <% if flash.any? %>
+          <% flash.each do |key, value| -%>
+            <section class="flash flash__<%= key %>"><%= value.html_safe %></section>
+          <% end -%>
+        <% end %>
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

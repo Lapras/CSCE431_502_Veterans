@@ -2,6 +2,7 @@
 
 module Admin
   class UsersController < ApplicationController
+    layout 'admin'
     before_action :authenticate_user!
     before_action :require_admin!
     before_action :set_user, only: %i[show edit update destroy]
@@ -26,7 +27,11 @@ module Admin
     def create
       @user = User.new(user_params.except(:role_names))
       if @user.save
-        @user.set_roles!(user_params[:role_names])
+        names = incoming_role_names
+        if names&.any?
+          names.each { |r| Role.find_or_create_by!(name: r) }
+          @user.set_roles!(names)
+        end
         redirect_to [:admin, @user], notice: t('admin.users.created')
       else
         render :new, status: :unprocessable_entity
@@ -36,7 +41,15 @@ module Admin
     # PATCH/PUT /admin/users/1 or /admin/users/1.json
     def update
       if @user.update(user_params.except(:role_names))
-        @user.set_roles!(user_params[:role_names])
+        names = incoming_role_names
+        # IMPORTANT: do nothing if role_names param is missing OR blank (keeps existing roles)
+        if names&.include?('none')
+          # Special case: 'none' means clear all roles
+          @user.roles = []
+        elsif names&.any?
+          names.each { |r| Role.find_or_create_by!(name: r) }
+          @user.set_roles!(names)
+        end
         redirect_to [:admin, @user], notice: t('admin.users.updated')
       else
         render :edit, status: :unprocessable_entity
@@ -59,14 +72,21 @@ module Admin
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:email, role_names: [])
+      params.require(:user).permit(:email, :full_name, :uid, :avatar_url, role_names: [])
     end
 
     def update_roles(user)
-      return if params.dig(:user, :role_names).blank?
+      names = params.dig(:user, :role_names)
+      return if names.nil? || names.compact_blank.empty?
 
-      user.roles = []
-      params[:user][:role_names].compact_blank.each { |r| user.add_role(r) }
+      user.set_roles!(names.compact_blank)
+    end
+
+    def incoming_role_names
+      raw = params.dig(:user, :role_names)
+      return nil if raw.nil? # key missing
+
+      Array(raw).compact_blank
     end
 
     def require_admin!
