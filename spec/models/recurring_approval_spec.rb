@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe RecurringApproval, type: :model do
@@ -7,7 +9,7 @@ RSpec.describe RecurringApproval, type: :model do
     RecurringExcusal.create!(
       user: user,
       reason: 'Test reason',
-      recurring_days: ['Monday', 'Wednesday'],
+      recurring_days: %w[Monday Wednesday],
       recurring_start_time: '09:00',
       recurring_end_time: '10:00',
       status: 'pending'
@@ -28,19 +30,22 @@ RSpec.describe RecurringApproval, type: :model do
 
   describe 'validations' do
     it 'validates presence of decision' do
-      approval = RecurringApproval.new(recurring_excusal: recurring_excusal, approved_by_user: admin, decision_at: Time.current)
+      approval = RecurringApproval.new(recurring_excusal: recurring_excusal, approved_by_user: admin,
+                                       decision_at: Time.current)
       expect(approval).not_to be_valid
       expect(approval.errors[:decision]).to include("can't be blank")
     end
 
     it 'validates presence of decision_at' do
-      approval = RecurringApproval.new(recurring_excusal: recurring_excusal, approved_by_user: admin, decision: 'approved')
+      approval = RecurringApproval.new(recurring_excusal: recurring_excusal, approved_by_user: admin,
+                                       decision: 'approved')
       expect(approval).not_to be_valid
       expect(approval.errors[:decision_at]).to include("can't be blank")
     end
 
     it 'validates decision is either approved or denied' do
-      approval = RecurringApproval.new(recurring_excusal: recurring_excusal, approved_by_user: admin, decision: 'invalid', decision_at: Time.current)
+      approval = RecurringApproval.new(recurring_excusal: recurring_excusal, approved_by_user: admin,
+                                       decision: 'invalid', decision_at: Time.current)
       expect(approval).not_to be_valid
     end
 
@@ -72,7 +77,7 @@ RSpec.describe RecurringApproval, type: :model do
     end
 
     let!(:denied_approval) do
-      recurring2 = RecurringExcusal.create!(
+      recurring_2 = RecurringExcusal.create!(
         user: user,
         reason: 'Another reason',
         recurring_days: ['Tuesday'],
@@ -81,7 +86,7 @@ RSpec.describe RecurringApproval, type: :model do
         status: 'pending'
       )
       RecurringApproval.create!(
-        recurring_excusal: recurring2,
+        recurring_excusal: recurring_2,
         approved_by_user: admin,
         decision: 'denied',
         decision_at: Time.current

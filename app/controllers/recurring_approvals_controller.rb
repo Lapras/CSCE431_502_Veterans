@@ -6,20 +6,16 @@ class RecurringApprovalsController < ApplicationController
   before_action :set_recurring_excusal, only: [:create]
 
   def create
-    if @recurring_excusal.recurring_approval.present?
-      flash[:alert] = I18n.t('recurring_approvals.already_reviewed')
-      redirect_to approvals_path and return
-    end
+    return if redirect_if_already_reviewed?
 
-    @approval = @recurring_excusal.build_recurring_approval(approval_params)
-    @approval.approved_by_user = current_user
-    @approval.decision_at = Time.current
+    build_approval
 
-    if @approval.save
-      flash[:notice] = "Recurring excusal #{@approval.decision}."
+    if save_approval
+      flash[:notice] = I18n.t('recurring_approvals.success', decision: @approval.decision)
     else
-      flash[:alert] = "Error processing approval: #{@approval.errors.full_messages.join(', ')}"
+      flash[:alert] = I18n.t('recurring_approvals.error', errors: @approval.errors.full_messages.join(', '))
     end
+
     redirect_to approvals_path
   end
 
@@ -28,8 +24,28 @@ class RecurringApprovalsController < ApplicationController
   def set_recurring_excusal
     @recurring_excusal = RecurringExcusal.find(params[:recurring_excusal_id])
   rescue ActiveRecord::RecordNotFound
-    flash[:alert] =  I18n.t('recurring_approvals.not_found')
+    flash[:alert] = I18n.t('recurring_approvals.not_found')
     redirect_to approvals_path
+  end
+
+  def redirect_if_already_reviewed?
+    if @recurring_excusal.recurring_approval.present?
+      flash[:alert] = I18n.t('recurring_approvals.already_reviewed')
+      redirect_to approvals_path
+      true
+    else
+      false
+    end
+  end
+
+  def build_approval
+    @approval = @recurring_excusal.build_recurring_approval(approval_params)
+    @approval.approved_by_user = current_user
+    @approval.decision_at = Time.current
+  end
+
+  def save_approval
+    @approval.save
   end
 
   def approval_params

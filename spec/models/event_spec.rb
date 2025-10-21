@@ -51,7 +51,7 @@ RSpec.describe 'Role gate', type: :request do
     end
 
     it 'accepts an ActiveSupport::TimeWithZone' do
-      e = Event.new(title: 'T', location: 'Gym', starts_at: Time.zone.now + 10.minutes)
+      e = Event.new(title: 'T', location: 'Gym', starts_at: 10.minutes.from_now)
       expect(e).to be_valid
     end
 
@@ -74,7 +74,11 @@ RSpec.describe 'Role gate', type: :request do
 end
 
 RSpec.describe Event, type: :model do
-  let(:member) { User.create!(email: 'member@example.com'); User.last.add_role(:member); User.last }
+  let(:member) do
+    User.create!(email: 'member@example.com')
+    User.last.add_role(:member)
+    User.last
+  end
   let(:valid_event) { Event.create!(title: 'Test Event', starts_at: 1.day.from_now, location: 'Test Location') }
 
   describe 'associations' do

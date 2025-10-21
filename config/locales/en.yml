@@ -35,6 +35,7 @@ en:
     not_admin: "You must be an administrator to perform this action."
     already_member: 'You are already a member.'
     already_requesting: 'You have already requested membership.'
+    not_auth_page: 'You are not authorized to view this page.'
   membership:
     request_sent: 'Your membership request has been submitted.'
   admin:

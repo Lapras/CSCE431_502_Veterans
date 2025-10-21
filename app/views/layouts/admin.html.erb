@@ -35,13 +35,7 @@
   </head>
 
   <body>
-    <div class="banner">
-      <%= image_tag "choral_activities_banner.png", alt: "Choral Activities Banner" %>
-    </div>
-
-    <% if user_signed_in? %>
-      <%= link_to "Sign Out", destroy_user_session_path, class: "sign-out" %>
-    <% end %>
+    <%= render "shared/banner" %>
 
     <div class="admin-container">
       <aside class="admin-sidebar">

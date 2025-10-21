@@ -47,7 +47,7 @@ jobs:
         
       - name: Run rubocop
         run: |
-          bundler exec rubocop --force-exclusion vendor/*/** \
+          bundler exec rubocop  \
           --format progress \
           --out rubocop.txt
       - name: Upload rubocop report

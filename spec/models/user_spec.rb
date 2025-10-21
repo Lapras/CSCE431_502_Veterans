@@ -66,9 +66,9 @@ RSpec.describe User, type: :model do
     it 'no-op when incoming set equals current set' do
       user.add_role(:admin)
       user.add_role(:member)
-      expect {
+      expect do
         user.set_roles!(['member', :admin, '', 'admin'])
-      }.not_to change { user.roles.pluck(:name).sort }
+      end.not_to(change { user.roles.pluck(:name).sort })
     end
   end
 end
