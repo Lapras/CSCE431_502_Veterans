@@ -1,0 +1,124 @@
+<h1>Documentation and support</h1>
+<p>Within this page are various forms of documentation and support available for members and administrators/officers.</p>
+
+ <%= link_to "← Back to Dashboard", root_path, class: "back-link" %>
+
+<nav class="internal-nav">
+  <ul>
+    <li><a href="#members">Being a Member</a></li>
+    <li><a href="#admins">Being an Administrator or Officer</a></li>
+    <li><a href="#deployment">Deployment and Hosting</a></li>
+  </ul>
+</nav>
+
+<h2 id="members">Being a Member</h2>
+
+<h4>The Dashboard</h4>
+
+<p>The dashboard shows you your attendance hsitory,, as well as future upcmoing events. 
+You can request an excusal or check into an upcoming event from this page. </p>
+
+<h4>Events</h4>
+<p>Events is where you can see all your past and future events you've been assigned to.
+As well as if you've been marked present, absent or you excusal has been approved or denied. </p>
+<p>In addition to this, you can submit recurring excusals. These excusals cover a certain time weekly you aren't available for events.
+They are approved by an officer like any other event.</p>
+
+<h2 id="admins">Being an Administrator or Officer</h2>
+<h4>Managing users</h4>
+<p>This tab allows you to see all users, and edit any important information</p>
+
+<h4>Managing Events</h4>
+<p>This tab allows you to edit, view and manage all events. As well as create new ones. 
+Events need a location, start time, and users assigned to them.</p>
+
+<h4>Attendance History</h4>
+<p>This view lets you see the attendance history of all users. How many events they've been present/tardy/excused from.</p>
+
+<h4>Manage Approvals</h4>
+<p>Here is where you can see all event excusals being submitted by members, and choose to approve or deny them.
+You can also additonally leave a comment.</p>
+
+<h2 id="deployment">Deployment and Hosting</h2>
+<p>
+  This application is a project done by 4 students taking Texas A&M CSCE-341. 
+  It is being made in conjunction with the Texas A&M singing cadets to help track their attendance for events, 
+  as well as being used to track disciplinary measures.
+</p>
+
+<h2>Requirements</h2>
+<ul>
+  <li>Ruby - 3.4.0</li>
+  <li>Rails - 7.0</li>
+  <li>Ruby Gems - Listed in <code>Gemfile</code></li>
+  <li>PostgreSQL - 14</li>
+  <li>Nodejs - v16.9.1</li>
+  <li>Yarn - 1.22.11</li>
+  <li>Docker (Latest Container)</li>
+</ul>
+
+<h2>External Dependencies</h2>
+<ul>
+  <li>Docker - <a href="https://www.docker.com/products/docker-desktop" target="_blank">Download latest version</a></li>
+  <li>Heroku CLI - <a href="https://devcenter.heroku.com/articles/heroku-cli" target="_blank">Download latest version</a></li>
+  <li>Git - <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">Download latest version</a></li>
+  <li>GitHub Desktop (optional but helpful) - <a href="https://desktop.github.com/" target="_blank">Download</a></li>
+</ul>
+
+<h2>Installation</h2>
+<p>Download this code repository using git:</p>
+<pre><code>git clone https://github.com/Lapras/CSCE431_502_Veterans</code></pre>
+
+<h2>Tests</h2>
+<p>An RSpec test suite is available and can be run using:</p>
+<pre><code>rspec</code></pre>
+
+<h2>Execute Code</h2>
+<p>Run the following in Powershell (Windows) or terminal (Linux/Mac):</p>
+<pre><code>cd CSCE431_502_Veterans
+
+docker run --rm -it --volume "$(pwd):/rails_app" -e DATABASE_USER=test_app -e DATABASE_PASSWORD=test_password -p 3000:3000 dmartinez05/ruby_rails_postgresql:latest
+
+# Install the app
+bundle install && rails webpacker:install && rails db:create && rails db:migrate
+
+# Run the app
+rails server --binding=0.0.0.0
+</code></pre>
+
+<p>Access the application in your browser at <a href="http://localhost:3000" target="_blank">http://localhost:3000</a>.</p>
+
+<h2>Environmental Variables / Files</h2>
+<p>A <code>.env</code> file is necessary to define authentication for the provided database. Example:</p>
+<pre><code>DATABASE_USER=test_user
+DATABASE_PASSWORD=test_password
+GOOGLE_OAUTH_CLIENT_ID=
+GOOGLE_OAUTH_CLIENT_SECRET=</code></pre>
+
+<h2>Deployment</h2>
+<p>Setup a Heroku account: <a href="https://signup.heroku.com/" target="_blank">https://signup.heroku.com/</a></p>
+<p>Steps:</p>
+<ol>
+  <li>Log in to Heroku</li>
+  <li>Create a new  Heroku App</li>
+  <li>Select the github deployment method, and link to https://github.com/Lapras/CSCE431_502_Veterans, and the main branch</li>
+  <li>visit the resources tab, and add the Heroku Postgres resource to your app</li>
+  <li> Visit the settings tabs, and find Buildpacks. Add the NodeJS buildpack, then the Ruby buildpack in that order</li>
+  <li>In the settings tab, find the Config Vars section. Hit reveal Config vars and add the following to the configuration:</li>
+</ol>
+<pre><code>GOOGLE_OAUTH_CLIENT_ID=(Google client ID, insecure to display here)
+GOOGLE_OAUTH_CLIENT_SECRET=(Google secret, insecure to display here)</code></pre>
+
+<h2>CI/CD</h2>
+<p>Heroku automatically deploys apps when the respective GitHub branches are updated:</p>
+<ul>
+  <li>Review app: test branch</li>
+  <li>Production app: main branch</li>
+</ul>
+<p>GitHub Actions run specs, security checks, linter, etc. after every push or pull request, ensuring code integrity.</p>
+
+<h2>Support</h2>
+<ul>
+  <li>Admins should first look at the application Documentation and Support page for assistance.</li>
+  <li>If additonal assistance is needed, contact the development team for support</li>
+</ul>

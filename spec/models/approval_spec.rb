@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Approval, type: :model do
@@ -32,7 +34,8 @@ RSpec.describe Approval, type: :model do
     end
 
     it 'validates decision is either approved or denied' do
-      approval = Approval.new(excusal_request: excusal_request, approved_by_user: admin, decision: 'invalid', decision_at: Time.current)
+      approval = Approval.new(excusal_request: excusal_request, approved_by_user: admin, decision: 'invalid',
+                              decision_at: Time.current)
       expect(approval).not_to be_valid
     end
 
