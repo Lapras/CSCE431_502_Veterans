@@ -1,38 +1,87 @@
-<h1>Request Recurring Excusal</h1>
-
-<%= form_with model: @recurring_excusal, local: true do |f| %>
-  <div>
-    <%= f.label :reason %>
-    <%= f.text_area :reason, rows: 5, style: "width: 100%; max-width: 500px;" %>
-  </div>
-
-  <div>
-    <%= f.label :recurring_days, "Days of the Week" %>
-    <div style="margin-top: 0.5rem;">
-      <% Date::DAYNAMES.each_with_index do |day, index| %>
-        <div style="margin-bottom: 0.3rem;">
-          <%= check_box_tag "recurring_excusal[recurring_days][]", index, @recurring_excusal.recurring_days&.include?(index), id: "day_#{index}" %>
-          <%= label_tag "day_#{index}", day, style: "display: inline; font-weight: normal; margin-left: 0.3rem;" %>
-        </div>
-      <% end %>
+<div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+  <h1 style="margin-bottom: 1.5rem; font-size: 1.875rem;">Request Recurring Excusal</h1>
+  
+  <%= form_with model: @recurring_excusal, local: true do |f| %>
+    
+    <!-- Reason Section -->
+    <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+      <%= f.label :reason, style: "display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;" %>
+      <%= f.text_area :reason, rows: 3, style: "width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; resize: vertical; box-sizing: border-box;" %>
     </div>
-  </div>
 
-  <div>
-    <%= f.label :recurring_start_time, "Start Time" %>
-    <%= f.time_select :recurring_start_time, ignore_date: true %>
-  </div>
+    <!-- Days of the Week Section -->
+    <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+      <%= f.label :recurring_days, "Days of the Week", style: "display: block; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;" %>
+      <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
+        <% Date::DAYNAMES.each_with_index do |day, index| %>
+          <div style="display: flex; align-items: center;">
+            <%= check_box_tag "recurring_excusal[recurring_days][]", index, @recurring_excusal.recurring_days&.include?(index), id: "day_#{index}", style: "width: 18px; height: 18px; cursor: pointer; margin-right: 0.5rem;" %>
+            <%= label_tag "day_#{index}", day, style: "cursor: pointer; margin: 0; font-weight: normal; white-space: nowrap;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
 
-  <div>
-    <%= f.label :recurring_end_time, "End Time" %>
-    <%= f.time_select :recurring_end_time, ignore_date: true %>
-  </div>
+    <!-- Time Range Section -->
+    <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+      <h3 style="font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">Time Range</h3>
+      
+      <div style="display: flex; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+        <%= f.label :recurring_start_time, "Start Time", style: "min-width: 90px; font-weight: 600;" %>
+        <div style="display: flex; align-items: center; gap: 0.25rem;">
+          <%= f.time_select :recurring_start_time, 
+              ignore_date: true, 
+              minute_step: 1,
+              style: "padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;" %>
+        </div>
+      </div>
 
-  <div>
-    <%= f.submit "Request Recurring Excusal" %>
-  </div>
-<% end %>
+      <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <%= f.label :recurring_end_time, "End Time", style: "min-width: 90px; font-weight: 600;" %>
+        <div style="display: flex; align-items: center; gap: 0.25rem;">
+          <%= f.time_select :recurring_end_time, 
+              ignore_date: true,
+              minute_step: 1,
+              style: "padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;" %>
+        </div>
+      </div>
+    </div>
 
-<div style="margin-top: 1rem;">
-  <%= link_to "Back to Events", events_path, class: "action-button" %>
+    <!-- Form Actions -->
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <%= f.submit "Request Recurring Excusal", 
+          style: "padding: 0.75rem 1.5rem; background: #7f1d1d; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 1rem;" %>
+      <%= link_to "Back to Events", events_path, 
+          style: "padding: 0.75rem 1.5rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; font-weight: 600; text-decoration: none; display: inline-block; font-size: 1rem;" %>
+    </div>
+    
+  <% end %>
 </div>
+
+<style>
+  /* Hover effects */
+  input[type="submit"]:hover {
+    background: #991b1b !important;
+  }
+  
+  a[href*="events"]:hover {
+    background: #e5e7eb !important;
+  }
+  
+  /* Make time selects more compact */
+  select {
+    padding: 0.5rem !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    font-size: 1rem !important;
+  }
+
+  /* Maroon checkboxes for days of the week */
+  input[type="checkbox"]:checked {
+    accent-color: #7f1d1d;
+  }
+  
+  input[type="checkbox"] {
+    accent-color: #7f1d1d;
+  }
+</style>
