@@ -215,12 +215,12 @@ RSpec.describe Event, type: :model do
     end
 
     it 'generates different codes for different events' do
-      event1 = Event.create!(title: 'Event 1', starts_at: 1.day.from_now, location: 'Location')
-      event2 = Event.create!(title: 'Event 2', starts_at: 1.day.from_now, location: 'Location')
+      event_one = Event.create!(title: 'Event 1', starts_at: 1.day.from_now, location: 'Location')
+      event_two = Event.create!(title: 'Event 2', starts_at: 1.day.from_now, location: 'Location')
       # While it's possible they could be the same by chance (1/1000), it's unlikely
       # If this test fails occasionally, that's actually fine - but usually they'll differ
-      expect(event1.check_in_code).to match(/^\d{3}$/)
-      expect(event2.check_in_code).to match(/^\d{3}$/)
+      expect(event_one.check_in_code).to match(/^\d{3}$/)
+      expect(event_two.check_in_code).to match(/^\d{3}$/)
     end
 
     describe '#valid_check_in_code?' do
