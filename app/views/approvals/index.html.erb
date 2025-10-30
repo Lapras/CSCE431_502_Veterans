@@ -22,6 +22,7 @@
         <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Event</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Evidence Link</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Requested</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Actions</th>
       </tr>
@@ -32,6 +33,7 @@
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.user.full_name || request.user.email %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.event.title %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.evidence_link %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
           <td style="border: 1px solid #ddd; padding: 8px;">
             <%= form_with model: Approval.new, url: excusal_request_approvals_path(request), method: :post, local: true, style: "display: inline;" do |f| %>
@@ -64,6 +66,7 @@
         <th style="border: 1px solid #ddd; padding: 8px;">Days</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Time</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Evidence Link</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Requested</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Actions</th>
       </tr>
@@ -80,6 +83,7 @@
             <%= recurring.recurring_end_time.strftime("%I:%M %p") %>
           </td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.evidence_link %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
           <td style="border: 1px solid #ddd; padding: 8px;">
             <%= form_with model: RecurringApproval.new, url: recurring_excusal_recurring_approvals_path(recurring), method: :post, local: true, style: "display: inline;" do |f| %>
@@ -116,6 +120,7 @@
         <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Event</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Evidence Link</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Approved By</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
@@ -127,6 +132,7 @@
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.user.full_name || request.user.email %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.event.title %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.evidence_link %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.approved_by_user.full_name || request.approval.approved_by_user.email %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.comment %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
@@ -148,6 +154,7 @@
         <th style="border: 1px solid #ddd; padding: 8px;">Days</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Time</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Evidence Link</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Approved By</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
@@ -165,6 +172,7 @@
             <%= recurring.recurring_end_time.strftime("%I:%M %p") %>
           </td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.evidence_link %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.approved_by_user.full_name || recurring.recurring_approval.approved_by_user.email %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.comment %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
@@ -190,6 +198,7 @@
         <th style="border: 1px solid #ddd; padding: 8px;">Student</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Event</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Evidence Link</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Denied By</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
@@ -201,6 +210,7 @@
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.user.full_name || request.user.email %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.event.title %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= request.evidence_link %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.approved_by_user.full_name || request.approval.approved_by_user.email %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.comment %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= request.approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
@@ -222,6 +232,7 @@
         <th style="border: 1px solid #ddd; padding: 8px;">Days</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Time</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Reason</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Evidence Link</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Denied By</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Comment</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Decision Date</th>
@@ -239,6 +250,7 @@
             <%= recurring.recurring_end_time.strftime("%I:%M %p") %>
           </td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.evidence_link %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.approved_by_user.full_name || recurring.recurring_approval.approved_by_user.email %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.comment %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
