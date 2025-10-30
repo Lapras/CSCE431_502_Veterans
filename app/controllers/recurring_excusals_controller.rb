@@ -26,7 +26,8 @@ class RecurringExcusalsController < ApplicationController
   private
 
   def recurring_excusal_params
-    params.require(:recurring_excusal).permit(:reason, :recurring_start_time, :recurring_end_time, recurring_days: [])
+    params.require(:recurring_excusal).permit(:reason, :evidence_link, :recurring_start_time, :recurring_end_time,
+                                              recurring_days: [])
   end
 
   def determine_layout

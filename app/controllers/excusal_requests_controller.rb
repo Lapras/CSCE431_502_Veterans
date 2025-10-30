@@ -24,7 +24,7 @@ class ExcusalRequestsController < ApplicationController
   private
 
   def excusal_request_params
-    params.require(:excusal_request).permit(:event_id, :reason)
+    params.require(:excusal_request).permit(:event_id, :evidence_link, :reason)
   end
 
   def determine_layout
