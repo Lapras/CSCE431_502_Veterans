@@ -21,6 +21,13 @@ class User < ApplicationRecord
   has_many :excusal_requests, dependent: :destroy
   has_many :recurring_excusals, dependent: :destroy
 
+  # Scopes allows us to easily define filters for a model. So this allows us to get all users that are members, or all ones
+  scope :visible_to_admin, -> { joins(:roles).where.not(roles: { name: %w[requesting] }).distinct }
+  scope :without_roles_or_requesting, lambda {
+    where.missing(:roles)
+         .or(left_outer_joins(:roles).where(roles: { name: 'requesting' }))
+  }
+
   # Backwards compatibility alias
   def events
     assigned_events

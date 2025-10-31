@@ -9,7 +9,15 @@ module Admin
 
     # GET /admin/users or /admin/users.json
     def index
-      @users = User.includes(:roles).order(:full_name, :email)
+      # In order to filter results, we're getting parameters from the HTTP request
+      @include_all = params[:include_all] == 'true'
+
+      @users = if @include_all
+                 User.all
+               else
+                 User.includes(:roles)
+                     .where.not(id: User.without_roles_or_requesting.pluck(:id))
+               end
     end
 
     # GET /admin/users/1 or /admin/users/1.json
