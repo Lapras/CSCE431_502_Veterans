@@ -16,7 +16,7 @@ module Admin
                  User.all
                else
                  User.includes(:roles)
-                     .where.not(id: User.without_roles_or_requesting.pluck(:id))
+                     .where.not(id: User.without_roles_or_requesting.select(:id))
                end
     end
 

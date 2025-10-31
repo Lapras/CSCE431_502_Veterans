@@ -21,7 +21,7 @@ RSpec.describe '/admin/users', type: :request do
   describe 'GET /index' do
     context 'with_admin' do
       it 'renders a successful response with default filtered users' do
-        no_role_user = User.create!(full_name: 'NoRole', email: 'n@example.com', uid: 'n1')
+        User.create!(full_name: 'NoRole', email: 'n@example.com', uid: 'n1')
         requesting_user = User.create!(full_name: 'Requesting', email: 'r@example.com', uid: 'r1')
         requesting_user.add_role(:requesting)
         valid_user = User.create!(full_name: 'Member', email: 'm@example.com', uid: 'm1')
@@ -37,7 +37,7 @@ RSpec.describe '/admin/users', type: :request do
       end
 
       it 'renders a successful response including all users when show_all=true' do
-        no_role_user = User.create!(full_name: 'NoRole', email: 'n@example.com', uid: 'n1')
+        User.create!(full_name: 'NoRole', email: 'n@example.com', uid: 'n1')
         requesting_user = User.create!(full_name: 'Requesting', email: 'r@example.com', uid: 'r1')
         requesting_user.add_role(:requesting)
         valid_user = User.create!(full_name: 'Member', email: 'm@example.com', uid: 'm1')
