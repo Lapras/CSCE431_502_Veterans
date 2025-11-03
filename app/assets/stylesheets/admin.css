@@ -1,0 +1,56 @@
+/* toolbar */
+.sort-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sort-status__label {
+  font-weight: 700;
+}
+
+.sort-status__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #f7f7f7;
+  font-weight: 600;
+}
+
+.sort-status__pill.asc  { background: #eef8ff; border-color: #cfe8ff; } /* optional nuance */
+.sort-status__pill.desc { background: #fff3e6; border-color: #ffd7b3; } /* optional nuance */
+
+.sort-status__arrow { opacity: .85; }
+
+.sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  background: #ddd;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  color: #000000 !important;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.sort-button:hover {
+  background: #eee;
+  border-color: #ccc;
+}
+
+.sort-button.active {
+  background:#ffeded;
+  border-color: #aaa;
+}
+
+.sort-icon {
+  opacity: 0.8;
+}
