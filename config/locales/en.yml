@@ -53,6 +53,7 @@ en:
     checkin: 'Succesfully checked in!'
     checkin_fail: 'Failed to check in.'
     already: 'already has an attendance record for this event'
+    invalid_code: 'Invalid check-in code. Please try again.'
   excusal:
     submit: 'Excusal request was successfully submitted.'
     recurring_submit: 'Recurring excusal request sent.'
