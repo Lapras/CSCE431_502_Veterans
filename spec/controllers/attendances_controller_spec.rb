@@ -74,20 +74,31 @@ RSpec.describe AttendancesController, type: :controller do
       sign_in member
     end
 
-    it 'checks in the current user' do
-      post :check_in, params: { event_id: event.id }
+    it 'checks in the current user with valid code' do
+      post :check_in, params: { event_id: event.id, check_in_code: event.check_in_code }
       expect(member.reload.attendances.first.status).to eq('present')
     end
 
-    it 'redirects to the event' do
-      post :check_in, params: { event_id: event.id }
+    it 'redirects to the event with valid code' do
+      post :check_in, params: { event_id: event.id, check_in_code: event.check_in_code }
       expect(response).to redirect_to(event)
     end
 
-    it 'creates attendance if not exists' do
+    it 'creates attendance if not exists with valid code' do
       expect do
-        post :check_in, params: { event_id: event.id }
+        post :check_in, params: { event_id: event.id, check_in_code: event.check_in_code }
       end.to change(Attendance, :count).by(1)
+    end
+
+    it 'does not check in with invalid code' do
+      post :check_in, params: { event_id: event.id, check_in_code: '999' }
+      expect(member.reload.attendances.first&.status).to eq('pending')
+    end
+
+    it 'redirects with alert on invalid code' do
+      post :check_in, params: { event_id: event.id, check_in_code: '999' }
+      expect(response).to redirect_to(event)
+      expect(flash[:alert]).to eq(I18n.t('attendance.invalid_code'))
     end
   end
 
@@ -144,8 +155,8 @@ RSpec.describe AttendancesController, type: :controller do
         expect(response).to redirect_to(events_path)
       end
 
-      it 'allows check_in for non-admin' do
-        post :check_in, params: { event_id: event.id }
+      it 'allows check_in for non-admin with valid code' do
+        post :check_in, params: { event_id: event.id, check_in_code: event.check_in_code }
         expect(response).to redirect_to(event)
       end
     end
