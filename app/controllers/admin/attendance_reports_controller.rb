@@ -26,6 +26,7 @@ module Admin
         'absent' => 'total_absences',
         'tardy' => 'total_tardies',
         'excused' => 'total_excused',
+        'discipline' => 'total_discipline_points',
         'total' => 'weighed_total'
       }
       allowed[param.to_s] || 'weighed_total'
@@ -44,21 +45,41 @@ module Admin
 
     def build_base_query
       absent_w = Attendance::POINT_VALUES['absent'].to_f
-      tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
+      tardy_w = Attendance::POINT_VALUES['tardy'].to_f
 
-      User.left_joins(:attendances)
-          .select(<<~SQL.squish)
-            users.*,
-            COALESCE(SUM(CASE WHEN attendances.status = 'present' THEN 1 END), 0) AS total_presents,
-            COALESCE(SUM(CASE WHEN attendances.status = 'absent'  THEN 1 END), 0) AS total_absences,
-            COALESCE(SUM(CASE WHEN attendances.status = 'tardy'   THEN 1 END), 0) AS total_tardies,
-            COALESCE(SUM(CASE WHEN attendances.status = 'excused' THEN 1 END), 0) AS total_excused,
-            (
-              COALESCE(SUM(CASE WHEN attendances.status = 'absent' THEN 1 END), 0) * #{absent_w} +
-              COALESCE(SUM(CASE WHEN attendances.status = 'tardy'  THEN 1 END), 0) * #{tardy_w}
-            )::numeric AS weighed_total
-          SQL
-          .group('users.id')
+      User
+        .select(<<~SQL.squish)
+          users.*,
+          COALESCE(att.total_presents, 0) AS total_presents,
+          COALESCE(att.total_absences, 0) AS total_absences,
+          COALESCE(att.total_tardies, 0) AS total_tardies,
+          COALESCE(att.total_excused, 0) AS total_excused,
+          COALESCE(d.total_discipline_points, 0) AS total_discipline_points,
+          (
+            COALESCE(att.total_absences, 0) * #{absent_w} +
+            COALESCE(att.total_tardies, 0) * #{tardy_w} +
+            COALESCE(d.total_discipline_points, 0)
+          )::numeric AS weighed_total
+        SQL
+        .joins(<<~SQL.squish)
+          LEFT JOIN (
+            SELECT user_id,
+                   SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
+                   SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
+                   SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
+                   SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
+            FROM attendances
+            GROUP BY user_id
+          ) att ON att.user_id = users.id
+        SQL
+        .joins(<<~SQL.squish)
+          LEFT JOIN (
+            SELECT user_id,
+                   COALESCE(SUM(points),0) AS total_discipline_points
+            FROM discipline_records
+            GROUP BY user_id
+          ) d ON d.user_id = users.id
+        SQL
     end
 
     def filter_by_query(base, query)
@@ -74,6 +95,7 @@ module Admin
         'absent' => 'total_absences',
         'tardy' => 'total_tardies',
         'excused' => 'total_excused',
+        'discipline' => 'total_discipline_points',
         'total' => 'weighed_total'
       }
       allowed[params[:sort].to_s] || 'weighed_total'
