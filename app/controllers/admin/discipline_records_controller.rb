@@ -1,5 +1,6 @@
 module Admin
   class DisciplineRecordsController < ApplicationController
+    before_action :set_discipline_record, only: %i[show edit update destroy]
     layout 'admin'
 
     def index
@@ -7,11 +8,13 @@ module Admin
     end
 
     def show
-      @discipline_record = DisciplineRecord.find(params[:id])
     end
 
     def new
       @discipline_record = DisciplineRecord.new
+    end
+
+    def edit
     end
 
     def create
@@ -25,13 +28,26 @@ module Admin
       end
     end
 
+    def update
+      if @discipline_record.update(discipline_record_params)
+        redirect_to admin_discipline_record_path(@discipline_record),
+                    notice: 'Discipline record was successfully updated.'
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
     def destroy
-      @discipline_record = DisciplineRecord.find(params[:id])
       @discipline_record.destroy
       redirect_to admin_discipline_records_path, notice: 'Record deleted.'
     end
 
     private
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_discipline_record
+      @discipline_record = DisciplineRecord.find(params[:id])
+    end
 
     def discipline_record_params
       params.require(:discipline_record).permit(:user_id, :points, :reason)

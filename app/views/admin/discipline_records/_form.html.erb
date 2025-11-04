@@ -1,0 +1,31 @@
+<%= form_with(model: [:admin, @discipline_record]) do |form| %>
+  <% if @discipline_record.errors.any? %>
+    <div class="alert alert-danger">
+      <h3><%= pluralize(@discipline_record.errors.count, "error") %> prohibited this record from being saved:</h3>
+      <ul>
+        <% @discipline_record.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :user_id, "User" %><br>
+    <%= form.collection_select :user_id, User.all, :id, :email, prompt: "Select a user" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :points %><br>
+    <%= form.number_field :points, step: 0.1, min: 0 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reason %><br>
+    <%= form.text_area :reason, rows: 4, placeholder: "Enter the reason for this discipline record" %>
+  </div>
+
+  <div class="actions mt-3">
+    <%= form.submit @discipline_record.new_record? ? "Create Record" : "Update Record", class: "btn btn-primary" %>
+  </div>
+<% end %>
