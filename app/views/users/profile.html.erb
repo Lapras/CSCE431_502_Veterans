@@ -1,0 +1,19 @@
+<div class="profile-container">
+  <h1 class="profile-title">My Profile</h1>
+  <div class="profile-card">
+    <p><strong>Name:</strong> <%= current_user.full_name %></p>
+    <p><strong>Email:</strong> <%= current_user.email %></p>
+    <p><strong>Your Role:</strong></p>
+    <ul class="role-list">
+      <% if current_user.roles.any? %>
+        <% current_user.roles.each do |role| %>
+          <li class="role-pill role-<%= role.name %>">
+            <%= role.name.titleize %>
+          </li>
+        <% end %>
+      <% else %>
+        <li class="role-pill role-none">No role assigned</li>
+      <% end %>
+    </ul>
+  </div>
+</div>
