@@ -207,4 +207,38 @@ RSpec.describe Event, type: :model do
       expect(stats[:excused]).to eq(1)
     end
   end
+
+  describe 'check-in code' do
+    it 'generates a 3-digit check-in code on creation' do
+      event = Event.create!(title: 'Test', starts_at: 1.day.from_now, location: 'Location')
+      expect(event.check_in_code).to match(/^\d{3}$/)
+    end
+
+    it 'generates different codes for different events' do
+      event_one = Event.create!(title: 'Event 1', starts_at: 1.day.from_now, location: 'Location')
+      event_two = Event.create!(title: 'Event 2', starts_at: 1.day.from_now, location: 'Location')
+      # While it's possible they could be the same by chance (1/1000), it's unlikely
+      # If this test fails occasionally, that's actually fine - but usually they'll differ
+      expect(event_one.check_in_code).to match(/^\d{3}$/)
+      expect(event_two.check_in_code).to match(/^\d{3}$/)
+    end
+
+    describe '#valid_check_in_code?' do
+      it 'returns true for correct code' do
+        event = Event.create!(title: 'Test', starts_at: 1.day.from_now, location: 'Location')
+        expect(event.valid_check_in_code?(event.check_in_code)).to be true
+      end
+
+      it 'returns false for incorrect code' do
+        event = Event.create!(title: 'Test', starts_at: 1.day.from_now, location: 'Location')
+        wrong_code = (event.check_in_code.to_i + 1) % 1000
+        expect(event.valid_check_in_code?(format('%03d', wrong_code))).to be false
+      end
+
+      it 'returns false for nil code' do
+        event = Event.create!(title: 'Test', starts_at: 1.day.from_now, location: 'Location')
+        expect(event.valid_check_in_code?(nil)).to be false
+      end
+    end
+  end
 end

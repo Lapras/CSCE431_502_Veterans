@@ -151,6 +151,7 @@ table td a {
 }
 
 .action-button:hover {
+  cursor: pointer;
   background-color: #700000;
 }
 
