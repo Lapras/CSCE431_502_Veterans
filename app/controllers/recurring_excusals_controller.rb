@@ -3,7 +3,9 @@
 class RecurringExcusalsController < ApplicationController
   layout :determine_layout
   before_action :authenticate_user!
-
+  before_action :set_recurring_excusal, only: [:approve, :deny]
+  before_action :authorize_admin!, only: [:approve, :deny]
+  
   def index
     @recurring_excusals = current_user.recurring_excusals.order(created_at: :desc)
   end
@@ -23,7 +25,27 @@ class RecurringExcusalsController < ApplicationController
     end
   end
 
+  def approve
+    @recurring_excusal.update(status: "approved")
+    redirect_to recurring_excusals_path, notice: "Recurring excusal approved."
+  end
+
+  def deny
+    @recurring_excusal.update(status: "denied")
+    redirect_to recurring_excusals_path, notice: "Recurring excusal denied."
+  end
+
   private
+
+  def set_recurring_excusal
+    @recurring_excusal = RecurringExcusal.find(params[:id])
+  end
+
+  def authorize_admin!
+    unless current_user.has_role?(:admin)
+      redirect_to recurring_excusals_path, alert: "You are not authorized to perform this action."
+    end
+  end
 
   def recurring_excusal_params
     params.require(:recurring_excusal).permit(:reason, :evidence_link, :recurring_start_time, :recurring_end_time,

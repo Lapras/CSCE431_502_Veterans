@@ -48,6 +48,11 @@ Rails.application.routes.draw do
   resources :approvals, only: [:index]
 
   resources :recurring_excusals, only: %i[index new create] do
+    member do
+      post :approve
+      post :deny
+    end
+
     resources :recurring_approvals, only: [:create]
   end
 
