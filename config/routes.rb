@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   post '/request_membership', to: 'membership_requests#create'
 
   namespace :admin do
-    resources :users
+    resources :users do
+      member do
+        get :confirm_delete
+      end
+    end
     resource :dashboard, only: [:show] # Admin dashboard
     resources :membership_requests, only: [:index] do
       member do

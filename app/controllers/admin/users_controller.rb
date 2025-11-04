@@ -5,7 +5,7 @@ module Admin
     layout 'admin'
     before_action :authenticate_user!
     before_action :require_admin!
-    before_action :set_user, only: %i[show edit update destroy]
+    before_action :set_user, only: %i[show edit update destroy confirm_delete]
 
     # GET /admin/users or /admin/users.json
     def index
@@ -62,6 +62,9 @@ module Admin
 
       redirect_to admin_users_path, notice: t('admin.users.deleted')
     end
+
+    # GET /admin/users/1/confirm_delete
+    def confirm_delete; end
 
     private
 
