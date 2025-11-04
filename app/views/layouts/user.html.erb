@@ -49,6 +49,7 @@
         <nav class="user-nav">
           <%= link_to "Dashboard", dashboard_path, class: "nav-link #{'active' if current_page?(dashboard_path)}" %>
           <%= link_to "Events", events_path, class: "nav-link #{'active' if controller_name == 'events'}" %>
+          <%= link_to "Profile", profile_path, class: "nav-link #{'active' if current_page?(profile_path)}" %>
         </nav>
       </aside>
       
