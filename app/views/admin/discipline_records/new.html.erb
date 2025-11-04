@@ -1,0 +1,22 @@
+<h1>New Discipline Record</h1>
+
+<%= form_with(model: [:admin, @discipline_record], local: true) do |form| %>
+  <div>
+    <%= form.label :user_id, "User" %><br>
+    <%= form.collection_select :user_id, User.all, :id, :email, prompt: "Select a user" %>
+  </div>
+
+  <div>
+    <%= form.label :points %><br>
+    <%= form.number_field :points, step: 0.1 %>
+  </div>
+
+  <div>
+    <%= form.label :reason %><br>
+    <%= form.text_area :reason, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Record" %>
+  </div>
+<% end %>

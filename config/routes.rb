@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "discipline_records/index"
+  get "discipline_records/new"
+  get "discipline_records/create"
+  get "discipline_records/show"
   get 'recurring_excusals/index'
   get 'recurring_excusals/new'
   get 'recurring_excusals/create'
@@ -53,6 +57,12 @@ Rails.application.routes.draw do
 
   resources :recurring_excusals, only: %i[index new create] do
     resources :recurring_approvals, only: [:create]
+  end
+
+  resources :discipline_records, only: %i[index show]
+
+  namespace :admin do
+    resources :discipline_records, only: %i[new create index show destroy]
   end
 
   root to: 'dashboards#show'
