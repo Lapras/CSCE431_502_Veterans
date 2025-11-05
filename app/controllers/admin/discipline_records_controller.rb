@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   class DisciplineRecordsController < ApplicationController
     before_action :set_discipline_record, only: %i[show edit update destroy]
@@ -8,22 +10,20 @@ module Admin
       @discipline_records = DisciplineRecord.includes(:user, :given_by).order(created_at: :desc)
     end
 
-    def show
-    end
+    def show; end
 
     def new
       @discipline_record = DisciplineRecord.new
     end
 
-    def edit
-    end
+    def edit; end
 
     def create
       @discipline_record = DisciplineRecord.new(discipline_record_params)
       @discipline_record.given_by = current_user
 
       if @discipline_record.save
-        redirect_to admin_discipline_records_path, notice: 'Discipline record created successfully.'
+        redirect_to admin_discipline_records_path, notice: I18n.t('discipline_records.created')
       else
         render :new, status: :unprocessable_entity
       end
@@ -32,15 +32,15 @@ module Admin
     def update
       if @discipline_record.update(discipline_record_params)
         redirect_to admin_discipline_record_path(@discipline_record),
-                    notice: 'Discipline record was successfully updated.'
+                    notice: I18n.t('discipline_records.update')
       else
         render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
-      @discipline_record.destroy
-      redirect_to admin_discipline_records_path, notice: 'Record deleted.'
+      @discipline_record.destroy!
+      redirect_to admin_discipline_records_path, notice: I18n.t('discipline_records.deleted')
     end
 
     private

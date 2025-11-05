@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     devise_controller?
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_path, alert: 'You are not authorized to access that page.'
+  rescue_from CanCan::AccessDenied do |_exception|
+    redirect_to root_path, alert: I18n.t('alerts.not_authorized')
   end
 end

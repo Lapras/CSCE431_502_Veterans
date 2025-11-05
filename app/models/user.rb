@@ -31,6 +31,69 @@ class User < ApplicationRecord
          .or(left_outer_joins(:roles).where(roles: { name: 'requesting' }))
   }
 
+  # === Attendance Reporting Scope ===
+  scope :with_attendance_summary, lambda {
+    absent_w = Attendance::POINT_VALUES['absent'].to_f
+    tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
+
+    select(<<~SQL.squish)
+      users.*,
+      COALESCE(att.total_presents, 0) AS total_presents,
+      COALESCE(att.total_absences, 0) AS total_absences,
+      COALESCE(att.total_tardies, 0) AS total_tardies,
+      COALESCE(att.total_excused, 0) AS total_excused,
+      COALESCE(d.total_discipline_points, 0) AS total_discipline_points,
+      (
+        COALESCE(att.total_absences, 0) * #{absent_w} +
+        COALESCE(att.total_tardies, 0) * #{tardy_w} +
+        COALESCE(d.total_discipline_points, 0)
+      )::numeric AS weighed_total
+    SQL
+      .joins(<<~SQL.squish)
+        LEFT JOIN (
+          SELECT user_id,
+                 SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
+                 SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
+                 SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
+                 SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
+          FROM attendances
+          GROUP BY user_id
+        ) att ON att.user_id = users.id
+      SQL
+      .joins(<<~SQL.squish)
+        LEFT JOIN (
+          SELECT user_id, COALESCE(SUM(points),0) AS total_discipline_points
+          FROM discipline_records
+          GROUP BY user_id
+        ) d ON d.user_id = users.id
+      SQL
+  }
+
+  # Optional: allow searching
+  scope :search, lambda { |query|
+    return all if query.blank?
+
+    pattern = "%#{query.strip}%"
+    where('users.full_name ILIKE ? OR users.email ILIKE ?', pattern, pattern)
+  }
+
+  # Optional: safe sorting (can live here or stay in controller)
+  def self.safe_sort(column, direction)
+    allowed = {
+      'name' => 'users.full_name',
+      'email' => 'users.email',
+      'present' => 'total_presents',
+      'absent' => 'total_absences',
+      'tardy' => 'total_tardies',
+      'excused' => 'total_excused',
+      'discipline' => 'total_discipline_points',
+      'total' => 'weighed_total'
+    }
+    col = allowed[column.to_s] || 'weighed_total'
+    dir = %w[asc desc].include?(direction.to_s.downcase) ? direction.to_s.downcase : 'desc'
+    order("#{col} #{dir}")
+  end
+
   # Backwards compatibility alias
   def events
     assigned_events

@@ -68,3 +68,7 @@ en:
   recurring_approvals:
     already_reviewed: "This recurring excusal has already been reviewed."
     not_found: "Recurring excusal not found."
+  discipline_records:
+    update: 'Discipline record was successfully updated.'
+    deleted: 'Record deleted'
+    created: 'Discipline record created succesfully.'
