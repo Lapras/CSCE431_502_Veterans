@@ -12,7 +12,7 @@
 
   <div class="field">
     <%= form.label :user_id, "User" %><br>
-    <%= form.collection_select :user_id, User.all, :id, :email, prompt: "Select a user" %>
+    <%= form.collection_select :user_id, User.all, :id, :full_name, prompt: "Select a user" %>
   </div>
 
   <div class="field">

@@ -21,7 +21,7 @@ class User < ApplicationRecord
   has_many :excusal_requests, dependent: :destroy
   has_many :recurring_excusals, dependent: :destroy
 
-  has_many :discipline_records, class_name: 'DisciplineRecord', foreign_key: 'given_by_id', dependent: :nullify
+  has_many :discipline_records, class_name: 'DisciplineRecord', dependent: :nullify
 
   # Backwards compatibility alias
   def events
@@ -54,6 +54,10 @@ class User < ApplicationRecord
     attendances.find_by(event: event)
   end
 
+  def total_discipline_points
+    discipline_records.sum(:points)
+  end
+
   def total_attendance_points
     attendances.sum(&:point_value)
   end
@@ -65,6 +69,7 @@ class User < ApplicationRecord
       absent: attendances.absent.count,
       excused: attendances.excused.count,
       tardy: attendances.tardy.count,
+      discipline: total_discipline_points,
       points: total_attendance_points
     }
   end
