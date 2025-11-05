@@ -1,9 +1,19 @@
 
 <h1>Users</h1>
 
-<%= link_to "New user", new_admin_user_path, class: "action-button" %>
-<%= link_to "Membership Requests", admin_membership_requests_path, class: "action-button" %>
-<%= link_to "Discipline User", new_admin_discipline_record_path, class: "action-button" %>
+<div class="actions">
+  <%= link_to "New user", new_admin_user_path, class: "action-button" %>
+  <%= link_to "Membership Requests", admin_membership_requests_path, class: "action-button" %>
+  <%= link_to "Discipline User", new_admin_discipline_record_path, class: "action-button" %>
+
+
+  <%= form_with url: admin_users_path, method: :get, local: true, class: "inline-form" do %>
+    <label>
+      <%= check_box_tag :include_all, "true", @include_all, onchange: "this.form.submit();" %>
+      Show all users (including pending/unassigned)
+    </label>
+  <% end %>
+</div>
 
 <table>
   <thead>
@@ -16,7 +26,6 @@
   </thead>
   <tbody>
     <% @users.each do |user| %>
-      <% next if user.roles.empty? || user.has_role?(:requesting) %>
       <tr>
         <td><%= user.full_name %></td>
         <td><%= user.email %></td>

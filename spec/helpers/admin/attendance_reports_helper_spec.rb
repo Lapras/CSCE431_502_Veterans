@@ -53,4 +53,77 @@ RSpec.describe Admin::AttendanceReportsHelper, type: :helper do
       end
     end
   end
+
+  describe Admin::AttendanceReportsHelper, type: :helper do
+    describe '#current_sort_key' do
+      it "defaults to 'total' when sort is invalid" do
+        allow(helper).to receive(:params).and_return(ActionController::Parameters.new(sort: 'weird'))
+        expect(helper.current_sort_key).to eq('total')
+      end
+    end
+  end
+
+  describe '#current_sort_dir' do
+    it 'defaults to desc when dir is invalid' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(dir: 'sideways'))
+      expect(helper.current_sort_dir).to eq('desc')
+    end
+
+    it 'defaults to desc when dir missing' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new({}))
+      expect(helper.current_sort_dir).to eq('desc')
+    end
+  end
+
+  describe '#current_sort_title' do
+    it 'maps key to human title' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(sort: 'email'))
+      expect(helper.current_sort_title).to eq('Email')
+    end
+  end
+
+  describe '#current_sort_arrow' do
+    it 'shows ↑ when asc' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(dir: 'asc'))
+      expect(helper.current_sort_arrow).to eq('↑')
+    end
+
+    it 'shows ↓ when desc or missing' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(dir: 'desc'))
+      expect(helper.current_sort_arrow).to eq('↓')
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new({}))
+      expect(helper.current_sort_arrow).to eq('↓')
+    end
+  end
+
+  describe '#next_dir' do
+    it 'returns desc when switching columns' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(sort: 'email', dir: 'asc'))
+      expect(helper.next_dir(:name)).to eq('desc')
+    end
+
+    it 'toggles asc→desc on same column' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(sort: 'name', dir: 'asc'))
+      expect(helper.next_dir(:name)).to eq('desc')
+    end
+
+    it 'toggles desc→asc on same column' do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(sort: 'name', dir: 'desc'))
+      expect(helper.next_dir(:name)).to eq('asc')
+    end
+  end
+
+  describe '#sort_link' do
+    it "adds 'active' class when sorting same key" do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(sort: 'name', dir: 'desc'))
+      html = helper.sort_link('Name', :name)
+      expect(html).to include('class="sort-button active"')
+    end
+
+    it "omits 'active' when sorting a different key" do
+      allow(helper).to receive(:params).and_return(ActionController::Parameters.new(sort: 'email', dir: 'asc'))
+      html = helper.sort_link('Name', :name)
+      expect(html).to include('class="sort-button "')
+    end
+  end
 end

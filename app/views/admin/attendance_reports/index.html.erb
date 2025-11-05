@@ -13,16 +13,13 @@
     <% end %>
   </div>
 <% end %>
-<style>
-  th a {
-    color: white !important;
-    text-decoration: none;
-  }
-  th a:hover {
-    color: #f5f5f5 !important;
-    text-decoration: underline;
-  }
-</style>
+
+<div class="sort-status">
+  <span class="sort-status__label">Sorted by:</span>
+  <span class="sort-status__pill <%= current_sort_dir %>">
+    <%= current_sort_title %> <span class="sort-status__arrow"><%= current_sort_arrow %></span>
+  </span>
+</div>
 
 <table class="table">
   <thead>
