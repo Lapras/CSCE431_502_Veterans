@@ -31,6 +31,12 @@ class AttendancesController < ApplicationController
 
     @attendance ||= @event.attendances.create(user: current_user, status: 'pending')
 
+    # Validate check-in code
+    unless @event.valid_check_in_code?(params[:check_in_code])
+      redirect_to @event, alert: I18n.t('attendance.invalid_code')
+      return
+    end
+
     if @attendance.check_in!
       redirect_to @event, notice: I18n.t('attendance.checkin')
     else

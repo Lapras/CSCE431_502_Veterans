@@ -20,10 +20,35 @@ RSpec.describe '/admin/users', type: :request do
 
   describe 'GET /index' do
     context 'with_admin' do
-      it 'renders a successful response' do
-        User.create!(full_name: 'X', email: 'x@example.com', uid: 'x1')
+      it 'renders a successful response with default filtered users' do
+        User.create!(full_name: 'NoRole', email: 'n@example.com', uid: 'n1')
+        requesting_user = User.create!(full_name: 'Requesting', email: 'r@example.com', uid: 'r1')
+        requesting_user.add_role(:requesting)
+        valid_user = User.create!(full_name: 'Member', email: 'm@example.com', uid: 'm1')
+        valid_user.add_role(:member)
+
         get admin_users_url
         expect(response).to be_successful
+
+        # Ensure only the valid user is shown in the HTML
+        expect(response.body).to include('Member')
+        expect(response.body).not_to include('NoRole')
+        expect(response.body).not_to include('Requesting')
+      end
+
+      it 'renders a successful response including all users when show_all=true' do
+        User.create!(full_name: 'NoRole', email: 'n@example.com', uid: 'n1')
+        requesting_user = User.create!(full_name: 'Requesting', email: 'r@example.com', uid: 'r1')
+        requesting_user.add_role(:requesting)
+        valid_user = User.create!(full_name: 'Member', email: 'm@example.com', uid: 'm1')
+        valid_user.add_role(:member)
+
+        get admin_users_url(include_all: true)
+        expect(response).to be_successful
+
+        # All users should now appear
+        expect(response.body).to include('Member')
+        expect(response.body).to include('r@example.com')
       end
 
       context 'without_admin' do
