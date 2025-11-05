@@ -60,7 +60,7 @@ en:
   excusal_requests:
     sent: "Excusal request is sent"
     missing_fields: "Error: Missing required fields"
-  recurring_excusals:
+  recurring_excusal:
     request_sent: "Recurring excusal request sent."
     approved: "Recurring excusal approved."
     denied: "Recurring excusal denied."
