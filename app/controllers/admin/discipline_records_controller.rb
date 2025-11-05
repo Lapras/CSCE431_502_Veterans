@@ -1,6 +1,7 @@
 module Admin
   class DisciplineRecordsController < ApplicationController
     before_action :set_discipline_record, only: %i[show edit update destroy]
+    before_action :require_admin!
     layout 'admin'
 
     def index
@@ -54,7 +55,9 @@ module Admin
     end
 
     def require_admin!
-      redirect_to root_path, alert: 'Not authorized.' unless current_user.admin?
+      return if current_user.has_role?(:admin)
+
+      redirect_to root_path, alert: I18n.t('alerts.not_authorized')
     end
   end
 end

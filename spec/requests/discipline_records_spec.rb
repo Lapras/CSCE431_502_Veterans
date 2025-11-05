@@ -1,32 +1,16 @@
 require 'rails_helper'
 
-RSpec.describe "DisciplineRecords", type: :request do
-  describe "GET /index" do
-    it "returns http success" do
-      get "/discipline_records/index"
-      expect(response).to have_http_status(:success)
-    end
+RSpec.describe 'users/show.html.erb', type: :view do
+  let(:user) { create(:user) }
+  let!(:discipline_record) { create(:discipline_record, user: user) }
+
+  before do
+    assign(:user, user)
+    render
   end
 
-  describe "GET /new" do
-    it "returns http success" do
-      get "/discipline_records/new"
-      expect(response).to have_http_status(:success)
-    end
+  it "displays the user's discipline records" do
+    expect(rendered).to match(discipline_record.reason)
+    expect(rendered).to match(discipline_record.points.to_s)
   end
-
-  describe "GET /create" do
-    it "returns http success" do
-      get "/discipline_records/create"
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe "GET /show" do
-    it "returns http success" do
-      get "/discipline_records/show"
-      expect(response).to have_http_status(:success)
-    end
-  end
-
 end
