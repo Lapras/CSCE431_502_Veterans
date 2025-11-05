@@ -3,9 +3,9 @@
 class RecurringExcusalsController < ApplicationController
   layout :determine_layout
   before_action :authenticate_user!
-  before_action :set_recurring_excusal, only: [:approve, :deny]
-  before_action :authorize_admin!, only: [:approve, :deny]
-  
+  before_action :set_recurring_excusal, only: %i[approve deny]
+  before_action :authorize_admin!, only: %i[approve deny]
+
   def index
     @recurring_excusals = current_user.recurring_excusals.order(created_at: :desc)
   end
@@ -26,13 +26,13 @@ class RecurringExcusalsController < ApplicationController
   end
 
   def approve
-    @recurring_excusal.update(status: "approved")
-    redirect_to recurring_excusals_path, notice: "Recurring excusal approved."
+    @recurring_excusal.update!(status: 'approved')
+    redirect_to recurring_excusals_path, notice: t('recurring_excusal.approved')
   end
 
   def deny
-    @recurring_excusal.update(status: "denied")
-    redirect_to recurring_excusals_path, notice: "Recurring excusal denied."
+    @recurring_excusal.update!(status: 'denied')
+    redirect_to recurring_excusals_path, notice: t('recurring_excusal.denied')
   end
 
   private
@@ -42,9 +42,9 @@ class RecurringExcusalsController < ApplicationController
   end
 
   def authorize_admin!
-    unless current_user.has_role?(:admin)
-      redirect_to recurring_excusals_path, alert: "You are not authorized to perform this action."
-    end
+    return if current_user.has_role?(:admin)
+
+    redirect_to recurring_excusals_path, alert: t('recurring_excusal.unauthorized')
   end
 
   def recurring_excusal_params
