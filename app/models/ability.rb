@@ -29,11 +29,8 @@ class Ability
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/define_check_abilities.md
 
-    if user.has_role?(:admin)
-      can :manage, :all
-    else
-      # No roles → no permissions
-      can :read, :all
-    end
+    can :manage, :all if user.has_role?(:admin)
+
+    can :read, DisciplineRecord, user_id: user.id
   end
 end

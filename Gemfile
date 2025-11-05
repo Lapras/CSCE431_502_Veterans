@@ -53,6 +53,8 @@ group :development, :test do
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'rails-controller-testing'
 end
 
 group :development do
