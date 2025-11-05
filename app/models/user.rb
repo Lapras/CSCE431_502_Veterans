@@ -21,7 +21,7 @@ class User < ApplicationRecord
   has_many :excusal_requests, dependent: :destroy
   has_many :recurring_excusals, dependent: :destroy
 
-  has_many :given_discipline_records, class_name: 'DisciplineRecord', foreign_key: 'given_by_id', dependent: :nullify
+  has_many :discipline_records, class_name: 'DisciplineRecord', foreign_key: 'given_by_id', dependent: :nullify
 
   # Backwards compatibility alias
   def events
