@@ -38,7 +38,7 @@ RSpec.describe 'DisciplineRecords', type: :request do
         get discipline_record_path(record_2)
 
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq('You are not authorized to access that page.')
+        expect(flash[:alert]).to eq(I18n.t('alerts.not_authorized'))
       end
     end
   end
