@@ -18,12 +18,15 @@
         <td><%= truncate(record.reason, length: 50) %></td>
         <td><%= record.created_at.to_date %></td>
         <td>
-          <%= link_to 'Show', admin_discipline_record_path(record) %>
-          <%= link_to 'Edit', edit_admin_discipline_record_path(record) %>
-          <%= link_to 'Delete', admin_discipline_record_path(record),
-                      method: :delete,
-                      data: { confirm: 'Are you sure?' } %>
+        <%= link_to 'Show', discipline_record_path(record) %>
+        <% if defined?(admin_namespace) && admin_namespace %>
+          <td>
+            <%= link_to 'Edit', edit_admin_discipline_record_path(record) %>
+            <%= link_to 'Delete', admin_discipline_record_path(record),
+                        method: :delete,
+                        data: { confirm: 'Are you sure?' } %>
         </td>
+        <%end %>
       </tr>
     <% end %>
   </tbody>

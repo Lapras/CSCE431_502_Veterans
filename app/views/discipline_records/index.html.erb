@@ -1,22 +1,5 @@
 <h1>My Discipline Records</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Given By</th>
-      <th>Points</th>
-      <th>Reason</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @discipline_records.each do |record| %>
-      <tr>
-        <td><%= record.given_by.email %></td>
-        <td><%= record.points %></td>
-        <td><%= record.reason %></td>
-        <td><%= record.created_at.to_date %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= link_to 'New Record', new_admin_discipline_record_path, class: "button" %>
+
+<%= render 'discipline_records/table', discipline_records: @discipline_records %>

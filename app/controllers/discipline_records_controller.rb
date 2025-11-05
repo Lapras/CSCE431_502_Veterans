@@ -1,7 +1,8 @@
 class DisciplineRecordsController < ApplicationController
+  layout 'user'
   def index
     # Users only see their own records
-    @discipline_records = current_user.discipline_records.includes(:given_by)
+    @discipline_records = current_user.discipline_records
   end
 
   def show
