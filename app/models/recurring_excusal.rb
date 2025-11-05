@@ -8,6 +8,9 @@ class RecurringExcusal < ApplicationRecord
   validates :recurring_start_time, presence: true
   validates :recurring_end_time, presence: true
   validates :status, inclusion: { in: %w[pending approved denied] }
+
+  validates :evidence_link, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true
+
   scope :approved, -> { where(status: 'approved') }
 
   has_one :recurring_approval, dependent: :destroy

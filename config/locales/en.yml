@@ -60,8 +60,11 @@ en:
   excusal_requests:
     sent: "Excusal request is sent"
     missing_fields: "Error: Missing required fields"
-  recurring_excusals:
+  recurring_excusal:
     request_sent: "Recurring excusal request sent."
+    approved: "Recurring excusal approved."
+    denied: "Recurring excusal denied."
+    unauthorized: "You are not authorized to perform this action."
   approvals:
     already_reviewed: "This request has already been reviewed."
     not_found: "Excusal request not found."
