@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 module Admin
-  class AttendanceReportsController < ApplicationController
-    before_action :authenticate_user!
-    before_action :require_admin!
-
-    layout 'admin'
-
+  class AttendanceReportsController < BaseController
     # GET /admin/attendance_reports
     def index
       @q = params[:q].to_s.strip

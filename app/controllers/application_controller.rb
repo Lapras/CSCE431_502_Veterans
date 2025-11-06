@@ -25,4 +25,10 @@ class ApplicationController < ActionController::Base
   def on_auth_pages?
     devise_controller?
   end
+
+  def require_role!(*roles)
+    return if current_user && roles.any? { |r| current_user.has_role?(r) }
+
+    redirect_to root_path, alert: I18n.t('alerts.not_authorized')
+  end
 end

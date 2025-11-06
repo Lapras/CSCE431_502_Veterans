@@ -31,9 +31,14 @@ class Ability
 
     if user.has_role?(:admin)
       can :manage, :all
+    elsif user.has_role?(:officer)
+      can :manage, :all
+      cannot :manage, User
+    elsif user.has_role?(:member)
+      can :read, :all
     else
       # No roles → no permissions
-      can :read, :all
+      can :read, :static
     end
   end
 end
