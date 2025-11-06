@@ -3,7 +3,6 @@
 module Management
   class AttendanceReportsController < BaseController
     skip_load_and_authorize_resource
-    # GET /admin/attendance_reports
     def index
       @q = params[:q].to_s.strip
       @rows = build_base_query
@@ -30,12 +29,6 @@ module Management
     # Whitelist sort direction
     def safe_direction(param)
       %w[asc desc].include?(param.to_s.downcase) ? param.to_s.downcase : 'desc'
-    end
-
-    def require_admin!
-      return if current_user&.has_role?(:admin)
-
-      redirect_to root_path, alert: I18n.t('alerts.not_admin')
     end
 
     def build_base_query

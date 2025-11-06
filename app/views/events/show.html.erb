@@ -11,7 +11,7 @@
     <span class="detail-value"><%= @event.location %></span>
   </div>
 
-  <% if current_user.has_role?(:admin) %>
+  <% if current_user.has_role?(:admin) || current_user.has_role?(:officer) %>
     <div class="detail-row">
       <span class="detail-label">Check-In Code:</span>
       <span class="detail-value"><%= @event.check_in_code %></span>

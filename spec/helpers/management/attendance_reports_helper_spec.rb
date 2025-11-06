@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Admin::AttendanceReportsHelper, type: :helper do
+RSpec.describe Management::AttendanceReportsHelper, type: :helper do
   describe '#sort_link' do
     context 'when no current sort is set' do
       it 'generates a link with desc direction' do

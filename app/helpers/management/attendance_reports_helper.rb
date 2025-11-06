@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Admin
+module Management
   module AttendanceReportsHelper
     TITLES = {
       'name' => 'Name',
@@ -52,7 +52,7 @@ module Admin
     def sort_link(label, key)
       link_to(
         label,
-        admin_attendance_reports_path(q: params[:q], sort: key, dir: next_dir(key)),
+        management_attendance_reports_path(q: params[:q], sort: key, dir: next_dir(key)),
         class: "sort-button #{'active' if current_sort == key.to_s}"
       )
     end

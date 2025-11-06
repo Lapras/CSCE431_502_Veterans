@@ -1,6 +1,6 @@
 <% content_for :title, "Events" %>
 
-<% if current_user&.has_role?(:admin) %>
+<% if current_user&.has_role?(:admin) || current_user&.has_role?(:officer) %>
   <!-- Admin View -->
   <h1>Events</h1>
 

@@ -2,10 +2,10 @@
 <h1>Users</h1>
 
 <div class="actions">
-  <%= link_to "New user", new_admin_user_path, class: "action-button" %>
-  <%= link_to "Membership Requests", admin_membership_requests_path, class: "action-button" %>
+  <%= link_to "New user", new_management_user_path, class: "action-button" %>
+  <%= link_to "Membership Requests", management_membership_requests_path, class: "action-button" %>
 
-  <%= form_with url: admin_users_path, method: :get, local: true, class: "inline-form" do %>
+  <%= form_with url: management_users_path, method: :get, local: true, class: "inline-form" do %>
     <label>
       <%= check_box_tag :include_all, "true", @include_all, onchange: "this.form.submit();" %>
       Show all users (including pending/unassigned)
@@ -29,9 +29,9 @@
         <td><%= user.email %></td>
         <td><%= user.roles.pluck(:name).join(", ") %></td>
         <td>
-          <%= link_to "Show", [:admin, user] %>
-          <%= link_to "Edit", edit_admin_user_path(user) %>
-          <%= link_to "Delete", confirm_delete_admin_user_path(user) %>
+          <%= link_to "Show", [:management, user] %>
+          <%= link_to "Edit", edit_management_user_path(user) %>
+          <%= link_to "Delete", confirm_delete_management_user_path(user) %>
         </td>
       </tr>
     <% end %>
