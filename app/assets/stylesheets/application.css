@@ -49,14 +49,14 @@ body {
 
 
 
-/* management Layout */
-.management-container {
+/* Admin Layout */
+.admin-container {
   display: flex;
   min-height: 100vh;
   padding-top: var(--banner-height, 112px);
 }
 
-.management-sidebar {
+.admin-sidebar {
   width: 250px;
   background-color: #4c4646;
   color: white;
@@ -67,12 +67,12 @@ body {
   overflow-y: auto;
 }
 
-.management-sidebar h2 {
+.admin-sidebar h2 {
   padding: 0 1.5rem;
   margin-bottom: 2rem;
 }
 
-.management-nav {
+.admin-nav {
   display: flex;
   flex-direction: column;
 }
@@ -93,7 +93,7 @@ body {
   border-left: 4px solid white;
 }
 
-.management-main {
+.admin-main {
   margin-left: 250px;
   padding: 2rem;
   flex: 1;

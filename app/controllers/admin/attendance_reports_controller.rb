@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-module Management
+module Admin
   class AttendanceReportsController < BaseController
-    skip_load_and_authorize_resource
     # GET /admin/attendance_reports
     def index
       @q = params[:q].to_s.strip
