@@ -66,6 +66,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_30_000001) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "evidence_link"
     t.index ["event_id"], name: "index_excusal_requests_on_event_id"
     t.index ["user_id"], name: "index_excusal_requests_on_user_id"
   end
@@ -92,6 +93,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_30_000001) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "evidence_link"
     t.index ["user_id"], name: "index_recurring_excusals_on_user_id"
   end
 

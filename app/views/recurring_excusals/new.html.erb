@@ -36,6 +36,7 @@
         </div>
       </div>
 
+<<<<<<< HEAD
       <div class="time-picker-row">
         <%= f.label :recurring_end_time, "End Time" %>
         <div>
@@ -46,6 +47,17 @@
         </div>
       </div>
     </div>
+=======
+  <div class="field">
+    <%= f.label :evidence_link, "Evidence link (Google Drive, etc.)" %>
+    <%= f.text_field :evidence_link, placeholder: "https://drive.google.com/..." %>
+  </div>
+
+  <div>
+    <%= f.submit "Request Recurring Excusal" %>
+  </div>
+<% end %>
+>>>>>>> origin/dev
 
     <!-- Form Actions -->
     <div class="form-actions">

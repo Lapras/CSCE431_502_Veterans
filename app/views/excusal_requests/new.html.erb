@@ -28,4 +28,31 @@
       <%= link_to "Back to Events", events_path, class: "btn-secondary" %>
     </div>
   <% end %>
+<<<<<<< HEAD
 </div>
+=======
+
+  <div>
+    <%= form.label :event_id, "Event" %>
+    <%= form.collection_select :event_id, Event.where('starts_at >= ?', Time.current).order(:starts_at), :id, :title, { include_blank: "Select Event" }, { style: "width: 100%; max-width: 500px;" } %>
+  </div>
+
+  <div>
+    <%= form.label :reason %>
+    <%= form.text_area :reason, rows: 5, style: "width: 100%; max-width: 500px;" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :evidence_link, "Evidence link (Google Drive, etc.)" %>
+    <%= form.text_field :evidence_link, placeholder: "https://drive.google.com/..." %>
+  </div>
+
+  <div>
+    <%= form.submit "Send Excusal Request" %>
+  </div>
+<% end %>
+
+<div style="margin-top: 1rem;">
+  <%= link_to "Back to Events", events_path, class: "action-button" %>
+</div>
+>>>>>>> origin/dev
