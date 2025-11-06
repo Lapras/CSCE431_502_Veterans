@@ -1,15 +1,15 @@
-<!-- app/views/admin/attendance_reports/index.html.erb -->
+<!-- app/views management/attendance_reports/index.html.erb -->
 <% content_for :title, "Attendance History" %>
 
 <h1>Attendance History</h1>
 
-<%= form_with url: admin_attendance_reports_path, method: :get, local: true, class: "search-form" do %>
+<%= form_with url: management_attendance_reports_path, method: :get, local: true, class: "search-form" do %>
   <div>
     <label for="q">Search name or email</label>
     <input type="text" id="q" name="q" value="<%= h @q %>" />
     <button type="submit">Search</button>
     <% if @q.present? %>
-      <%= link_to "Clear", admin_attendance_reports_path %>
+      <%= link_to "Clear", management_attendance_reports_path %>
     <% end %>
   </div>
 <% end %>

@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get '/documentation_and_support', to: 'static_pages#documentation_and_support', as: :documentation_and_support
   post '/request_membership', to: 'membership_requests#create'
 
-  namespace :admin do
+  namespace :management do
     resources :users do
       member do
         get :confirm_delete

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Admin
+module Management
   class MembershipRequestsController < BaseController
     def index
       @users = User.with_role(:requesting)

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-module Admin
+module Management
   class DashboardsController < BaseController
+    skip_load_and_authorize_resource
+
     def show
       @total_users = User.count
       @admin_users = User.with_role(:admin)

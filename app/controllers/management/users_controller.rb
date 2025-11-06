@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Admin
+module Management
   class UsersController < BaseController
     # GET /admin/users or /admin/users.json
     def index
