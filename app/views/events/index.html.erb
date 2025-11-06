@@ -44,6 +44,7 @@
   <h1>Events</h1>
 
   <div style="margin-bottom: 1.5rem;">
+    <%= link_to "Request Excusal", new_excusal_request_path, class: "action-button" %>
     <%= link_to "Request Recurring Excusal", new_recurring_excusal_path, class: "action-button" %>
     <%= link_to "View My Recurring Requests", recurring_excusals_path, class: "action-button" %>
   </div>
@@ -90,7 +91,6 @@
           </td>
           <td>
             <%= link_to "Show", event %>
-            <%= link_to "Request Excusal", new_excusal_request_path(event_id: event.id) %>
           </td>
         </tr>
       <% end %>

@@ -1,8 +1,8 @@
 <div class="recurring-excusal-form">
   <h1>Request Recurring Excusal</h1>
-  
+
   <%= form_with model: @recurring_excusal, local: true do |f| %>
-    
+
     <!-- Reason Section -->
     <div class="form-section">
       <%= f.label :reason %>
@@ -25,45 +25,39 @@
     <!-- Time Range Section -->
     <div class="form-section">
       <h3>Time Range</h3>
-      
+
       <div class="time-picker-row">
         <%= f.label :recurring_start_time, "Start Time" %>
         <div>
-          <%= f.time_select :recurring_start_time, 
-              ignore_date: true, 
+          <%= f.time_select :recurring_start_time,
+              ignore_date: true,
               minute_step: 1,
               ampm: true %>
         </div>
       </div>
 
-<<<<<<< HEAD
       <div class="time-picker-row">
         <%= f.label :recurring_end_time, "End Time" %>
         <div>
-          <%= f.time_select :recurring_end_time, 
+          <%= f.time_select :recurring_end_time,
               ignore_date: true,
               minute_step: 1,
               ampm: true %>
         </div>
       </div>
     </div>
-=======
-  <div class="field">
-    <%= f.label :evidence_link, "Evidence link (Google Drive, etc.)" %>
-    <%= f.text_field :evidence_link, placeholder: "https://drive.google.com/..." %>
-  </div>
 
-  <div>
-    <%= f.submit "Request Recurring Excusal" %>
-  </div>
-<% end %>
->>>>>>> origin/dev
+    <!-- Evidence Link Section (if needed) -->
+    <div class="form-section">
+      <%= f.label :evidence_link, "Evidence link (Google Drive, etc.)" %>
+      <%= f.text_field :evidence_link, placeholder: "https://drive.google.com/..." %>
+    </div>
 
     <!-- Form Actions -->
     <div class="form-actions">
       <%= f.submit "Request Recurring Excusal", class: "btn-primary" %>
       <%= link_to "Back to Events", events_path, class: "btn-secondary" %>
     </div>
-    
+
   <% end %>
 </div>
