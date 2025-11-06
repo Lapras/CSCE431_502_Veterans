@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 class StaticPagesController < ApplicationController
-<<<<<<< HEAD
   layout 'not_a_member'
-=======
-  layout 'admin'
->>>>>>> parent of a11eba7 (first changes)
   skip_before_action :check_user_roles, only: [:not_a_member]
   def not_a_member; end
 
