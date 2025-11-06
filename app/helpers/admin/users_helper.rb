@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Management
+module Admin
   module UsersHelper
   end
 end

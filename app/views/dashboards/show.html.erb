@@ -12,7 +12,7 @@
   <% end %>
 </div>
 
-<% if current_user.has_role?(:member) || current_user.has_role?(:admin) || current_user.has_role?(:officer)%>
+<% if current_user.has_role?(:member) || current_user.has_role?(:admin) %>
   <% stats = current_user.attendance_stats %>
   <h2>My Attendance Summary</h2>
 

@@ -32,7 +32,7 @@
   <% end %>
 <% end %>
 
-<% if current_user.has_role?(:admin) || current_user.has_role?(:officer) %>
+<% if current_user.has_role?(:admin) %>
   <div style="margin-top: 1rem;">
     <%= link_to "Manage Attendance", event_attendances_path(@event), class: "action-button" %>
     <%= link_to "Edit Event", edit_event_path(@event), class: "action-button" %>

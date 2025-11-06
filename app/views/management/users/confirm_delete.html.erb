@@ -8,5 +8,5 @@
   <p><strong>Role:</strong> <%= @user.roles.pluck(:name).join(", ") %></p>
 </div>
 
-<%= button_to "Yes, Delete", [:management, @user], method: :delete, class: "action-button" %>
-<%= link_to "Cancel", [:management, @user], class: "action-button" %>
+<%= button_to "Yes, Delete", [:admin, @user], method: :delete, class: "action-button" %>
+<%= link_to "Cancel", [:admin, @user], class: "action-button" %>
