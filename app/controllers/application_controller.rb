@@ -31,4 +31,8 @@ class ApplicationController < ActionController::Base
 
     redirect_to root_path, alert: I18n.t('alerts.not_authorized')
   end
+
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_path, alert: 'You are not authorized to access that page.'
+  end
 end
