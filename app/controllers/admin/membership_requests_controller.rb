@@ -2,6 +2,7 @@
 
 module Admin
   class MembershipRequestsController < BaseController
+    skip_load_and_authorize_resource
     def index
       @users = User.with_role(:requesting)
     end

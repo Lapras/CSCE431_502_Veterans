@@ -3,6 +3,7 @@
 module Admin
   class AttendanceReportsController < BaseController
     # GET /admin/attendance_reports
+    skip_load_and_authorize_resource
     def index
       @q = params[:q].to_s.strip
       @rows = build_base_query
