@@ -129,12 +129,18 @@ class User < ApplicationRecord
            dependent: :destroy
 
   # attendance related methods
-  def attendance_for(event)
-    attendances.find_by(event: event)
-  end
+    def attendance_for(event)
+      attendances.find_by(event: event)
+    end
 
+  # Compute total "discipline points" based on enum record_type
+  # tardy = 0.33, absence = 1.0, and every 3 tardies round up to 1 absence
   def total_discipline_points
-    discipline_records.sum(:points)
+    tardies  = discipline_records.tardy.count
+    absences = discipline_records.absence.count
+
+    # Convert every 3 tardies into 1 absence equivalent
+    absences + (tardies * 0.33)
   end
 
   def total_attendance_points
@@ -148,8 +154,8 @@ class User < ApplicationRecord
       absent: attendances.absent.count,
       excused: attendances.excused.count,
       tardy: attendances.tardy.count,
-      discipline: total_discipline_points,
-      points: total_attendance_points
+      discipline: total_discipline_points.round(2),
+      points: total_attendance_points.round(2)
     }
   end
 end

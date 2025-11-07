@@ -6,8 +6,8 @@ require 'rails_helper'
 RSpec.describe 'DisciplineRecords', type: :request do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
-  let!(:record_1) { create(:discipline_record, user: user, given_by: user, points: 5) }
-  let!(:record_2) { create(:discipline_record, user: other_user, given_by: other_user, points: 3) }
+  let!(:record_1) { create(:discipline_record, user: user, given_by: user) }
+  let!(:record_2) { create(:discipline_record, user: other_user, given_by: other_user) }
 
   before do
     sign_in user

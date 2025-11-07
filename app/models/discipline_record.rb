@@ -6,4 +6,7 @@ class DisciplineRecord < ApplicationRecord
 
   enum :record_type, { tardy: 'tardy', absence: 'absence' }, suffix: true
   validates :reason, presence: true
+
+  scope :tardy, -> { where(record_type: 'tardy') }
+  scope :absence, -> { where(record_type: 'absence') }
 end

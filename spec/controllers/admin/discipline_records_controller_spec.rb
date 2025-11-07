@@ -32,13 +32,13 @@ RSpec.describe Admin::DisciplineRecordsController, type: :controller do
       it 'creates a new discipline record' do
         expect do
           post :create,
-               params: { discipline_record: { user_id: user.id, given_by_id: admin.id, points: 5, reason: 'Test' } }
+               params: { id: record.id, discipline_record: { record_type: 'invalid_enum_value' } }
         end.to change(DisciplineRecord, :count).by(1)
       end
 
       it 'redirects to the admin discipline records index' do
         post :create,
-             params: { discipline_record: { user_id: user.id, given_by_id: admin.id, points: 5, reason: 'Test' } }
+             params: { id: record.id, discipline_record: { record_type: 'invalid_enum_value' } }
         expect(response).to redirect_to(admin_discipline_records_path)
       end
     end
@@ -47,7 +47,7 @@ RSpec.describe Admin::DisciplineRecordsController, type: :controller do
       it 'does not create a record and re-renders new with unprocessable_entity' do
         expect do
           post :create,
-               params: { discipline_record: { user_id: nil, given_by_id: admin.id, points: nil, reason: '' } }
+               params: { id: record.id, discipline_record: { record_type: 'invalid_enum_value' } }
         end.not_to change(DisciplineRecord, :count)
 
         expect(response).to render_template(:new)
@@ -65,19 +65,24 @@ RSpec.describe Admin::DisciplineRecordsController, type: :controller do
 
   describe 'PATCH #update' do
     context 'with valid parameters' do
-      it 'updates the record' do
-        patch :update, params: { id: record.id, discipline_record: { points: 7 } }
-        expect(record.reload.points).to eq(7)
+       it 'updates the record' do
+        new_attrs = attributes_for(:discipline_record, record_type: 'absence', reason: 'Updated reason')
+
+        patch :update, params: { id: record.id, discipline_record: new_attrs }
+
+        expect(response).to redirect_to(admin_discipline_record_path(record))
+        record.reload
+        expect(record.record_type).to eq('absence')
+        expect(record.reason).to eq('Updated reason')
       end
     end
 
     context 'with invalid parameters' do
       it 'does not update and re-renders edit with unprocessable_entity' do
-        patch :update, params: { id: record.id, discipline_record: { points: nil } }
-
+        patch :update, params: { id: record.id, discipline_record: { record_type: record.record_type, reason: '' } }
         expect(response).to render_template(:edit)
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(record.reload.points).not_to be_nil
+        expect(record.reload.record_type).not_to be_nil
       end
     end
   end
