@@ -33,41 +33,49 @@ class User < ApplicationRecord
 
   # === Attendance Reporting Scope ===
   scope :with_attendance_summary, lambda {
-    absent_w = Attendance::POINT_VALUES['absent'].to_f
-    tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
+  absent_w = Attendance::POINT_VALUES['absent'].to_f
+  tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
 
-    select(<<~SQL.squish)
-      users.*,
-      COALESCE(att.total_presents, 0) AS total_presents,
-      COALESCE(att.total_absences, 0) AS total_absences,
-      COALESCE(att.total_tardies, 0) AS total_tardies,
-      COALESCE(att.total_excused, 0) AS total_excused,
-      COALESCE(d.total_discipline_points, 0) AS total_discipline_points,
-      (
-        COALESCE(att.total_absences, 0) * #{absent_w} +
-        COALESCE(att.total_tardies, 0) * #{tardy_w} +
-        COALESCE(d.total_discipline_points, 0)
-      )::numeric AS weighed_total
+  select(<<~SQL.squish)
+    users.*,
+    COALESCE(att.total_presents, 0) AS total_presents,
+    COALESCE(att.total_absences, 0) AS total_absences,
+    COALESCE(att.total_tardies, 0) AS total_tardies,
+    COALESCE(att.total_excused, 0) AS total_excused,
+    COALESCE(d.total_discipline_points, 0)::numeric(10,2) AS total_discipline_points,
+    (
+      COALESCE(att.total_absences, 0) * #{absent_w} +
+      COALESCE(att.total_tardies, 0) * #{tardy_w} +
+      COALESCE(d.total_discipline_points, 0)
+    )::numeric(10,2) AS weighed_total
+  SQL
+    .joins(<<~SQL.squish)
+      LEFT JOIN (
+        SELECT user_id,
+               SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
+               SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
+               SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
+               SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
+        FROM attendances
+        GROUP BY user_id
+      ) att ON att.user_id = users.id
     SQL
-      .joins(<<~SQL.squish)
-        LEFT JOIN (
-          SELECT user_id,
-                 SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
-                 SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
-                 SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
-                 SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
-          FROM attendances
-          GROUP BY user_id
-        ) att ON att.user_id = users.id
-      SQL
-      .joins(<<~SQL.squish)
-        LEFT JOIN (
-          SELECT user_id, COALESCE(SUM(points),0) AS total_discipline_points
-          FROM discipline_records
-          GROUP BY user_id
-        ) d ON d.user_id = users.id
-      SQL
-  }
+    .joins(<<~SQL.squish)
+      LEFT JOIN (
+        SELECT user_id,
+                 SUM(
+                   CASE
+                     WHEN record_type = 'absence' THEN 1
+                     WHEN record_type = 'tardy'   THEN 1.0 / 3.0
+                     ELSE 0
+                   END
+                 )
+                AS total_discipline_points
+        FROM discipline_records
+        GROUP BY user_id
+      ) d ON d.user_id = users.id
+    SQL
+}
 
   # Optional: allow searching
   scope :search, lambda { |query|
