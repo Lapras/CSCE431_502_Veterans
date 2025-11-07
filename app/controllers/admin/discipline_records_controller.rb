@@ -3,7 +3,6 @@
 module Admin
   class DisciplineRecordsController < BaseController
     load_and_authorize_resource
-    before_action :require_admin!
     layout 'admin'
 
     def index
@@ -49,10 +48,5 @@ module Admin
       params.require(:discipline_record).permit(:user_id, :points, :reason)
     end
 
-    def require_admin!
-      return if current_user.has_role?(:admin)
-
-      redirect_to root_path, alert: I18n.t('alerts.not_authorized')
-    end
   end
 end
