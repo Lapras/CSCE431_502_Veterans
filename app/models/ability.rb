@@ -36,7 +36,7 @@ class Ability
       cannot %i[create update destroy], User
     elsif user.has_role?(:member)
       can :read, DisciplineRecord, user_id: user.id
-      
+
       can :read, Event do |event|
         event.assigned_users.include?(user)
       end

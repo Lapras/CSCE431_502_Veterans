@@ -47,6 +47,5 @@ module Admin
     def discipline_record_params
       params.require(:discipline_record).permit(:user_id, :points, :reason)
     end
-
   end
 end

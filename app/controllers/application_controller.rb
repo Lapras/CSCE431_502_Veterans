@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
     redirect_back fallback_location: root_path, alert: I18n.t('alerts.not_authorized')
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
+  rescue_from CanCan::AccessDenied do |_exception|
     redirect_back fallback_location: root_path, alert: I18n.t('alerts.not_authorized')
   end
 end

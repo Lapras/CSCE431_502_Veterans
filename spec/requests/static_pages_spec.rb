@@ -6,7 +6,7 @@ RSpec.describe 'StaticPages', type: :request do
   # Use Devise integration helpers for request specs
   include Devise::Test::IntegrationHelpers
 
-  let(:admin) { create(:user, :admin) }         # Using FactoryBot trait :admin
+  let(:admin) { create(:user, :admin) } # Using FactoryBot trait :admin
   let(:member) { create(:user, :member) }      # FactoryBot trait :member
   let(:norole_user) { create(:user) }          # No roles
   let(:not_member_user) { create(:user, :not_a_member) } # Trait for :not_a_member

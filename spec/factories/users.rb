@@ -17,7 +17,7 @@ FactoryBot.define do
     end
 
     trait :not_a_member do
-      after(:create) { |user| user.add_role(:not_a_member)}
+      after(:create) { |user| user.add_role(:not_a_member) }
     end
 
     trait :with_discipline_records do
