@@ -10,7 +10,7 @@ class DashboardsController < ApplicationController
       redirect_to admin_dashboard_path
       return
     end
-    
+
     # User-specific data
     @user = current_user
   end
