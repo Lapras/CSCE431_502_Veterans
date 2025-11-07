@@ -31,6 +31,7 @@
       <th style="text-align:right;"><%= sort_link("Absent", :absent) %></th>
       <th style="text-align:right;"><%= sort_link("Tardy",  :tardy) %></th>
       <th style="text-align:right;"><%= sort_link("Excused",:excused) %></th>
+      <th style="text-align:right;"><%= sort_link("Discipline",:excused) %></th>
     </tr>
   </thead>
   <tbody>
@@ -43,6 +44,7 @@
         <td style="text-align:right;"><%= u.read_attribute(:total_absences) %></td>
         <td style="text-align:right;"><%= u.read_attribute(:total_tardies) %></td>
         <td style="text-align:right;"><%= u.read_attribute(:total_excused) %></td>
+        <td style="text-align:right;"><%= u.read_attribute(:total_discipline_points) %></td>
       </tr>
     <% end %>
   </tbody>

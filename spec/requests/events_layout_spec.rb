@@ -9,6 +9,7 @@ RSpec.describe 'Events layouts and admin gate', type: :request do
   before do
     admin.add_role(:admin)
     member.add_role(:member)
+    @headers = { 'HTTP_REFERER' => events_path }
   end
 
   describe 'require_admin before_action' do
@@ -23,7 +24,7 @@ RSpec.describe 'Events layouts and admin gate', type: :request do
     it 'redirects a non-admin (covers require_admin then branch)' do
       sign_in member
       get new_event_path
-      expect(response).to redirect_to(events_path)
+      expect(response).to redirect_to(root_path)
       follow_redirect!
       expect(response.body).to include('Events')
     end

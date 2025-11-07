@@ -19,7 +19,7 @@ class RecurringExcusalsController < ApplicationController
     @recurring_excusal.status = 'pending'
 
     if @recurring_excusal.save
-      redirect_to recurring_excusals_path, notice: I18n.t('recurring_excusal.request_sent')
+      redirect_to recurring_excusals_path, notice: I18n.t('recurring_excusals.request_sent')
     else
       render :new
     end
@@ -27,12 +27,12 @@ class RecurringExcusalsController < ApplicationController
 
   def approve
     @recurring_excusal.update!(status: 'approved')
-    redirect_to recurring_excusals_path, notice: t('recurring_excusal.approved')
+    redirect_to recurring_excusals_path, notice: t('recurring_excusals.approved')
   end
 
   def deny
     @recurring_excusal.update!(status: 'denied')
-    redirect_to recurring_excusals_path, notice: t('recurring_excusal.denied')
+    redirect_to recurring_excusals_path, notice: t('recurring_excusals.denied')
   end
 
   private
@@ -44,7 +44,7 @@ class RecurringExcusalsController < ApplicationController
   def authorize_admin!
     return if current_user.has_role?(:admin)
 
-    redirect_to recurring_excusals_path, alert: t('recurring_excusal.unauthorized')
+    redirect_to recurring_excusals_path, alert: t('recurring_excusals.unauthorized')
   end
 
   def recurring_excusal_params
