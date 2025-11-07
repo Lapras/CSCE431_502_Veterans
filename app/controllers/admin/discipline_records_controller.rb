@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Admin
-  class DisciplineRecordsController < ApplicationController
-    before_action :set_discipline_record, only: %i[show edit update destroy]
+  class DisciplineRecordsController < BaseController
+    load_and_authorize_resource
     before_action :require_admin!
     layout 'admin'
 
@@ -44,11 +44,6 @@ module Admin
     end
 
     private
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_discipline_record
-      @discipline_record = DisciplineRecord.find(params[:id])
-    end
 
     def discipline_record_params
       params.require(:discipline_record).permit(:user_id, :points, :reason)
