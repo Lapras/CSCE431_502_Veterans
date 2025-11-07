@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_30_000001) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_04_211331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,6 +38,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_30_000001) do
     t.index ["event_id"], name: "index_attendances_on_event_id"
     t.index ["user_id", "event_id"], name: "index_attendances_on_user_id_and_event_id", unique: true
     t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
+
+  create_table "discipline_records", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "given_by_id", null: false
+    t.decimal "points", precision: 8, scale: 2, default: "0.0", null: false
+    t.text "reason", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["given_by_id"], name: "index_discipline_records_on_given_by_id"
+    t.index ["user_id"], name: "index_discipline_records_on_user_id"
   end
 
   create_table "event_users", force: :cascade do |t|
@@ -129,6 +140,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_30_000001) do
   add_foreign_key "approvals", "users", column: "approved_by_user_id"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "users"
+  add_foreign_key "discipline_records", "users"
+  add_foreign_key "discipline_records", "users", column: "given_by_id"
   add_foreign_key "event_users", "events"
   add_foreign_key "event_users", "users"
   add_foreign_key "excusal_requests", "events"
