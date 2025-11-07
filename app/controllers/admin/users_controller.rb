@@ -94,9 +94,5 @@ module Admin
 
       Array(raw).compact_blank
     end
-
-    def require_admin!
-      redirect_to root_path, alert: t('admin.users.unauthorized') unless current_user&.has_role?(:admin)
-    end
   end
 end

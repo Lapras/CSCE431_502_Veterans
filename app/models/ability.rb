@@ -33,7 +33,7 @@ class Ability
       can :manage, :all
     elsif user.has_role?(:officer)
       can :manage, :all
-      cannot :manage, User
+      cannot %i[create update destroy], User
     elsif user.has_role?(:member)
       can :read, :all
     else
