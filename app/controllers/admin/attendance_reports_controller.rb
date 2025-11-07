@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 module Admin
-  class AttendanceReportsController < ApplicationController
-    before_action :authenticate_user!
-    before_action :require_admin!
-
-    layout 'admin'
-
+  class AttendanceReportsController < BaseController
     # GET /admin/attendance_reports
+    skip_load_and_authorize_resource
     def index
       @q = params[:q].to_s.strip
       @rows = User

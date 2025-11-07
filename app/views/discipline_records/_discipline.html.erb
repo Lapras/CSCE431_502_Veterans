@@ -1,6 +1,6 @@
 <div class="discipline-record border rounded p-3 mb-3">
   <p><strong>Given By:</strong> <%= discipline_record.given_by.full_name %></p>
-  <p><strong>Points:</strong> <%= discipline_record.points %></p>
+  <p><strong>Discipline Type:</strong> <%= discipline_record.record_type %></p>
   <p><strong>Reason:</strong></p>
   <p class="reason"><%= simple_format(discipline_record.reason) %></p>
   <p><em>Issued on <%= discipline_record.created_at.strftime("%B %d, %Y") %></em></p>

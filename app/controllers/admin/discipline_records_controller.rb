@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Admin
-  class DisciplineRecordsController < ApplicationController
-    before_action :set_discipline_record, only: %i[show edit update destroy]
-    before_action :require_admin!
+  class DisciplineRecordsController < BaseController
+    load_and_authorize_resource
     layout 'admin'
 
     def index
@@ -45,19 +44,8 @@ module Admin
 
     private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_discipline_record
-      @discipline_record = DisciplineRecord.find(params[:id])
-    end
-
     def discipline_record_params
-      params.require(:discipline_record).permit(:user_id, :points, :reason)
-    end
-
-    def require_admin!
-      return if current_user.has_role?(:admin)
-
-      redirect_to root_path, alert: I18n.t('alerts.not_authorized')
+      params.require(:discipline_record).permit(:user_id, :record_type, :reason)
     end
   end
 end
