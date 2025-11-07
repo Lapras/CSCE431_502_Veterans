@@ -59,7 +59,7 @@ RSpec.describe '/admin/users', type: :request do
 
         it 'redirects to not a member' do
           get admin_users_url
-          expect(flash[:alert]).to eq('You must be an administrator to perform this action.')
+          expect(flash[:alert]).to eq(I18n.t('alerts.not_authorized'))
         end
       end
     end
