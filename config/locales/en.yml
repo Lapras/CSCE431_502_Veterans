@@ -63,7 +63,8 @@ en:
   recurring_excusals:
     request_sent: "Recurring excusal request sent."
     denied: "Recurring Excusal denired."
-    unauthroized: "You are not authorized to perform this action"
+    approved: "Recurring excusal approved."
+    unauthorized: "You are not authorized to perform this action."
   approvals:
     already_reviewed: "This request has already been reviewed."
     not_found: "Excusal request not found."
