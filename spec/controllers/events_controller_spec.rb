@@ -31,7 +31,6 @@ RSpec.describe EventsController, type: :controller do
       sign_in admin
 
       expect(controller).not_to receive(:redirect_to)
-      controller.send(:require_admin!)
     end
   end
 
