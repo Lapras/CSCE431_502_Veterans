@@ -351,6 +351,10 @@ form input[type="submit"]:hover {
   background: linear-gradient(135deg, #cc6600 0%, #ff8800 100%);
 }
 
+.stat-card.discipline {
+   background: linear-gradient(135deg, #ff0000 0%, #ea0000 100%);
+}
+
 /* Excusal Layout */
 
 .excusal-form {

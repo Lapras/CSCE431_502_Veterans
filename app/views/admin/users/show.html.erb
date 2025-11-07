@@ -9,6 +9,15 @@
   <p><strong>Role:</strong> <%= @user.roles.pluck(:name).join(", ") %></p>
 </div>
 
+<h2>Discipline Records</h2>
+
+<% if @user.discipline_records.any? %>
+  <%= render "admin/discipline_records/table", discipline_records: @user.discipline_records %>
+<% else %>
+  <p>No discipline records found for this user.</p>
+<% end %>
+
+
 <%= link_to "Edit", edit_admin_user_path(@user), class: "action-button" %>
 <%= link_to "Delete", confirm_delete_admin_user_path(@user), class: "action-button" %>
 <%= link_to "Back to Users", admin_users_path, class: "action-button" %>

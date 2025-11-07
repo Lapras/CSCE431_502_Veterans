@@ -150,7 +150,7 @@ RSpec.describe RecurringExcusalsController, type: :controller do
       it 'redirects to the index' do
         patch :deny, params: { id: recurring_excusal.id }
         expect(response).to redirect_to(recurring_excusals_path)
-        expect(flash[:notice]).to eq('Recurring excusal denied.')
+        expect(flash[:notice]).to eq(I18n.t('recurring_excusals.denied'))
       end
 
       it 'raises an error for a non-existent excusal' do

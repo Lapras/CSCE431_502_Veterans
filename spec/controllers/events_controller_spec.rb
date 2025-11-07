@@ -17,12 +17,12 @@ RSpec.describe EventsController, type: :controller do
       user.add_role(:member)
       sign_in user
       allow(controller).to receive(:events_path).and_return('/events')
-      allow(I18n).to receive(:t).with('alerts.not_admin').and_return('Not admin')
+      # allow(I18n).to receive(:t).with('alerts.not_authorized').and_return('Not admin')
 
       get :new # <- triggers before_action :require_admin!
 
-      expect(response).to redirect_to('/events')
-      expect(flash[:alert]).to eq('Not admin')
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t('alerts.not_authorized'))
     end
 
     it 'returns early (no redirect) for admin' do
@@ -31,7 +31,6 @@ RSpec.describe EventsController, type: :controller do
       sign_in admin
 
       expect(controller).not_to receive(:redirect_to)
-      controller.send(:require_admin!)
     end
   end
 

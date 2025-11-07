@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 module Admin
-  class UsersController < ApplicationController
-    layout 'admin'
-    before_action :authenticate_user!
-    before_action :require_admin!
-    before_action :set_user, only: %i[show edit update destroy confirm_delete]
-
+  class UsersController < BaseController
     # GET /admin/users or /admin/users.json
     def index
       # In order to filter results, we're getting parameters from the HTTP request
@@ -98,10 +93,6 @@ module Admin
       return nil if raw.nil? # key missing
 
       Array(raw).compact_blank
-    end
-
-    def require_admin!
-      redirect_to root_path, alert: t('admin.users.unauthorized') unless current_user&.has_role?(:admin)
     end
   end
 end

@@ -59,7 +59,7 @@ RSpec.describe '/admin/users', type: :request do
 
         it 'redirects to not a member' do
           get admin_users_url
-          expect(flash[:alert]).to eq('You must be an administrator to perform this action.')
+          expect(flash[:alert]).to eq(I18n.t('alerts.not_authorized'))
         end
       end
     end
@@ -92,7 +92,7 @@ RSpec.describe '/admin/users', type: :request do
     context 'with valid parameters' do
       it 'creates a new User' do
         expect do
-          post admin_users_url, params: { user: valid_attributes.merge(role_names: %w[member]) }
+          post admin_users_url, params: { user: valid_attributes }
         end.to change(User, :count).by(1)
       end
 
