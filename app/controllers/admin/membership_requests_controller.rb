@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 module Admin
-  class MembershipRequestsController < ApplicationController
-    before_action :require_admin!
-
-    # puts admin layout (left handed sidebar)
-    layout 'admin'
-
+  class MembershipRequestsController < BaseController
+    skip_load_and_authorize_resource
     def index
       @users = User.with_role(:requesting)
     end

@@ -60,10 +60,10 @@ en:
   excusal_requests:
     sent: "Excusal request is sent"
     missing_fields: "Error: Missing required fields"
-  recurring_excusal:
+  recurring_excusals:
     request_sent: "Recurring excusal request sent."
+    denied: "Recurring Excusal denired."
     approved: "Recurring excusal approved."
-    denied: "Recurring excusal denied."
     unauthorized: "You are not authorized to perform this action."
   approvals:
     already_reviewed: "This request has already been reviewed."
@@ -71,3 +71,7 @@ en:
   recurring_approvals:
     already_reviewed: "This recurring excusal has already been reviewed."
     not_found: "Recurring excusal not found."
+  discipline_records:
+    update: 'Discipline record was successfully updated.'
+    deleted: 'Record deleted'
+    created: 'Discipline record created succesfully.'

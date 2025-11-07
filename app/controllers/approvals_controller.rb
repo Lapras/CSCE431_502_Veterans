@@ -2,7 +2,7 @@
 
 class ApprovalsController < ApplicationController
   layout 'admin'
-  before_action :require_admin!
+  before_action -> { require_role!(:admin, :officer) }
   before_action :set_excusal_request, only: [:create]
 
   def index
