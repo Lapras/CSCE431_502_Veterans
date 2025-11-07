@@ -33,6 +33,6 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_back fallback_location: root_path, alert: 'You are not authorized to access that page.'
+    redirect_back fallback_location: root_path, alert: I18n.t('alerts.not_authorized')
   end
 end
