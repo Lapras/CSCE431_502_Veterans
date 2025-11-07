@@ -148,7 +148,7 @@ class User < ApplicationRecord
   end
 
   def total_events_count
-    a ttendances.count
+    attendances.count
   end
 
   def total_present
