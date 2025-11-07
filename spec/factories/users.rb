@@ -16,6 +16,10 @@ FactoryBot.define do
       after(:create) { |user| user.add_role(:member) }
     end
 
+    trait :not_a_member do
+      after(:create) { |user| user.add_role(:not_a_member)}
+    end
+
     trait :with_discipline_records do
       transient do
         discipline_count { 3 }
