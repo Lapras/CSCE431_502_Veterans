@@ -18,8 +18,7 @@ RSpec.describe 'DisciplineRecords', type: :request do
     it 'returns a successful response' do
       get discipline_records_path
       expect(response).to be_successful
-end
-
+    end
   end
 
   describe 'GET /discipline_records/:id' do

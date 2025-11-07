@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeDisciplinePoints < ActiveRecord::Migration[7.0]
   def up
     rename_column :discipline_records, :points, :record_type
