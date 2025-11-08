@@ -15,5 +15,10 @@
         <li class="role-pill role-none">No role assigned</li>
       <% end %>
     </ul>
+    <% if current_user.has_role?(:member) %>
+      <li> As a member, you can: view your events, view your attendance history, and request excusals! </li>
+    <% else %>
+      <li> As an admin, you can: manage users, manage events, manage approvals, view attendance history, and request excusals! </li>
+    <% end %>
   </div>
 </div>

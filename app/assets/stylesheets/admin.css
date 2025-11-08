@@ -54,3 +54,77 @@
 .sort-icon {
   opacity: 0.8;
 }
+
+.profile-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+}
+
+.profile-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #2a2a2a;
+}
+
+.profile-card {
+  background: #ffffff;
+  padding: 1.8rem;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+  border: 1px solid #ddd;
+  font-size: 1.1rem;
+}
+
+.profile-card p {
+  margin: 0.6rem 0;
+  line-height: 1.5;
+}
+
+.role-list {
+  margin: 0.4rem 0 1.2rem 0;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff !important;
+  background-color: #500000;
+  height: 36px;
+  line-height: 1;
+}
+
+.role-admin {
+  background-color: #500000;
+}
+
+.role-member {
+  background-color: #006400;
+}
+
+.role-officer {
+  background-color: #003366;
+}
+
+.role-none {
+  background-color: #777;
+}
+
+.profile-card li {
+  margin-top: 0.8rem;
+  padding-left: 4px;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.4;
+}
