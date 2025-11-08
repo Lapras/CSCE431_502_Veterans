@@ -30,11 +30,18 @@
     </div>
 
     <div class="ability-note">
-      <% if current_user.has_role?(:member) %>
-        As a member, you can: view your events, view your attendance history, and request excusals.
-      <% else %>
-        As an admin, you can: manage users, manage events, manage approvals, view attendance history, and request excusals.
-      <% end %>
+      <% capability_message =
+          if current_user.has_role?(:admin)
+            "As an admin, you can: manage users, manage events, manage approvals, view attendance history, and request excusals."
+          elsif current_user.has_role?(:officer)
+            "As an officer, you can: manage events, manage approvals, view attendance history, and request excusals."
+          else
+            "As a member, you can: view your events, view your attendance history, and request excusals."
+          end %>
+
+      <p class="ability-note">
+        <%= capability_message %>
+      </p>
     </div>
   </div>
 </div>
