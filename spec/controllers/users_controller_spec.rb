@@ -14,25 +14,25 @@ RSpec.describe UsersController, type: :controller do
     end
 
     context 'when signed in as a regular member' do
-    let(:user) { create(:user) }
+      let(:user) { create(:user) }
 
-    before do
+      before do
         user.add_role(:member)
         sign_in user
         get :profile
-    end
+      end
 
-    it 'assigns @user to the current_user' do
+      it 'assigns @user to the current_user' do
         expect(assigns(:user)).to eq(user)
-    end
+      end
 
-    it 'renders the profile template' do
+      it 'renders the profile template' do
         expect(response).to render_template(:profile)
-    end
+      end
 
-    it "uses the 'user' layout (not the admin layout)" do
+      it "uses the 'user' layout (not the admin layout)" do
         expect(response).to render_template(layout: 'user')
-    end
+      end
     end
 
     context 'when signed in as an admin' do
