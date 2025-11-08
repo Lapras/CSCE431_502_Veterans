@@ -1,24 +1,40 @@
 <div class="profile-container">
   <h1 class="profile-title">My Profile</h1>
+
   <div class="profile-card">
-    <p><strong>Name:</strong> <%= current_user.full_name %></p>
-    <p><strong>Email:</strong> <%= current_user.email %></p>
-    <p><strong>Your Role:</strong></p>
-    <ul class="role-list">
-      <% if current_user.roles.any? %>
-        <% current_user.roles.each do |role| %>
-          <li class="role-pill role-<%= role.name %>">
-            <%= role.name.titleize %>
-          </li>
-        <% end %>
+    <div class="kv">
+      <div class="kv-row">
+        <div class="kv-key">Name:</div>
+        <div class="kv-val"><%= current_user.full_name %></div>
+      </div>
+
+      <div class="kv-row">
+        <div class="kv-key">Email:</div>
+        <div class="kv-val"><%= current_user.email %></div>
+      </div>
+
+      <div class="kv-row">
+        <div class="kv-key">Role(s):</div>
+        <div class="kv-val">
+          <% if current_user.roles.any? %>
+            <div class="tag-row">
+              <% current_user.roles.each do |role| %>
+                <span class="tag tag-<%= role.name %>"><%= role.name.titleize %></span>
+              <% end %>
+            </div>
+          <% else %>
+            <span class="tag tag-none">No role assigned</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="ability-note">
+      <% if current_user.has_role?(:member) %>
+        As a member, you can: view your events, view your attendance history, and request excusals.
       <% else %>
-        <li class="role-pill role-none">No role assigned</li>
+        As an admin, you can: manage users, manage events, manage approvals, view attendance history, and request excusals.
       <% end %>
-    </ul>
-    <% if current_user.has_role?(:member) %>
-      <li> As a member, you can: view your events, view your attendance history, and request excusals! </li>
-    <% else %>
-      <li> As an admin, you can: manage users, manage events, manage approvals, view attendance history, and request excusals! </li>
-    <% end %>
+    </div>
   </div>
 </div>
