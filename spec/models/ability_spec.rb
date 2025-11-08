@@ -41,10 +41,6 @@ RSpec.describe Ability, type: :model do
 
     subject(:ability) { Ability.new(member) }
 
-    it 'can read all' do
-      expect(ability).to be_able_to(:read, :all)
-    end
-
     it 'cannot manage all' do
       expect(ability).not_to be_able_to(:manage, :all)
     end

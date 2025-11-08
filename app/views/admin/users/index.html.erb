@@ -1,8 +1,19 @@
 
 <h1>Users</h1>
 
-<%= link_to "New user", new_admin_user_path, class: "action-button" %>
-<%= link_to "Membership Requests", admin_membership_requests_path, class: "action-button" %>
+<div class="actions">
+  <%= link_to "New user", new_admin_user_path, class: "action-button" %>
+  <%= link_to "Membership Requests", admin_membership_requests_path, class: "action-button" %>
+  <%= link_to "Discipline User", new_admin_discipline_record_path, class: "action-button" %>
+
+
+  <%= form_with url: admin_users_path, method: :get, local: true, class: "inline-form" do %>
+    <label>
+      <%= check_box_tag :include_all, "true", @include_all, onchange: "this.form.submit();" %>
+      Show all users (including pending/unassigned)
+    </label>
+  <% end %>
+</div>
 
 <table>
   <thead>
@@ -10,21 +21,25 @@
       <th>Full Name</th>
       <th>Email</th>
       <th>Role</th>
-      <th>Actions</th>
+      <% if current_user.has_role?(:admin) %>
+        <th>Actions</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
     <% @users.each do |user| %>
-      <% next if user.roles.empty? || user.has_role?(:requesting) %>
       <tr>
         <td><%= user.full_name %></td>
         <td><%= user.email %></td>
         <td><%= user.roles.pluck(:name).join(", ") %></td>
-        <td>
-          <%= link_to "Show", [:admin, user] %>
-          <%= link_to "Edit", edit_admin_user_path(user) %>
-          <%= link_to "Delete", [:admin, user], data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-        </td>
+        <% if current_user.has_role?(:admin) %>
+          <td>
+            <%= link_to "Show", [:admin, user] %>
+            <%= link_to "Edit", edit_admin_user_path(user) %>
+            <%= link_to "Delete", confirm_delete_admin_user_path(user) %>
+          </td>
+        <% end %>
+        
       </tr>
     <% end %>
   </tbody>

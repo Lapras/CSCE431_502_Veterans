@@ -31,7 +31,7 @@
     <%= form.label :role_names, "Roles" %><br>
     <% # Prefer real Role names from DB, but always include a safe fallback list so 'member' shows up. %>
     <% db_roles = (Role.pluck(:name) rescue []) %>
-    <% fallback = %w[admin member] %>
+    <% fallback = %w[admin member officer] %>
     <% available_roles = (["none"] + db_roles + fallback).uniq %>
     <%= form.collection_select :role_names,
       available_roles, :to_s, :to_s,

@@ -151,6 +151,7 @@ table td a {
 }
 
 .action-button:hover {
+  cursor: pointer;
   background-color: #700000;
 }
 
@@ -348,4 +349,8 @@ form input[type="submit"]:hover {
 
 .stat-card.tardy {
   background: linear-gradient(135deg, #cc6600 0%, #ff8800 100%);
+}
+
+.stat-card.discipline {
+   background: linear-gradient(135deg, #ff0000 0%, #ea0000 100%);
 }
