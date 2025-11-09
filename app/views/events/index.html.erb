@@ -4,11 +4,19 @@
   <!-- Admin View -->
   <h1>Events</h1>
 
-  <%= link_to "New Event", new_event_path, class: "action-button" %>
-  <%= link_to "Request Excusal", new_excusal_request_path, class: "action-button" %>
-  <%= link_to "Request Recurring Excusal", new_recurring_excusal_path, class: "action-button" %>
-  <%= link_to "View My Recurring Requests", recurring_excusals_path, class: "action-button" %>
-
+  <%= form_with(url: events_path, method: :get, local: true) do |form| %>
+    <div style="margin-bottom: 1.5rem; margin-top: 1rem;">
+      <%= form.label :search_term, "Search Events:" %>
+      <%= form.text_field :search_term, value: params[:search_term], placeholder: "Title or location...", style: "margin-right: 20px;" %>
+      <%= form.submit "Search", class: "action-button" %>
+    </div>
+  <% end %>
+  <div style="margin-bottom: 2rem;">
+    <%= link_to "New Event", new_event_path, class: "action-button", style: "margin-right: 30px;" %>
+    <%= link_to "Request Excusal", new_excusal_request_path, class: "action-button", style: "margin-right: 30px;" %>
+    <%= link_to "Request Recurring Excusal", new_recurring_excusal_path, class: "action-button", style: "margin-right: 30px;" %>
+    <%= link_to "View My Recurring Requests", recurring_excusals_path, class: "action-button" %>
+  </div>
   <table>
     <thead>
       <tr>
@@ -42,6 +50,14 @@
 <% else %>
   <!-- User View -->
   <h1>Events</h1>
+
+  <%= form_with(url: events_path, method: :get, local: true) do |form| %>
+    <div style="margin-bottom: 1.5rem; margin-top: 1rem;">
+      <%= form.label :search_term, "Search Events:" %>
+      <%= form.text_field :search_term, value: params[:search_term], placeholder: "Title or location..." %>
+      <%= form.submit "Search", class: "action-button" %>
+    </div>
+  <% end %>
 
   <div style="margin-bottom: 1.5rem;">
     <%= link_to "Request Excusal", new_excusal_request_path, class: "action-button" %>
