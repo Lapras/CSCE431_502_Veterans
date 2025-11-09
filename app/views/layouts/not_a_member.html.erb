@@ -1,0 +1,64 @@
+<!-- app/views/layouts/not_a_member.html.erb -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GoogleOauthDevise</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <style>
+      .flash__alert { color: red; }
+      .flash__notice { color: blue; }
+      .flash__success { color: green; }
+    </style>
+    <script>
+      function adjustLayoutForBanner() {
+        const banner = document.querySelector('.banner');
+        if (banner) {
+          const bannerHeight = banner.offsetHeight;
+          document.documentElement.style.setProperty('--banner-height', bannerHeight + 'px');
+        }
+      }
+
+      // Run on page load
+      window.addEventListener('load', adjustLayoutForBanner);
+      // Run on window resize
+      window.addEventListener('resize', adjustLayoutForBanner);
+      // Run immediately in case DOM is already ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', adjustLayoutForBanner);
+      } else {
+        adjustLayoutForBanner();
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="banner">
+      <%= image_tag "choral_activities_banner.png", alt: "Choral Activities Banner" %>
+    </div>
+
+    <% if user_signed_in? %>
+      <%= link_to "Sign Out", destroy_user_session_path, class: "sign-out" %>
+    <% end %>
+
+    <div class="user-container">
+      <aside class="user-sidebar">
+        <h2>Menu</h2>
+        <nav class="user-nav">
+          <%= link_to "Dashboard", dashboard_path, class: "nav-link #{'active' if current_page?(dashboard_path)}" %>
+        </nav>
+      </aside>
+      
+      <main class="user-main">
+        <% if flash.any? %>
+          <% flash.each do |key, value| -%>
+            <section class="flash flash__<%= key %>"><%= value.html_safe %></section>
+          <% end -%>
+        <% end %>
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

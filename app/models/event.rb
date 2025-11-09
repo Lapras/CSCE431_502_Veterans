@@ -16,6 +16,13 @@ class Event < ApplicationRecord
   validate :starts_at_must_be_valid_datetime
   validates :location, presence: true
 
+  scope :search_by_text, lambda { |term|
+    return all if term.blank? # Return all events if search term is empty
+
+    sanitized_term = "%#{term.downcase}%"
+    where('LOWER(title) LIKE ? OR LOWER(location) LIKE ?', sanitized_term, sanitized_term)
+  }
+
   has_many :excusal_requests, dependent: :destroy
 
   # Generate check-in code before validation
