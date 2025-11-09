@@ -32,7 +32,7 @@ class User < ApplicationRecord
   }
 
   # === Attendance Reporting Scope ===
-  scope :with_attendance_summary, lambda {
+  scope :with_attendance_summary, lambda {|event_ids = nil|
     absent_w = Attendance::POINT_VALUES['absent'].to_f
     tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
 
@@ -57,6 +57,7 @@ class User < ApplicationRecord
                  SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
                  SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
           FROM attendances
+          WHERE event_id IN (#{event_ids.join(',')})
           GROUP BY user_id
         ) att ON att.user_id = users.id
       SQL

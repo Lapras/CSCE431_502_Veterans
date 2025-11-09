@@ -6,10 +6,26 @@ module Admin
     skip_load_and_authorize_resource
     def index
       @q = params[:q].to_s.strip
+      @last_n = params[:last_n].present? ? params[:last_n].to_i : nil
+
+      events_scope = Event.order(starts_at: :desc)
+      events_scope = events_scope.limit(@last_n) if @last_n.present?
+
+      # Get the filtered event IDs
+      event_ids = events_scope.pluck(:id)
       @rows = User
-              .with_attendance_summary
+              .with_attendance_summary(event_ids)
               .search(@q)
               .safe_sort(params[:sort], params[:dir])
+      @summary_stats = Attendance.where(event_id: event_ids)
+                                 .group(:status)
+                                 .count
+      total = @summary_stats.values.sum.to_f
+      @summary_percentages = if total.positive?
+                               @summary_stats.transform_values { |v| ((v / total) * 100).round(1) }
+                             else
+                               {}
+                             end
     end
 
     def require_admin!
