@@ -7,12 +7,18 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
+    search_term = params[:search_term]
+
     @events = if current_user&.has_role?(:admin)
                 # Admins see all future events
-                Event.where(starts_at: Time.current..).order(:starts_at)
+                Event.where(starts_at: Time.current..)
+                     .search_by_text(search_term) # <-- This part is new
+                     .order(:starts_at)
               else
                 # Regular users only see events they're assigned to
-                current_user.events.where(starts_at: Time.current..).order(:starts_at)
+                current_user.events.where(starts_at: Time.current..)
+                            .search_by_text(search_term) # <-- This part is new
+                            .order(:starts_at)
               end
   end
 
