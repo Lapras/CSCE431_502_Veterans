@@ -30,9 +30,9 @@ class User < ApplicationRecord
     where.missing(:roles)
          .or(left_outer_joins(:roles).where(roles: { name: 'requesting' }))
   }
-
+  # rubocop:disable Metrics/BlockLength
   # === Attendance Reporting Scope ===
-  scope :with_attendance_summary, lambda {|event_ids = nil|
+  scope :with_attendance_summary, lambda { |event_ids = nil|
     absent_w = Attendance::POINT_VALUES['absent'].to_f
     tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
 
@@ -49,18 +49,23 @@ class User < ApplicationRecord
         COALESCE(d.total_discipline_points, 0)
       )::numeric AS weighed_total
     SQL
-      .joins(<<~SQL.squish)
-        LEFT JOIN (
-          SELECT user_id,
-                 SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
-                 SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
-                 SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
-                 SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
-          FROM attendances
-          WHERE event_id IN (#{event_ids.join(',')})
-          GROUP BY user_id
-        ) att ON att.user_id = users.id
-      SQL
+      .joins(
+        sanitize_sql_array([
+          <<~SQL.squish,
+            LEFT JOIN (
+              SELECT user_id,
+               SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
+               SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
+               SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
+               SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
+              FROM attendances
+              WHERE event_id IN (?)
+              GROUP BY user_id
+            ) att ON att.user_id = users.id
+          SQL
+          event_ids
+        ])
+      )
       .joins(<<~SQL.squish)
         LEFT JOIN (
           SELECT user_id, COALESCE(SUM(points),0) AS total_discipline_points
@@ -69,6 +74,7 @@ class User < ApplicationRecord
         ) d ON d.user_id = users.id
       SQL
   }
+  # rubocop:enable Metrics/BlockLength
 
   # Optional: allow searching
   scope :search, lambda { |query|
