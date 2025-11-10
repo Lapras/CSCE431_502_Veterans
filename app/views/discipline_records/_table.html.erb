@@ -3,7 +3,7 @@
     <tr>
       <th>User</th>
       <th>Given By</th>
-      <th>Points</th>
+      <th>Discipline Type</th>
       <th>Reason</th>
       <th>Date</th>
       <th></th>
@@ -14,18 +14,15 @@
       <tr>
         <td><%= record.user.full_name %></td>
         <td><%= record.given_by.full_name %></td>
-        <td><%= record.points %></td>
+        <td><%= record.record_type   %></td>
         <td><%= truncate(record.reason, length: 50) %></td>
         <td><%= record.created_at.to_date %></td>
-        <td>
-        <%= link_to 'Show', discipline_record_path(record) %>
-        <% if defined?(admin_namespace) && admin_namespace %>
-          <td>
-            <%= link_to 'Edit', edit_admin_discipline_record_path(record) %>
-            <%= link_to 'Delete', admin_discipline_record_path(record),
+        <td><%= link_to 'Show', discipline_record_path(record) %>
+        <% if current_user.has_role?(:admin) %>
+          <%= link_to 'Edit', edit_admin_discipline_record_path(record) %>
+          <%= link_to 'Delete', admin_discipline_record_path(record),
                         method: :delete,
-                        data: { confirm: 'Are you sure?' } %>
-        </td>
+                        data: { confirm: 'Are you sure?' } %></td>
         <%end %>
       </tr>
     <% end %>

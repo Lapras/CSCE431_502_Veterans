@@ -99,7 +99,7 @@ RSpec.describe RecurringExcusalsController, type: :controller do
       it 'redirects with an authorization error' do
         patch :approve, params: { id: recurring_excusal.id }
         expect(response).to redirect_to(recurring_excusals_path)
-        expect(flash[:alert]).to eq('You are not authorized to perform this action.')
+        expect(flash[:alert]).to eq(I18n.t('alerts.not_authorized'))
       end
     end
 
@@ -114,7 +114,7 @@ RSpec.describe RecurringExcusalsController, type: :controller do
       it 'redirects to the index' do
         patch :approve, params: { id: recurring_excusal.id }
         expect(response).to redirect_to(recurring_excusals_path)
-        expect(flash[:notice]).to eq('Recurring excusal approved.')
+        expect(flash[:notice]).to eq(I18n.t('recurring_excusals.approved'))
       end
 
       it 'raises an error for a non-existent excusal' do
@@ -135,7 +135,7 @@ RSpec.describe RecurringExcusalsController, type: :controller do
       it 'redirects with an authorization error' do
         patch :deny, params: { id: recurring_excusal.id }
         expect(response).to redirect_to(recurring_excusals_path)
-        expect(flash[:alert]).to eq('You are not authorized to perform this action.')
+        expect(flash[:alert]).to eq(I18n.t('alerts.not_authorized'))
       end
     end
 

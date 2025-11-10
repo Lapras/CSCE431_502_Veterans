@@ -5,7 +5,7 @@ FactoryBot.define do
     association :user
     association :given_by, factory: :user
 
-    points { Faker::Number.between(from: 0.3, to: 2) }
+    record_type { DisciplineRecord.record_types.keys.sample } # "tardy" or "absence"
     reason { Faker::Lorem.sentence(word_count: 5) }
   end
 end

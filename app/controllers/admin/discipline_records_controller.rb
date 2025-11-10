@@ -45,7 +45,7 @@ module Admin
     private
 
     def discipline_record_params
-      params.require(:discipline_record).permit(:user_id, :points, :reason)
+      params.require(:discipline_record).permit(:user_id, :record_type, :reason)
     end
   end
 end
