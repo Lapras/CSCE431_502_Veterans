@@ -9,10 +9,7 @@ class AttendancesController < ApplicationController
 
   # GET /events/:event_id/attendances
   def index
-    @attendances = @event.attendances.includes(:user)
-    @attendances = @attendances.where(status: params[:status_filter]) if params[:status_filter].present?
-    @attendances = @attendances.joins(:user).merge(User.search(params[:search])) if params[:search].present?
-    @attendances = @attendances.order('users.full_name')
+    @attendances = filtered_attendances
     @stats = @event.attendance_stats
   end
 
@@ -53,16 +50,37 @@ class AttendancesController < ApplicationController
     params[:attendances]&.each do |id, attrs|
       attendance = @event.attendances.find(id)
       # Only update if status has changed
-      if attendance.status != attrs[:status]
-        success_count += 1 if attendance.update(status: attrs[:status])
-      end
+      success_count += 1 if (attendance.status != attrs[:status]) && attendance.update(status: attrs[:status])
     end
 
     redirect_to event_attendances_path(@event),
                 notice: "Updated #{success_count} attendance record(s)."
   end
 
+  def filtered_attendances
+    scope = base_scope
+    scope = filter_status(scope)
+    scope = filter_search(scope)
+    scope.order('users.full_name')
+  end
+
   private
+
+  def base_scope
+    @event.attendances.includes(:user)
+  end
+
+  def filter_status(scope)
+    return scope if params[:status_filter].blank?
+
+    scope.where(status: params[:status_filter])
+  end
+
+  def filter_search(scope)
+    return scope if params[:search].blank?
+
+    scope.joins(:user).merge(User.search(params[:search]))
+  end
 
   def set_event
     @event = Event.find(params[:event_id])
