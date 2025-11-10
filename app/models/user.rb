@@ -34,7 +34,7 @@ class User < ApplicationRecord
   # === Attendance Reporting Scope ===
   scope :with_attendance_summary, lambda { |event_ids = nil|
     absent_w = Attendance::POINT_VALUES['absent'].to_f
-    tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
+    tardy_w = Attendance::POINT_VALUES['tardy'].to_f
 
     select(<<~SQL.squish)
       users.*,
@@ -42,12 +42,12 @@ class User < ApplicationRecord
       COALESCE(att.total_absences, 0) AS total_absences,
       COALESCE(att.total_tardies, 0) AS total_tardies,
       COALESCE(att.total_excused, 0) AS total_excused,
-      COALESCE(d.total_discipline_points, 0) AS total_discipline_points,
+      COALESCE(d.total_discipline_points, 0)::numeric(10,2) AS total_discipline_points,
       (
         COALESCE(att.total_absences, 0) * #{absent_w} +
         COALESCE(att.total_tardies, 0) * #{tardy_w} +
         COALESCE(d.total_discipline_points, 0)
-      )::numeric AS weighed_total
+      )::numeric(10,2) AS weighed_total
     SQL
       .joins(
         sanitize_sql_array([
@@ -68,7 +68,15 @@ class User < ApplicationRecord
       )
       .joins(<<~SQL.squish)
         LEFT JOIN (
-          SELECT user_id, COALESCE(SUM(points),0) AS total_discipline_points
+          SELECT user_id,
+                   SUM(
+                     CASE
+                       WHEN record_type = 'absence' THEN 1
+                       WHEN record_type = 'tardy'   THEN 1.0 / 3.0
+                       ELSE 0
+                     END
+                   )
+                  AS total_discipline_points
           FROM discipline_records
           GROUP BY user_id
         ) d ON d.user_id = users.id
@@ -132,23 +140,49 @@ class User < ApplicationRecord
     attendances.find_by(event: event)
   end
 
+  # Compute total "discipline points" based on enum record_type
+  # tardy = 0.33, absence = 1.0, and every 3 tardies round up to 1 absence
   def total_discipline_points
-    discipline_records.sum(:points)
+    tardies  = discipline_records.tardy.count
+    absences = discipline_records.absence.count
+
+    # Convert every 3 tardies into 1 absence equivalent
+    absences + (tardies * 0.33)
   end
 
   def total_attendance_points
     attendances.sum(&:point_value)
   end
 
+  def total_events_count
+    attendances.count
+  end
+
+  def total_present
+    attendances.present.count
+  end
+
+  def total_absent
+    attendances.absent.count
+  end
+
+  def total_excused
+    attendances.excused.count
+  end
+
+  def total_tardy
+    attendances.tardy.count
+  end
+
   def attendance_stats
     {
-      total_events: attendances.count,
-      present: attendances.present.count,
-      absent: attendances.absent.count,
-      excused: attendances.excused.count,
-      tardy: attendances.tardy.count,
-      discipline: total_discipline_points,
-      points: total_attendance_points
+      total_events: total_events_count,
+      present: total_present,
+      absent: total_absent,
+      excused: total_excused,
+      tardy: total_tardy,
+      discipline: total_discipline_points.round(2),
+      points: total_attendance_points.round(2)
     }
   end
 end

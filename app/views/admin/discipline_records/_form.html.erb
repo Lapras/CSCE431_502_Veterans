@@ -16,8 +16,10 @@
   </div>
 
   <div class="field">
-    <%= form.label :points %><br>
-    <%= form.number_field :points, step: 0.1, min: 0 %>
+    <%= form.label :record_type %><br>
+    <%= form.select :record_type, 
+          DisciplineRecord.record_types.keys.map { |t| [t.titleize, t] },
+          prompt: "Select record type" %>
   </div>
 
   <div class="field">

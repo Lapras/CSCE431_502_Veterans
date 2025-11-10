@@ -8,19 +8,8 @@ RSpec.describe DisciplineRecord, type: :model do
   it 'is valid with valid attributes' do
     expect(subject).to be_valid
   end
-
-  it 'is not valid without points' do
-    subject.points = nil
-    expect(subject).not_to be_valid
-  end
-
   it 'is not valid without a reason' do
     subject.reason = nil
-    expect(subject).not_to be_valid
-  end
-
-  it 'is not valid if points is not numeric' do
-    subject.points = 'abc'
     expect(subject).not_to be_valid
   end
 
