@@ -5,11 +5,14 @@ class AttendancesController < ApplicationController
   layout :select_layout
   before_action :set_event
   before_action :set_attendance, only: %i[edit update]
-  before_action :require_admin!, except: [:check_in]
+  before_action :require_admin_or_officer!, except: [:check_in]
 
   # GET /events/:event_id/attendances
   def index
-    @attendances = @event.attendances.includes(:user).order('users.full_name')
+    @attendances = @event.attendances.includes(:user)
+    @attendances = @attendances.where(status: params[:status_filter]) if params[:status_filter].present?
+    @attendances = @attendances.joins(:user).merge(User.search(params[:search])) if params[:search].present?
+    @attendances = @attendances.order('users.full_name')
     @stats = @event.attendance_stats
   end
 
@@ -49,7 +52,10 @@ class AttendancesController < ApplicationController
     success_count = 0
     params[:attendances]&.each do |id, attrs|
       attendance = @event.attendances.find(id)
-      success_count += 1 if attendance.update(status: attrs[:status])
+      # Only update if status has changed
+      if attendance.status != attrs[:status]
+        success_count += 1 if attendance.update(status: attrs[:status])
+      end
     end
 
     redirect_to event_attendances_path(@event),
@@ -70,14 +76,14 @@ class AttendancesController < ApplicationController
     params.require(:attendance).permit(:status, :notes, :checked_in_at)
   end
 
-  def require_admin!
-    return if current_user&.has_role?(:admin)
+  def require_admin_or_officer!
+    return if current_user&.has_role?(:admin) || current_user&.has_role?(:officer)
 
     redirect_to events_path, alert: I18n.t('admin.users.unauthorized')
   end
 
   def select_layout
-    if current_user&.has_role?(:admin)
+    if current_user&.has_role?(:admin) || current_user&.has_role?(:officer)
       'admin'
     else
       'user'
