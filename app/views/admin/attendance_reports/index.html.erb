@@ -12,6 +12,33 @@
       <%= link_to "Clear", admin_attendance_reports_path %>
     <% end %>
   </div>
+  <div style="margin-top: 1em;">
+    <label for="last_n">Number of recent events to display (e.g., enter 3 to display the last three events, leave blank to display all events):</label>
+    <input type="number" id="last_n" name="last_n" value="<%= params[:last_n] %>" min="1" />
+    <button type="submit" name="show_summary" value="1">View Summary Statistics</button>
+  </div>
+<% end %>
+
+<% if @summary_stats.present? %>
+  <h2>Summary Statistics</h2>
+  <table class="table" style="margin-bottom: 2em;">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Count</th>
+        <th>Percentage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @summary_stats.each do |status, count| %>
+        <tr>
+          <td><%= status.capitalize %></td>
+          <td><%= count %></td>
+          <td><%= @summary_percentages[status] %> %</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
 
 <div class="sort-status">
@@ -49,3 +76,5 @@
     <% end %>
   </tbody>
 </table>
+
+
