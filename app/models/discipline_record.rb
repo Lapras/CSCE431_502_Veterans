@@ -4,6 +4,9 @@ class DisciplineRecord < ApplicationRecord
   belongs_to :user
   belongs_to :given_by, class_name: 'User'
 
-  validates :points, presence: true, numericality: true
+  enum :record_type, { tardy: 'tardy', absence: 'absence' }, suffix: true
   validates :reason, presence: true
+
+  scope :tardy, -> { where(record_type: 'tardy') }
+  scope :absence, -> { where(record_type: 'absence') }
 end

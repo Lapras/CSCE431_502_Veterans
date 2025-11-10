@@ -44,7 +44,7 @@ class RecurringExcusalsController < ApplicationController
   def authorize_admin!
     return if current_user.has_role?(:admin)
 
-    redirect_to recurring_excusals_path, alert: t('recurring_excusals.unauthorized')
+    redirect_to recurring_excusals_path, alert: t('alerts.not_authorized')
   end
 
   def recurring_excusal_params

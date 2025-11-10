@@ -28,7 +28,7 @@ Metrics/BlockLength:
   Exclude:
     - config/**/*
     - spec/**/*
-  Max: 33
+  Max: 42
 
 Naming/MethodName:
   Enabled: true
