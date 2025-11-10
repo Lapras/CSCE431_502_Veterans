@@ -1,0 +1,47 @@
+<div class="profile-container">
+  <h1 class="profile-title">My Profile</h1>
+
+  <div class="profile-card">
+    <div class="kv">
+      <div class="kv-row">
+        <div class="kv-key">Name:</div>
+        <div class="kv-val"><%= current_user.full_name %></div>
+      </div>
+
+      <div class="kv-row">
+        <div class="kv-key">Email:</div>
+        <div class="kv-val"><%= current_user.email %></div>
+      </div>
+
+      <div class="kv-row">
+        <div class="kv-key">Role(s):</div>
+        <div class="kv-val">
+          <% if current_user.roles.any? %>
+            <div class="tag-row">
+              <% current_user.roles.each do |role| %>
+                <span class="tag tag-<%= role.name %>"><%= role.name.titleize %></span>
+              <% end %>
+            </div>
+          <% else %>
+            <span class="tag tag-none">No role assigned</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="ability-note">
+      <% capability_message =
+          if current_user.has_role?(:admin)
+            "As an admin, you can: manage users, manage events, manage approvals, view attendance history, and request excusals."
+          elsif current_user.has_role?(:officer)
+            "As an officer, you can: manage events, manage approvals, view attendance history, and request excusals."
+          else
+            "As a member, you can: view your events, view your attendance history, and request excusals."
+          end %>
+
+      <p class="ability-note">
+        <%= capability_message %>
+      </p>
+    </div>
+  </div>
+</div>
