@@ -51,20 +51,20 @@ class User < ApplicationRecord
     SQL
       .joins(
         sanitize_sql_array([
-          <<~SQL.squish,
-            LEFT JOIN (
-              SELECT user_id,
-               SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
-               SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
-               SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
-               SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
-              FROM attendances
-              WHERE event_id IN (?)
-              GROUP BY user_id
-            ) att ON att.user_id = users.id
-          SQL
-          event_ids
-        ])
+                             <<~SQL.squish,
+                               LEFT JOIN (
+                                 SELECT user_id,
+                                  SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS total_presents,
+                                  SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS total_absences,
+                                  SUM(CASE WHEN status = 'tardy' THEN 1 ELSE 0 END) AS total_tardies,
+                                  SUM(CASE WHEN status = 'excused' THEN 1 ELSE 0 END) AS total_excused
+                                 FROM attendances
+                                 WHERE event_id IN (?)
+                                 GROUP BY user_id
+                               ) att ON att.user_id = users.id
+                             SQL
+                             event_ids
+                           ])
       )
       .joins(<<~SQL.squish)
         LEFT JOIN (
