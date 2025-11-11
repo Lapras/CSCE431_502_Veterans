@@ -29,7 +29,7 @@ RSpec.describe '/events', type: :request do
     it 'GET /new redirects (admin only)' do
       get new_event_path
       expect(response).to have_http_status(:redirect)
-      expect(response).to redirect_to(events_path)
+      expect(response).to redirect_to(root_path)
     end
 
     it 'only shows events starting in the future' do

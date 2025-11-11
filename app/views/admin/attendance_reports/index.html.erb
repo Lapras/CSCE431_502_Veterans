@@ -1,10 +1,11 @@
 <!-- app/views/admin/attendance_reports/index.html.erb -->
 <% content_for :title, "Attendance History" %>
 
-<h1>Attendance History</h1>
+<h1 class="page-title">Attendance History</h1>
 
 <%= form_with url: admin_attendance_reports_path, method: :get, local: true, class: "search-form" do %>
-  <div>
+
+  <div class="form-row">
     <label for="q">Search name or email</label>
     <input type="text" id="q" name="q" value="<%= h @q %>" />
     <button type="submit">Search</button>
@@ -12,41 +13,23 @@
       <%= link_to "Clear", admin_attendance_reports_path %>
     <% end %>
   </div>
-<% end %>
-<style>
-  th a {
-    color: white !important;
-    text-decoration: none;
-  }
-  th a:hover {
-    color: #f5f5f5 !important;
-    text-decoration: underline;
-  }
-</style>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th><%= sort_link("Name",   :name) %></th>
-      <th><%= sort_link("Email",  :email) %></th>
-      <th style="text-align:right;"><%= sort_link("Total",:total) %></th>
-      <th style="text-align:right;"><%= sort_link("Present",:present) %></th>
-      <th style="text-align:right;"><%= sort_link("Absent", :absent) %></th>
-      <th style="text-align:right;"><%= sort_link("Tardy",  :tardy) %></th>
-      <th style="text-align:right;"><%= sort_link("Excused",:excused) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @rows.each do |u| %>
-      <tr>
-        <td><%= u.full_name.presence || "—" %></td>
-        <td><%= u.email %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:weighed_total) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_presents) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_absences) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_tardies) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_excused) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+  <div class="form-row" style="margin-top: 1em;">
+    <label for="last_n">Events to include (e.g., 3 = last 3 events):</label>
+    <input
+      type="number"
+      id="last_n"
+      name="last_n"
+      value="<%= params[:last_n] %>"
+      min="1"
+      class="event-count-input"
+    />
+    <button type="submit" name="show_summary" value="1">View Summary Statistics</button>
+  </div>
+
+<% end %>
+
+
+<turbo-frame id="attendance_table">
+  <%= render "table" %>
+</turbo-frame>

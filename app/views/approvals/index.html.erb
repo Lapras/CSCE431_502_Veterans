@@ -173,9 +173,11 @@
           </td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.evidence_link %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.approved_by_user.full_name || recurring.recurring_approval.approved_by_user.email %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.comment %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_approval&.approved_by_user&.full_name || recurring.recurring_approval&.approved_by_user&.email || "N/A" %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval&.comment || "N/A" %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval&.decision_at&.strftime("%b %d, %Y %I:%M %p") || "N/A" %></td>
         </tr>
       <% end %>
     </tbody>
@@ -251,9 +253,13 @@
           </td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.reason %></td>
           <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.evidence_link %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.approved_by_user.full_name || recurring.recurring_approval.approved_by_user.email %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.comment %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval.decision_at.strftime("%b %d, %Y %I:%M %p") %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">
+            <%= recurring.recurring_approval&.approved_by_user&.full_name ||
+            recurring.recurring_approval&.approved_by_user&.email ||
+            "N/A" %>
+          </td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval&.comment || "N/A" %></td>
+          <td style="border: 1px solid #ddd; padding: 8px;"><%= recurring.recurring_approval&.decision_at&.strftime("%b %d, %Y %I:%M %p") || "N/A" %></td>
         </tr>
       <% end %>
     </tbody>

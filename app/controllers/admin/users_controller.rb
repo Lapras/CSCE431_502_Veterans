@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 module Admin
-  class UsersController < ApplicationController
-    layout 'admin'
-    before_action :authenticate_user!
-    before_action :require_admin!
-    before_action :set_user, only: %i[show edit update destroy]
-
+  class UsersController < BaseController
     # GET /admin/users or /admin/users.json
     def index
-      @users = User.includes(:roles).order(:full_name, :email)
+      # In order to filter results, we're getting parameters from the HTTP request
+      @include_all = params[:include_all] == 'true'
+
+      @users = if @include_all
+                 User.all
+               else
+                 User.includes(:roles)
+                     .where.not(id: User.without_roles_or_requesting.select(:id))
+               end
     end
 
     # GET /admin/users/1 or /admin/users/1.json
@@ -63,6 +66,9 @@ module Admin
       redirect_to admin_users_path, notice: t('admin.users.deleted')
     end
 
+    # GET /admin/users/1/confirm_delete
+    def confirm_delete; end
+
     private
 
     # Use callbacks to share common setup or constraints between actions.
@@ -87,10 +93,6 @@ module Admin
       return nil if raw.nil? # key missing
 
       Array(raw).compact_blank
-    end
-
-    def require_admin!
-      redirect_to root_path, alert: t('admin.users.unauthorized') unless current_user&.has_role?(:admin)
     end
   end
 end

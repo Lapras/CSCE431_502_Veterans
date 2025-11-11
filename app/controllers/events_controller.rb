@@ -2,17 +2,23 @@
 
 class EventsController < ApplicationController
   layout :select_layout
-  before_action :set_event, only: %i[show edit update destroy event_confirm_delete]
-  before_action :require_admin!, except: %i[index show]
+  load_and_authorize_resource only: %i[show edit update destroy event_confirm_delete]
+  before_action -> { require_role!(:admin, :officer) }, except: %i[index show]
 
   # GET /events or /events.json
   def index
+    search_term = params[:search_term]
+
     @events = if current_user&.has_role?(:admin)
                 # Admins see all future events
-                Event.where(starts_at: Time.current..).order(:starts_at)
+                Event.where(starts_at: Time.current..)
+                     .search_by_text(search_term) # <-- This part is new
+                     .order(:starts_at)
               else
                 # Regular users only see events they're assigned to
-                current_user.events.where(starts_at: Time.current..).order(:starts_at)
+                current_user.events.where(starts_at: Time.current..)
+                            .search_by_text(search_term) # <-- This part is new
+                            .order(:starts_at)
               end
   end
 
@@ -98,14 +104,8 @@ class EventsController < ApplicationController
     params.require(:event).permit(:title, :starts_at, :location, :notes, user_ids: [])
   end
 
-  def require_admin!
-    return if current_user&.has_role?(:admin)
-
-    redirect_to events_path, alert: I18n.t('alerts.not_admin')
-  end
-
   def select_layout
-    if current_user&.has_role?(:admin)
+    if current_user&.has_role?(:admin) || current_user&.has_role?(:officer)
       'admin'
     else
       'user'

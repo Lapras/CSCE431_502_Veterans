@@ -1,0 +1,12 @@
+
+<% content_for :title, "New Discipline" %>
+
+<h1>New Discipline Record</h1>
+
+<%= render "form", discipline_record: @discipline_record %>
+
+<br>
+
+<div>
+  <%= link_to "Back", admin_discipline_records_path %>
+</div>

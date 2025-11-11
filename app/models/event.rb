@@ -16,7 +16,17 @@ class Event < ApplicationRecord
   validate :starts_at_must_be_valid_datetime
   validates :location, presence: true
 
+  scope :search_by_text, lambda { |term|
+    return all if term.blank? # Return all events if search term is empty
+
+    sanitized_term = "%#{term.downcase}%"
+    where('LOWER(title) LIKE ? OR LOWER(location) LIKE ?', sanitized_term, sanitized_term)
+  }
+
   has_many :excusal_requests, dependent: :destroy
+
+  # Generate check-in code before validation
+  before_validation :generate_check_in_code, on: :create
 
   # Create attendance records for assigned users when event is created
   after_create :create_attendance_records
@@ -51,7 +61,17 @@ class Event < ApplicationRecord
     assigned_users
   end
 
+  # Validate check-in code
+  def valid_check_in_code?(code)
+    check_in_code.present? && check_in_code == code.to_s
+  end
+
   private
+
+  # Generate a random 3-digit code for check-in
+  def generate_check_in_code
+    self.check_in_code = format('%03d', rand(0..999))
+  end
 
   def starts_at_cannot_be_in_the_past
     return if starts_at.blank? # let presence validator handle blank
