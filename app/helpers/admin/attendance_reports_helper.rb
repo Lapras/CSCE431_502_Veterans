@@ -9,7 +9,8 @@ module Admin
       'present' => 'Present',
       'absent' => 'Absent',
       'tardy' => 'Tardy',
-      'excused' => 'Excused'
+      'excused' => 'Excused',
+      'discipline' => 'Discipline'
     }.freeze
 
     # shared state
@@ -25,7 +26,7 @@ module Admin
     # toolbar display
     def current_sort_key
       key = current_sort
-      %w[name email total present absent tardy excused].include?(key) ? key : 'total'
+      %w[name email total present absent tardy excused discipline].include?(key) ? key : 'total'
     end
 
     def current_sort_dir

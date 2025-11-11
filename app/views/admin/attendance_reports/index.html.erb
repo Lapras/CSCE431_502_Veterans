@@ -1,10 +1,11 @@
 <!-- app/views/admin/attendance_reports/index.html.erb -->
 <% content_for :title, "Attendance History" %>
 
-<h1>Attendance History</h1>
+<h1 class="page-title">Attendance History</h1>
 
 <%= form_with url: admin_attendance_reports_path, method: :get, local: true, class: "search-form" do %>
-  <div>
+
+  <div class="form-row">
     <label for="q">Search name or email</label>
     <input type="text" id="q" name="q" value="<%= h @q %>" />
     <button type="submit">Search</button>
@@ -12,69 +13,23 @@
       <%= link_to "Clear", admin_attendance_reports_path %>
     <% end %>
   </div>
-  <div style="margin-top: 1em;">
-    <label for="last_n">Number of recent events to display (e.g., enter 3 to display the last three events, leave blank to display all events):</label>
-    <input type="number" id="last_n" name="last_n" value="<%= params[:last_n] %>" min="1" />
+
+  <div class="form-row" style="margin-top: 1em;">
+    <label for="last_n">Events to include (e.g., 3 = last 3 events):</label>
+    <input
+      type="number"
+      id="last_n"
+      name="last_n"
+      value="<%= params[:last_n] %>"
+      min="1"
+      class="event-count-input"
+    />
     <button type="submit" name="show_summary" value="1">View Summary Statistics</button>
   </div>
+
 <% end %>
 
-<% if @summary_stats.present? %>
-  <h2>Summary Statistics</h2>
-  <table class="table" style="margin-bottom: 2em;">
-    <thead>
-      <tr>
-        <th>Status</th>
-        <th>Count</th>
-        <th>Percentage</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @summary_stats.each do |status, count| %>
-        <tr>
-          <td><%= status.capitalize %></td>
-          <td><%= count %></td>
-          <td><%= @summary_percentages[status] %> %</td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
 
-<div class="sort-status">
-  <span class="sort-status__label">Sorted by:</span>
-  <span class="sort-status__pill <%= current_sort_dir %>">
-    <%= current_sort_title %> <span class="sort-status__arrow"><%= current_sort_arrow %></span>
-  </span>
-</div>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th><%= sort_link("Name",   :name) %></th>
-      <th><%= sort_link("Email",  :email) %></th>
-      <th style="text-align:right;"><%= sort_link("Total",:total) %></th>
-      <th style="text-align:right;"><%= sort_link("Present",:present) %></th>
-      <th style="text-align:right;"><%= sort_link("Absent", :absent) %></th>
-      <th style="text-align:right;"><%= sort_link("Tardy",  :tardy) %></th>
-      <th style="text-align:right;"><%= sort_link("Excused",:excused) %></th>
-      <th style="text-align:right;"><%= sort_link("Discipline",:excused) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @rows.each do |u| %>
-      <tr>
-        <td><%= u.full_name.presence || "—" %></td>
-        <td><%= u.email %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:weighed_total) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_presents) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_absences) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_tardies) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_excused) %></td>
-        <td style="text-align:right;"><%= u.read_attribute(:total_discipline_points) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-
+<turbo-frame id="attendance_table">
+  <%= render "table" %>
+</turbo-frame>

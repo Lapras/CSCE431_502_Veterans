@@ -98,3 +98,18 @@
   font-size: 0.95rem;
   line-height: 1.5;
 }
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-row input {
+  flex: 1;
+}
+
+.search-form .event-count-input {
+  width: 80px;
+  flex: 0 0 auto;
+}
