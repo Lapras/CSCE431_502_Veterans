@@ -1,6 +1,14 @@
 <!-- app/views/events/show.html.erb -->
 <h1><%= @event.title %></h1>
 
+<% if current_user.has_role?(:admin) || current_user.has_role?(:officer) %>
+  <div style="text-align: center; margin: 1.5rem 0;">
+    <%= link_to "ROLL CALL", event_attendances_path(@event),
+        class: "action-button",
+        style: "font-size: 1.3em; padding: 15px 40px; background: #500000; display: inline-block;" %>
+  </div>
+<% end %>
+
 <div class="event-details-card">
   <div class="detail-row">
     <span class="detail-label">Date & Time:</span>
@@ -11,7 +19,11 @@
     <span class="detail-value"><%= @event.location %></span>
   </div>
 
-  <% if current_user.has_role?(:admin) %>
+  <% if current_user.has_role?(:admin) || current_user.has_role?(:officer) %>
+    <div class="detail-row">
+      <span class="detail-label">Check-In Code:</span>
+      <span class="detail-value"><%= @event.check_in_code %></span>
+    </div>
     <div class="detail-row">
       <span class="detail-label">Attendance:</span>
       <% stats = @event.attendance_stats %>
@@ -49,8 +61,18 @@
 
       <% if attendance.status == 'pending' %>
         <div style="margin-top: 1rem;">
-          <%= button_to "Check In", check_in_event_attendances_path(@event),
-              method: :post, class: "action-button" %>
+          <%= form_with url: check_in_event_attendances_path(@event), method: :post, local: true do |form| %>
+            <div style="margin-bottom: 1rem;">
+              <%= form.label :check_in_code, "Enter 3-Digit Check-In Code:", style: "display: block; margin-bottom: 0.5rem; font-weight: bold;" %>
+              <%= form.text_field :check_in_code,
+                  placeholder: "000",
+                  maxlength: 3,
+                  pattern: "[0-9]{3}",
+                  required: true,
+                  style: "padding: 0.5rem; font-size: 1.2em; width: 100px; text-align: center; letter-spacing: 0.3em;" %>
+            </div>
+            <%= form.submit "Check In", class: "action-button" %>
+          <% end %>
         </div>
       <% end %>
     </div>
@@ -59,7 +81,6 @@
 
 <div style="margin-top: 1.5rem;">
   <% if current_user.has_role?(:admin) %>
-    <%= link_to "Manage Attendance", event_attendances_path(@event), class: "action-button" %>
     <%= link_to "Edit Event", edit_event_path(@event), class: "action-button" %>
     <%= link_to "Delete Event", event_confirm_delete_event_path(@event), class: "action-button" %>
   <% end %>

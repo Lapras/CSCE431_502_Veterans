@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'discipline_records/index'
+  get 'discipline_records/new'
+  get 'discipline_records/create'
+  get 'discipline_records/show'
   get 'recurring_excusals/index'
   get 'recurring_excusals/new'
   get 'recurring_excusals/create'
@@ -11,12 +15,17 @@ Rails.application.routes.draw do
   get 'recurring_excusals/create'
   get 'excusal_requests/new'
   get 'excusal_requests/create'
+  get '/profile', to: 'users#profile'
   get 'not_a_member', to: 'static_pages#not_a_member', as: :not_a_member
   get '/documentation_and_support', to: 'static_pages#documentation_and_support', as: :documentation_and_support
   post '/request_membership', to: 'membership_requests#create'
 
   namespace :admin do
-    resources :users
+    resources :users do
+      member do
+        get :confirm_delete
+      end
+    end
     resource :dashboard, only: [:show] # Admin dashboard
     resources :membership_requests, only: [:index] do
       member do
@@ -48,7 +57,18 @@ Rails.application.routes.draw do
   resources :approvals, only: [:index]
 
   resources :recurring_excusals, only: %i[index new create] do
+    member do
+      post :approve
+      post :deny
+    end
+
     resources :recurring_approvals, only: [:create]
+  end
+
+  resources :discipline_records, only: %i[index show]
+
+  namespace :admin do
+    resources :discipline_records, only: %i[new edit create index show destroy update]
   end
 
   root to: 'dashboards#show'

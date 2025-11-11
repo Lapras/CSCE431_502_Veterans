@@ -3,7 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe 'events/index', type: :view do
-  let(:user) { User.create!(email: 'test@example.com', full_name: 'Test User') }
+  let(:user) { create(:user) }
+
+  before do
+    allow(user).to receive(:has_role?).with(:admin).and_return(false)
+    allow(user).to receive(:has_role?).with(:officer).and_return(true)
+    allow(view).to receive(:current_user).and_return(user)
+  end
+
   let!(:events) do
     [
       Event.create!(

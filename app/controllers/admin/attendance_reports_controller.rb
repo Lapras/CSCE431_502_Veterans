@@ -1,86 +1,51 @@
 # frozen_string_literal: true
 
 module Admin
-  class AttendanceReportsController < ApplicationController
-    before_action :authenticate_user!
-    before_action :require_admin!
-
-    layout 'admin'
-
+  class AttendanceReportsController < BaseController
     # GET /admin/attendance_reports
+    skip_load_and_authorize_resource
+
     def index
-      @q = params[:q].to_s.strip
-      @rows = build_base_query
-      @rows = filter_by_query(@rows, @q) if @q.present?
-      @rows = @rows.order(sort_column => sort_dir)
+      set_query_params
+      set_events
+      load_rows
+      compute_summary
+    end
+
+    def require_admin!
+      redirect_to root_path, alert: t('admin.users.unauthorized') unless current_user&.has_role?(:admin)
     end
 
     private
 
-    # Whitelist sortable columns (SQL aliases from the SELECT above + user fields)
-    def safe_sort(param)
-      allowed = {
-        'name' => 'users.full_name',
-        'email' => 'users.email',
-        'present' => 'total_presents',
-        'absent' => 'total_absences',
-        'tardy' => 'total_tardies',
-        'excused' => 'total_excused',
-        'total' => 'weighed_total'
-      }
-      allowed[param.to_s] || 'weighed_total'
+    def set_query_params
+      @q = params[:q].to_s.strip
+      @last_n = params[:last_n].present? ? params[:last_n].to_i : nil
     end
 
-    # Whitelist sort direction
-    def safe_direction(param)
-      %w[asc desc].include?(param.to_s.downcase) ? param.to_s.downcase : 'desc'
+    def set_events
+      events_scope = Event.order(starts_at: :desc)
+      events_scope = events_scope.limit(@last_n) if @last_n.present?
+      @event_ids = events_scope.pluck(:id)
     end
 
-    def require_admin!
-      return if current_user&.has_role?(:admin)
-
-      redirect_to root_path, alert: I18n.t('alerts.not_admin')
+    def load_rows
+      @rows = User
+              .with_attendance_summary(@event_ids)
+              .search(@q)
+              .safe_sort(params[:sort], params[:dir])
     end
 
-    def build_base_query
-      absent_w = Attendance::POINT_VALUES['absent'].to_f
-      tardy_w  = Attendance::POINT_VALUES['tardy'].to_f
-
-      User.left_joins(:attendances)
-          .select(<<~SQL.squish)
-            users.*,
-            COALESCE(SUM(CASE WHEN attendances.status = 'present' THEN 1 END), 0) AS total_presents,
-            COALESCE(SUM(CASE WHEN attendances.status = 'absent'  THEN 1 END), 0) AS total_absences,
-            COALESCE(SUM(CASE WHEN attendances.status = 'tardy'   THEN 1 END), 0) AS total_tardies,
-            COALESCE(SUM(CASE WHEN attendances.status = 'excused' THEN 1 END), 0) AS total_excused,
-            (
-              COALESCE(SUM(CASE WHEN attendances.status = 'absent' THEN 1 END), 0) * #{absent_w} +
-              COALESCE(SUM(CASE WHEN attendances.status = 'tardy'  THEN 1 END), 0) * #{tardy_w}
-            )::numeric AS weighed_total
-          SQL
-          .group('users.id')
-    end
-
-    def filter_by_query(base, query)
-      pattern = "%#{query}%"
-      base.where('users.full_name ILIKE ? OR users.email ILIKE ?', pattern, pattern)
-    end
-
-    def sort_column
-      allowed = {
-        'name' => 'users.full_name',
-        'email' => 'users.email',
-        'present' => 'total_presents',
-        'absent' => 'total_absences',
-        'tardy' => 'total_tardies',
-        'excused' => 'total_excused',
-        'total' => 'weighed_total'
-      }
-      allowed[params[:sort].to_s] || 'weighed_total'
-    end
-
-    def sort_dir
-      %w[asc desc].include?(params[:dir].to_s.downcase) ? params[:dir].to_s.downcase : 'desc'
+    def compute_summary
+      @summary_stats = Attendance.where(event_id: @event_ids)
+                                 .group(:status)
+                                 .count
+      total = @summary_stats.values.sum.to_f
+      @summary_percentages = if total.positive?
+                               @summary_stats.transform_values { |v| ((v / total) * 100).round(1) }
+                             else
+                               {}
+                             end
     end
   end
 end

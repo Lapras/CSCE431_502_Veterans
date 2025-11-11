@@ -11,6 +11,8 @@ class ExcusalRequest < ApplicationRecord
   scope :approved, -> { where(status: 'approved') }
   scope :denied, -> { where(status: 'denied') }
 
+  validates :evidence_link, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true
+
   after_initialize :set_default_status, if: :new_record?
 
   def pending?

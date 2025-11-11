@@ -1,38 +1,63 @@
-<h1>Request Recurring Excusal</h1>
+<div class="recurring-excusal-form">
+  <h1>Request Recurring Excusal</h1>
 
-<%= form_with model: @recurring_excusal, local: true do |f| %>
-  <div>
-    <%= f.label :reason %>
-    <%= f.text_area :reason, rows: 5, style: "width: 100%; max-width: 500px;" %>
-  </div>
+  <%= form_with model: @recurring_excusal, local: true do |f| %>
 
-  <div>
-    <%= f.label :recurring_days, "Days of the Week" %>
-    <div style="margin-top: 0.5rem;">
-      <% Date::DAYNAMES.each_with_index do |day, index| %>
-        <div style="margin-bottom: 0.3rem;">
-          <%= check_box_tag "recurring_excusal[recurring_days][]", index, @recurring_excusal.recurring_days&.include?(index), id: "day_#{index}" %>
-          <%= label_tag "day_#{index}", day, style: "display: inline; font-weight: normal; margin-left: 0.3rem;" %>
-        </div>
-      <% end %>
+    <!-- Reason Section -->
+    <div class="form-section">
+      <%= f.label :reason %>
+      <%= f.text_area :reason, rows: 2 %>
     </div>
-  </div>
 
-  <div>
-    <%= f.label :recurring_start_time, "Start Time" %>
-    <%= f.time_select :recurring_start_time, ignore_date: true %>
-  </div>
+    <!-- Days of the Week Section -->
+    <div class="form-section">
+      <%= f.label :recurring_days, "Days of the Week" %>
+      <div class="days-flex">
+        <% Date::DAYNAMES.each_with_index do |day, index| %>
+          <div class="day-checkbox-wrapper">
+            <%= check_box_tag "recurring_excusal[recurring_days][]", index, @recurring_excusal.recurring_days&.include?(index), id: "day_#{index}" %>
+            <%= label_tag "day_#{index}", day %>
+          </div>
+        <% end %>
+      </div>
+    </div>
 
-  <div>
-    <%= f.label :recurring_end_time, "End Time" %>
-    <%= f.time_select :recurring_end_time, ignore_date: true %>
-  </div>
+    <!-- Time Range Section -->
+    <div class="form-section">
+      <h3>Time Range</h3>
 
-  <div>
-    <%= f.submit "Request Recurring Excusal" %>
-  </div>
-<% end %>
+      <div class="time-picker-row">
+        <%= f.label :recurring_start_time, "Start Time" %>
+        <div>
+          <%= f.time_select :recurring_start_time,
+              ignore_date: true,
+              minute_step: 1,
+              ampm: true %>
+        </div>
+      </div>
 
-<div style="margin-top: 1rem;">
-  <%= link_to "Back to Events", events_path, class: "action-button" %>
+      <div class="time-picker-row">
+        <%= f.label :recurring_end_time, "End Time" %>
+        <div>
+          <%= f.time_select :recurring_end_time,
+              ignore_date: true,
+              minute_step: 1,
+              ampm: true %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evidence Link Section (if needed) -->
+    <div class="form-section">
+      <%= f.label :evidence_link, "Evidence link (Google Drive, etc.)" %>
+      <%= f.text_field :evidence_link, placeholder: "https://drive.google.com/..." %>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <%= f.submit "Request Recurring Excusal", class: "btn-primary" %>
+      <%= link_to "Back to Events", events_path, class: "btn-secondary" %>
+    </div>
+
+  <% end %>
 </div>

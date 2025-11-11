@@ -1,0 +1,16 @@
+<div class="discipline-record border rounded p-3 mb-3">
+  <p><strong>Given By:</strong> <%= discipline_record.given_by.full_name %></p>
+  <p><strong>Discipline Type:</strong> <%= discipline_record.record_type %></p>
+  <p><strong>Reason:</strong></p>
+  <p class="reason"><%= simple_format(discipline_record.reason) %></p>
+  <p><em>Issued on <%= discipline_record.created_at.strftime("%B %d, %Y") %></em></p>
+
+  <% if defined?(admin_namespace) && admin_namespace %>
+    <p>
+      <%= link_to 'Edit', edit_admin_discipline_record_path(discipline_record), class: 'btn btn-sm btn-secondary' %>
+      <%= link_to 'Delete', admin_discipline_record_path(discipline_record),
+                  method: :delete, data: { confirm: 'Are you sure?' },
+                  class: 'btn btn-sm btn-danger' %>
+    </p>
+  <% end %>
+</div>

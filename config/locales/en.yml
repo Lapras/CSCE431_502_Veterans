@@ -53,6 +53,7 @@ en:
     checkin: 'Succesfully checked in!'
     checkin_fail: 'Failed to check in.'
     already: 'already has an attendance record for this event'
+    invalid_code: 'Invalid check-in code. Please try again.'
   excusal:
     submit: 'Excusal request was successfully submitted.'
     recurring_submit: 'Recurring excusal request sent.'
@@ -61,9 +62,16 @@ en:
     missing_fields: "Error: Missing required fields"
   recurring_excusals:
     request_sent: "Recurring excusal request sent."
+    denied: "Recurring Excusal denired."
+    approved: "Recurring excusal approved."
+    unauthorized: "You are not authorized to perform this action."
   approvals:
     already_reviewed: "This request has already been reviewed."
     not_found: "Excusal request not found."
   recurring_approvals:
     already_reviewed: "This recurring excusal has already been reviewed."
     not_found: "Recurring excusal not found."
+  discipline_records:
+    update: 'Discipline record was successfully updated.'
+    deleted: 'Record deleted'
+    created: 'Discipline record created succesfully.'
